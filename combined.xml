@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>
+
+//// ================================================
+//// Constants and type definition
+
+const int R = 7;                     // Number of robots
+typedef int[0,R-1] robot;            // The set of robot ids
+typedef int[-1,R-1] optionalRobot;   // The set of robot ids, -1 denoting null
+
+const int Q = 4;                       // Number of choices
+typedef int[0,Q-1] choice;             // The set of choice indexes
+typedef int[-1,Q-1] optionalChoice;    // The set of choice indexes
+
+const int NN = 6;                      // Max number of neighbors
+typedef int[0,NN-1] neighbor;          // The set of possible neighbor indexes
+typedef int[-1,NN-1] optionalNeighbor; // The set of possible neighbor indexes, -1 denoting null
+
+typedef int[0,2] timestamp;            // Synchronization following rock-paper-scissors logic ( 0 &lt; 1 &lt; 2 &lt; 0 )
+
+//// ================================================
+//// Robot state
+
+/* Most state is kept in global variables. 
+However, a robot only ever accesses the state of its neighbors. 
+In this we abstract away the specific communication protocal, while maintaining the requirement that robots have no global knowledge. */
+
+/* The public decision of each robot. Is updated (along P), after publicP and ND but before any neighbor starts recalculating D */
+choice decision[R];
+
+/*The decision group of each robot - true means the robot of that ID is in the same group. Is continuously updated while in the calculateDsize state*/
+bool D[R][R];
+
+/* The public preferences of each robot - the preferences are only updated simultaneously with ND */
+double publicP[R][Q];
+
+/* The public size of the donsensus group of each robot. 
+Is updated atomically, after having calculated D.
+The paper calls this the consensus group, we call it the [D]ecision group 
+This is to phonetically align the use of C and D for neighbors (connected robots) and consenting (same decision) respectively.*/
+int[0,R] ND[R];
+
+/* The reason why some fields are updated atomically and others continuously is because they are used for different purposes:
+publicP and ND are used when updating neighboring robots preferences, and so they should represent the last coherent state.
+D is used for propagating information to calculate ND, and so it updates continuously.
+decision is determined right after P is updated. */
+
+// Locking state
+timestamp cycle[R];        // Used to synchronize cyclus.
+timestamp level[R];        // Synchronization while calculating D.
+timestamp calm[R];         // Used for determining when D has been calculated.
+
+//// =================================================
+//// Functions
+
+// Timestamps
+
+// Returns true if the timestamp of robot r is behind or at equal to that of robot s. False if r is in front.
+bool compareTimestamps(timestamp a, timestamp b) {
+    if (a == b) return true;
+    if ((a + 1) % 3 == b) return true;
+    return false;
+}
+
+// Populate array with random values summing to 1 (PMF)
+void initP(double &amp;P[Q]){
+    double rands[Q];
+    double ssum = 0;
+    for (i : choice) {
+        double val = random(1);
+        rands[i] = val;
+        ssum = ssum + val;
+    }
+    for (i : choice) {
+        P[i] = rands[i] / ssum;
+    }
+}
+
+// Count the number of true values in array
+int[0,R] count(bool &amp;A[R]){
+    return sum (i : robot) A[i] == true;
+}
+
+// Get the index of a highest value
+choice maxIndex(double &amp;P[Q]){
+    choice maxI = 0;
+    double max = 0;
+    for (i : choice){
+        if (P[i] &gt; max) {
+            max = P[i];
+            maxI = i;
+        }
+    }
+    return maxI;
+}
+
+// Get next true value of boolean array A *after* index i.
+// Returns -1 if there is no next value
+optionalRobot getNextTrue(int i, bool &amp;A[R]){
+    while (i &lt; R-1) {
+        i++;
+        if (A[i]) return i;
+        
+    }
+    return -1;
+}
+
+//// ================================================
+//// Meta
+
+// Return true if all values are equal. Used for verification
+bool allSameTimestamp(timestamp &amp;A[R]){
+    timestamp comparison = A[0];
+    return forall (i : int[1,R-1]) A[i] == comparison;
+}
+
+// Have a robot finished
+meta bool done[R];
+meta bool allDone = false;
+meta bool allSameCycleAndDone = false;</declaration>
+	<template>
+		<name>Robot</name>
+		<parameter>robot id, bool &amp;C[R]</parameter>
+		<declaration>//// =====================================================
+//// State
+
+
+meta int cyclecounter = 0;
+
+optionalRobot neighbors[NN];           // Inverted index of neighbors, index 0 to count(C)-1 contains index of true values in C. -1 for empty slots.
+bool mayContinue;                      // Guard and synchronization variable - is updated with compareCycle() and compareLevels()
+double P[Q];                           // Preferences as a PMF over all choices in Q.
+
+//// =====================================================
+//// Methods
+// Functions that are simplified by having access to state
+
+    //// Utility
+
+bool isInSameCycle(robot r)      { return cycle[r] == cycle[id]; }
+bool isConsenting(robot r)       { return decision[r] == decision[id]; }
+bool isRobot(optionalRobot r)    { return r != -1; }
+bool isCalm(robot r)             { return calm[r] &gt; 0; }
+bool isLowerLevel(robot r)       { return !compareTimestamps(level[id], level[r]); }
+bool isInEarlierCycle(robot r)   { return !compareTimestamps(cycle[id], cycle[r]); }
+void incrementLevel()            { level[id] = (level[id] + 1) % 3; }
+
+/**Increment cycle by one and reset lower synchronization variables*/
+void incrementCycle()            { 
+    cycle[id] = (cycle[id] + 1) % 3; 
+    level[id] = 0;
+    calm[id] = 0;
+    cyclecounter++;
+}
+
+
+    //// Synchronization methods
+
+/**Returns true if the all neighbors are on the same or next cycle as self.*/
+/* We need both cases (same cycle or next) because a neighboring disagreeing robot may complete a full loop and enter the next cycle before this robot continues.
+We need to wait for every neighbor, else updating behavior is different for robots in different sized decision groups. */
+bool compareCycle() {
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (isRobot(r) &amp;&amp; isInEarlierCycle(r)) { return false; }
+    }
+    return true;
+
+}
+
+/**Returns true if no consenting neighbor is behind this robot in updating their D array.*/
+/* This is important, because it ensures that the robot does not ask a neighbor twice before that neighbor has a chance to update their values.
+A neighbor can never be in an earlier cycle than this robot when compareLevels() is called.
+This is because compareLevels is only called in state `FindingDecisionGroup`.
+Cycles are only incremented when entering state `AwaitingNeighbors`, and `AwaitingNeighbors` can only be exited when all neighbors are in the same or next cycle*/
+bool compareLevels() {
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (isRobot(r) &amp;&amp; isConsenting(r) &amp;&amp; isInSameCycle(r) &amp;&amp; isLowerLevel(r)) {  return false; }
+    }
+    return true;
+}
+
+/**Returns true if no consenting, updating, neighbor has a calmness of 0.*/
+/* As this method is only colled when this robots calmness is 1, it works like a comparison, asking: are all eligible neighbors at the same or highe level of calmness?*/
+bool compareCalmness() {
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (isRobot(r) &amp;&amp; isConsenting(r) &amp;&amp; isInSameCycle(r) &amp;&amp; !isCalm(r)) { return false; }
+    }
+    return true;
+}
+
+    //// Updating and calculating preferences (P)
+
+/**Updates the preferences of this robot according to the equation given in (Liu &amp; Lee, 2020)*/
+/* Uses the last coherent state of each neighbor.*/
+void updateP() {
+    double sumP[Q];    // The sum of all neighbor's preference value for each choice (including self)
+    int sumND;         // The total size of all neighbor's decision groups (including self)
+    optionalRobot r;
+
+    // First add yourself
+    for (c : choice) {
+                sumP[c] = sumP[c] + ND[id] * publicP[id][c];
+    }
+    sumND += ND[id];
+
+    // Then add the each neighbor
+    for (n : neighbor) {
+        r = neighbors[n];
+        if ( isRobot(r) ) {
+            for (c : choice) {
+                sumP[c] = sumP[c] + ND[r] * publicP[r][c];
+            }
+            sumND += ND[r];
+        }
+    }
+
+    // Normalize
+    for (c : choice) { P[c] = sumP[c] / sumND; } 
+}
+
+    //// Calculating consensus / decision group (D)
+
+/** Add every robot to the decision group (D) of this robot that are present in the decision group of any neighbors with the same decision as this.
+The function returns false if no new robots were added. */
+bool syncWithConsentingNeighbors() {
+    bool stale = true;
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (isRobot(r) &amp;&amp; isConsenting(r)) {
+            for (s : robot) {
+                stale &amp;= (D[r][s] imply D[id][s]);  // Information is only new if the neighbor knows of an id that is in the group that this robot does not.
+                D[id][s] = D[r][s] || D[id][s];     // Union operation
+            }
+        }
+    }
+    return stale;
+}
+
+    //// Initializations
+
+// Resets the D array. 
+void resetD() {
+    for (r : robot) { D[id][r] = false; }
+    D[id][id] = true;                      // A robot always agrees with itself
+}
+
+// Create inverted Index of neighbors (neighbors array)
+void initNeighbors() {
+    optionalRobot nextNeighbor;
+    nextNeighbor = getNextTrue(-1, C);                    // Find first neighboring robot
+
+    for (n : neighbor) {
+        if (isRobot(nextNeighbor)) {
+            neighbors[n] = nextNeighbor;                  // Save neighbor in neighbors
+            nextNeighbor = getNextTrue(nextNeighbor, C);  // Find next neighboring robot
+        } else {
+            neighbors[n] = -1;                            // If there are no more neighbors
+        }
+    }
+}
+
+// Initialize a robot with random preferences.
+void initialize() {
+    initP(P);
+    decision[id] = maxIndex(P);
+    initNeighbors();
+    level[id] = 0;
+    cycle[id] = 0;
+    // Meta values
+    cyclecounter = 0;
+    allDone = false;
+    done[id] = false;
+}
+
+</declaration>
+		<location id="id0" x="-178" y="-51">
+			<name x="-161" y="-68">Initial</name>
+			<committed/>
+		</location>
+		<location id="id1" x="-178" y="-212">
+			<name x="-144" y="-221">PreferencesUpdated</name>
+			<label kind="exponentialrate" x="-178" y="-221">1</label>
+		</location>
+		<location id="id2" x="187" y="-85">
+			<name x="212" y="-119">FindingDecisionGroup</name>
+			<label kind="exponentialrate" x="187" y="-93">1</label>
+		</location>
+		<location id="id3" x="187" y="-331">
+			<name x="204" y="-357">AwaitingNeighbors</name>
+			<label kind="exponentialrate" x="187" y="-340">1</label>
+		</location>
+		<location id="id4" x="467" y="-17">
+			<name x="484" y="-25">CheckCalmness</name>
+			<label kind="exponentialrate" x="467" y="-25">1</label>
+		</location>
+		<location id="id5" x="756" y="-331">
+			<name x="746" y="-365">Terminal</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id6">
+			<source ref="id3"/>
+			<target ref="id5"/>
+			<label kind="guard" x="408" y="-357">ND[id] == R</label>
+			<label kind="assignment" x="408" y="-323">done[id] = true,
+allDone = count(done) == R ? 1 : 0,
+allSameCycleAndDone = allSameTimestamp(cycle) &amp;&amp; allDone</label>
+			<label kind="comments" x="408" y="-255">These updates are only for verification (SMC)</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="guard" x="238" y="76">calm[id] == 1</label>
+			<label kind="assignment" x="153" y="93">calm[id] = compareCalmness() ? 2 : 1</label>
+			<nail x="467" y="93"/>
+			<nail x="136" y="93"/>
+			<nail x="136" y="-85"/>
+		</transition>
+		<transition id="id8">
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="guard" x="238" y="25">calm[id] == 0</label>
+			<nail x="467" y="42"/>
+			<nail x="136" y="42"/>
+			<nail x="136" y="-85"/>
+		</transition>
+		<transition id="id9">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="102" y="-416">!mayContinue &amp;&amp; ND[id] != R</label>
+			<label kind="assignment" x="110" y="-399">mayContinue = compareCycle()</label>
+			<nail x="204" y="-374"/>
+			<nail x="170" y="-374"/>
+		</transition>
+		<transition id="id10">
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-153" y="-348">mayContinue &amp;&amp; ND[id] != R</label>
+			<label kind="assignment" x="-153" y="-331">updateP(),
+decision[id] = maxIndex(P)</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="195" y="-289">calm[id] == 2</label>
+			<label kind="assignment" x="195" y="-272">ND[id] = count(D[id]),
+publicP[id] = P,
+mayContinue = false,
+incrementCycle()</label>
+			<nail x="187" y="-102"/>
+		</transition>
+		<transition id="id12">
+			<source ref="id2"/>
+			<target ref="id4"/>
+			<label kind="guard" x="195" y="-34">!mayContinue &amp;&amp; calm[id] &lt; 2</label>
+			<label kind="assignment" x="195" y="-17">mayContinue = compareLevels()</label>
+			<nail x="187" y="-17"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id2"/>
+			<target ref="id4"/>
+			<label kind="guard" x="212" y="-102">mayContinue &amp;&amp; calm[id] &lt; 2</label>
+			<label kind="assignment" x="476" y="-93">calm[id] = syncWithConsentingNeighbors() ? 1 : 0,
+incrementLevel(),
+mayContinue = compareLevels()</label>
+			<nail x="467" y="-85"/>
+		</transition>
+		<transition id="id14">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="-93" y="-161">resetD(),
+level[id] = 1,
+mayContinue = false</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="-161" y="-85">initialize()</label>
+		</transition>
+	</template>
+	<system>
+
+
+// Place template instantiations here.
+
+/* For R = 5
+
+bool c5_0[R] = {false, true, true,  false, false },
+bool c5_1[R] = {true,  false, false, true,  false },
+bool c5_2[R] = {true,  false, false, false, false },
+bool c5_3[R] = {false, true,  false, false, true  },
+bool c5_4[R] = {false, false, false, true,  false }
+
+r0 = Robot(0, c5_0);
+r1 = Robot(1, c5_1);
+r2 = Robot(2, c5_2);
+r3 = Robot(3, c5_3);
+r4 = Robot(4, c5_4);
+
+*/
+
+/* For R = 3 */
+
+/*
+bool c3_0[R] = {false, true,  true  };
+bool c3_1[R] = {true,  false, false };
+bool c3_2[R] = {true,  false, false };
+
+r0 = Robot(0, c3_0);
+r1 = Robot(1, c3_1);
+r2 = Robot(2, c3_2);
+
+system r0, r1, r2;
+*/
+
+//// Fully connected network n = 
+// This should always complete after one full update (right after evvery robot enters cycle 2 for the first time).
+
+bool c5_0[R] = {false, true, true, true, true, true, true};
+bool c5_1[R] = {true, false, true, true, true, true, true};
+bool c5_2[R] = {true, true, false, true, true, true, true};
+bool c5_3[R] = {true, true, true, false, true, true, true};
+bool c5_4[R] = {true, true, true, true, false, true, true};
+bool c5_5[R] = {true, true, true, true, true, false, true};
+bool c5_6[R] = {true, true, true, true, true, true, false};
+r0 = Robot(0, c5_0);
+r1 = Robot(1, c5_1);
+r2 = Robot(2, c5_2);
+r3 = Robot(3, c5_3);
+r4 = Robot(4, c5_4);
+r5 = Robot(5, c5_5);
+r6 = Robot(6, c5_6);
+system r0, r1, r2, r3, r4, r5, r6;
+
+</system>
+	<queries>
+		<option key="--alpha" value="0.01"/>
+		<option key="--beta" value="0.01"/>
+		<option key="--epsilon" value="0.01"/>
+		<query>
+			<formula>E[&lt;=1000;5000](max: r0.cyclecounter)</formula>
+			<comment>How many cycles in total does robot 0 go through before consensus is reached.
+
+Results:
+For 7 robots with random preferences in a fully connected graphs. [&lt;=1000;5000] ≈ 2 (as expected)</comment>
+			<result outcome="success" type="quantity" value="≈ 2" timestamp="2025-04-25 12:58:57 +0200">
+				<details>≈ 2</details>
+				<plot title="Probability Density Distribution" xaxis="max: r0.cyclecounter" yaxis="probability density">
+					<series title="density" type="b(1.000000)" color="0x0000ff" encoding="csv">2.0,1.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.0,0.0
+2.0,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=1
+Runs: 5000 in total, 5000 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [2, 2]
+Mean estimate of displayed sample: ≈ 2</comment>
+				</plot>
+				<plot title="Probability Distribution" xaxis="max: r0.cyclecounter" yaxis="probability">
+					<series title="probability" type="b(1.000000)" color="0x0000ff" encoding="csv">2.0,1.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.0,0.0
+2.0,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=1
+Runs: 5000 in total, 5000 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [2, 2]
+Mean estimate of displayed sample: ≈ 2</comment>
+				</plot>
+				<plot title="Cumulative Probability Distribution" xaxis="max: r0.cyclecounter" yaxis="probability">
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">2.0,0.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.0,0.0
+2.0,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=1
+Runs: 5000 in total, 5000 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [2, 2]
+Mean estimate of displayed sample: ≈ 2</comment>
+				</plot>
+				<plot title="Cumulative Probability Confidence Intervals" xaxis="max: r0.cyclecounter" yaxis="probability">
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">2.0,7.375038011081052E-4
+					</series>
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">2.0,0.0
+					</series>
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">2.0,0.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.0,0.0
+2.0,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=1
+Runs: 5000 in total, 5000 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [2, 2]
+Mean estimate of displayed sample: ≈ 2</comment>
+				</plot>
+				<plot title="Frequency Histogram" xaxis="max: r0.cyclecounter" yaxis="count">
+					<series title="count" type="b(1.000000)" color="0x0000ff" encoding="csv">2.0,5000.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.0,0.0
+2.0,5000.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=1
+Runs: 5000 in total, 5000 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [2, 2]
+Mean estimate of displayed sample: ≈ 2</comment>
+				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=100](&lt;&gt; allSameCycleAndDone) &gt;= 95.0</formula>
+			<comment/>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

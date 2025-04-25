@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+
+// ================================================
+// Constants and type definition
+
+const int R = 3;                // Number of robots
+const int r = R-1;              // Final robot index
+typedef int[-1,r] robot;        // The set of robot indexes
+
+const int Q = 2;                // Number of choices
+const int q = Q-1;              // Final choice index
+typedef int[-1,q] choice;       // The set of choice indexes
+
+const int NN = 2;               // Max number of neighbors
+const int nn = NN-1;
+
+// ================================================
+// Communication
+
+broadcast chan decisionMade[R]; // This robot has made a decision
+choice decisionMadeVar;         // The decision the robot made
+
+broadcast chan agree[R];        // A robot agrees with this robot
+bool agreeVar[R];               // The consensus group of the agreeing robot
+
+broadcast chan disagree[R];     // A robot disagrees with this robot
+
+// =================================================
+// Functions
+
+// Populate array with random values summing to 1 (PMF)
+void initP(double &amp;P[Q]){
+    double rands[Q];
+    double ssum = 0;
+    for (i : int[0,q]) {
+        double val = random(1);
+        rands[i] = val;
+        ssum = ssum + val;
+    }
+    for (i : int[0,q]) {
+        P[i] = rands[i] / ssum;
+    }
+}
+
+// Count the number of true values in array
+int[0,r] count(bool A[R]){
+    return sum (i : int[0,r]) A[i] == true;
+}
+
+// Get the index of a highest value
+int[0,q] maxIndex(double &amp;P[Q]){
+    int[0,q] maxI = 0;
+    double max = 0;
+    for (i : int[0,q]){
+        if (P[i] &gt; max) {
+            max = P[i];
+            maxI = i;
+        }
+    }
+    return maxI;
+}
+
+// ===============================================
+// Currently unused
+
+// Get the index containing a minimum value
+int minIndex(int &amp;P[R]){
+    int[0,r] minI = 0;
+    double min = 0;
+    for (i : int[0,q]){
+        if (P[i] &lt; min) {
+            min = P[i];
+            minI = i;
+        }
+    }
+    return minI;
+}
+
+// Get next true value of boolean array starting at index i.
+// Returns -1 if there is no next value
+int[-1,r] getNextTrue(int i, bool &amp;A[R]){
+    while (i &lt; R) {
+        if (A[i]) return i;
+        i++;
+    }
+    return -1;
+}
+
+// Create inverted Index of neighbors
+void initNeighbors(int[-1,r] &amp;a[NN], bool &amp;C[R]) {
+    int Ci = 0;
+    int i = 0;
+    while (Ci != -1) {
+        Ci = getNextTrue(Ci, C);
+        a[i] = Ci;
+        i++;
+    }
+}
+
+
+// Makes array A into the union of A and B
+void inPlaceUnion(bool A[R], bool B[R]) {
+    for (i : int[0, r]) {A[i] = A[i] || B[i];}
+}</declaration>
+	<template>
+		<name>Robot</name>
+		<parameter>robot id, bool &amp;C[R]</parameter>
+		<declaration>// Clocks
+
+clock timeout;
+
+
+// State
+
+// robot id                   id of this robot
+// bool C[R]                  Connection group (Neighbors)
+int[0,NN] NC;              // Size of C (should be within NN)
+
+bool D[R];                 // Local consensus group
+int[0,R] ND;               // Size of D
+
+bool CD[R];                // Intersection of C &amp; D - Consenting Neighbors
+
+double P[Q];               // Preferences
+choice decision;           // Exhibited decision (max of P)
+choice newDecision;
+
+int[0,NN] acknowledgements; // Temporary variable counting how many neighbors have received message
+
+
+// Methods
+// Functions that are simplified by having acces to state
+
+void joinGroup(bool &amp;A[R]) {
+    for (i : robot) {
+        bool d = D[i] || A[R];
+        D[i] = d;
+        CD[i] = d &amp; C[i];
+    }
+}
+
+void resetD() {
+    for (i : int[0,r]) { D[i] = false; }
+    D[id] = true;
+}
+
+void initialize() {
+    NC = count(C);
+    initP(P);
+    decision = -1;
+}</declaration>
+		<location id="id0" x="-340" y="-255">
+			<name x="-350" y="-289">initial</name>
+			<committed/>
+		</location>
+		<location id="id1" x="-68" y="-153">
+			<name x="-51" y="-178">decide</name>
+			<urgent/>
+		</location>
+		<location id="id2" x="-68" y="-306">
+			<name x="-59" y="-340">updatePreferences</name>
+		</location>
+		<location id="id3" x="-68" y="-17">
+			<name x="-59" y="-51">informCofDecision</name>
+			<label kind="exponentialrate" x="-85" y="-51">1</label>
+		</location>
+		<location id="id4" x="331" y="-153">
+			<name x="348" y="-187">awaitUpdates</name>
+		</location>
+		<location id="id5" x="-68" y="238">
+			<name x="-51" y="204">acknowledgeDecision</name>
+		</location>
+		<location id="id6" x="-331" y="170">
+			<name x="-341" y="136">IAgree</name>
+		</location>
+		<location id="id7" x="-331" y="289">
+			<name x="-341" y="255">IDisagree</name>
+		</location>
+		<location id="id8" x="-68" y="-255">
+			<name x="-51" y="-263">prefsUpdated</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id9">
+			<source ref="id2"/>
+			<target ref="id8"/>
+		</transition>
+		<transition id="id10">
+			<source ref="id7"/>
+			<target ref="id3"/>
+			<nail x="-773" y="289"/>
+			<nail x="-773" y="-17"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id6"/>
+			<target ref="id3"/>
+			<nail x="-773" y="170"/>
+			<nail x="-773" y="-17"/>
+		</transition>
+		<transition id="id12">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-578" y="0">agree[id]?</label>
+			<label kind="assignment" x="-663" y="17">joinGroup(agreeVar),
+acknowledgements++,
+agreeVar = D</label>
+			<nail x="-68" y="76"/>
+			<nail x="-493" y="76"/>
+			<nail x="-493" y="-17"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-442" y="0">disagree[id]?</label>
+			<label kind="assignment" x="-484" y="17">acknowledgements++</label>
+			<nail x="-68" y="76"/>
+			<nail x="-331" y="76"/>
+			<nail x="-331" y="-17"/>
+		</transition>
+		<transition id="id14">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-280" y="-8">acknowledgements &lt; NC</label>
+			<label kind="synchronisation" x="-246" y="8">decisionMade[id]!</label>
+			<label kind="assignment" x="-323" y="25">decisionMadeVar = decision</label>
+			<nail x="-68" y="76"/>
+			<nail x="-110" y="76"/>
+			<nail x="-110" y="-17"/>
+		</transition>
+		<transition id="id15">
+			<source ref="id5"/>
+			<target ref="id7"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id5"/>
+			<target ref="id6"/>
+		</transition>
+		<transition id="id17">
+			<source ref="id3"/>
+			<target ref="id5"/>
+			<label kind="select" x="-51" y="59">r : robot</label>
+			<label kind="guard" x="-51" y="76">C[r] == true</label>
+			<label kind="synchronisation" x="-51" y="93">decisionMade[r]?</label>
+			<label kind="assignment" x="-51" y="110">partner = r
+partnerDecision = decisionMadeVar</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id3"/>
+			<target ref="id4"/>
+			<label kind="guard" x="93" y="-17">timeout &gt; 10</label>
+			<nail x="331" y="-17"/>
+		</transition>
+		<transition id="id19">
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<nail x="331" y="-306"/>
+		</transition>
+		<transition id="id20">
+			<source ref="id1"/>
+			<target ref="id4"/>
+			<label kind="guard" x="34" y="-178">decision == newDecision</label>
+		</transition>
+		<transition id="id21">
+			<source ref="id8"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="-59" y="-221">newDecision = maxIndex(P)</label>
+		</transition>
+		<transition id="id22">
+			<source ref="id1"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-263" y="-110">decision != newDecision</label>
+			<label kind="assignment" x="-59" y="-136">timeout = 0,
+acknowledgements = 0,
+decision = maxIndex(P),
+resetD()</label>
+		</transition>
+		<transition id="id23">
+			<source ref="id0"/>
+			<target ref="id8"/>
+			<label kind="assignment" x="-323" y="-246">initialize()</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+/* For R = 5
+
+bool c5_0[R] = {false, true, true,  false, false },
+bool c5_1[R] = {true,  false, false, true,  false },
+bool c5_2[R] = {true,  false, false, false, false },
+bool c5_3[R] = {false, true,  false, false, true  },
+bool c5_4[R] = {false, false, false, true,  false }
+
+r0 = Robot(0, c5_0);
+r1 = Robot(1, c5_1);
+r2 = Robot(2, c5_2);
+r3 = Robot(3, c5_3);
+r4 = Robot(4, c5_4);
+
+*/
+
+/* For R = 3 */
+
+bool c3_0[R] = {false, true,  true  };
+bool c3_1[R] = {true,  false, false };
+bool c3_2[R] = {true,  false, false };
+
+r0 = Robot(0, c3_0);
+r1 = Robot(1, c3_1);
+r2 = Robot(2, c3_2);
+
+// List one or more processes to be composed into a system.
+system r0, r1, r2;</system>
+	<queries>
+		<option key="--diagnostic" value="1"/>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+//dummy variable
+clock x;
+
+////TODO:
+//Make channels related to prompting (already done a bit, but should be "refined")
+
+////An array for channels to join consensus groups
+//First one used by pref_a, next one by pref_b etc.
+broadcast chan join[3];
+
+////An array for channels to leave consensus groups
+//First one used by pref_a, next one by pref_b etc.
+broadcast chan leave[3];
+
+////The number of choices
+const int Q = 3;
+
+////The number of robots
+const int R = 4;
+
+////Information regarding neighbours
+bool Robots[R][R] = {{false, true, true, false}, {true, false, true, false}, {true, true, false, true},{false, false, true, false}};
+
+
+///Channels for prompting for updates and receiving them
+chan prompt[R];
+chan exchange; //Time will tell, whether this one can be simplified away
+
+////Array holding distributions of preferences (a robot should only access its own pref).
+int leadingPrefs[R];
+
+////Global values for communication of values through channels (messages):
+int N_msg;
+double pref_msg[Q];
+
+
+
+//------------------------------------------------------
+////making of quickfind
+//------------------------------------------------------
+
+////To make less abstract, this could be done in terms of states
+
+////The Id of the consensus-group indexed by robot
+//int consensus_group[R];
+////The size of consensus-group indexed by id
+//int size[R];
+
+////finds the consensus-group for a given robot
+//int find(int &amp;r){
+//    return consensus_group[r];
+//}
+
+////joins two robots if they're not already in same group
+//adjusts size of consensus-group accordingly
+//If find can't be called here, maybe the id's can be found in each robot, and then this function can be called with those through sync.
+//void union(int &amp;r1, int &amp;r2){
+//    int id1 = find(r1);
+//    int id2 = find(r2);
+//    if(id1 == id2){
+//        return;
+//    }
+//    else {
+//        for(i : int[0,Q-1]) {
+//            if(id[])
+//        }
+//    }
+//}
+</declaration>
+	<template>
+		<name>ConsensusGroup</name>
+		<parameter> const int[0,2] ID</parameter>
+		<declaration>//The ID representing the choice
+//int ID;
+//Variable for the number of nodes 
+//(unused for now, and might just be state-based)
+int memberNo;
+</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="-10" y="-34">M_0</name>
+			<label kind="comments" x="238" y="59">&lt;h1&gt;Consensus Group&lt;/h1&gt;
+&lt;p&gt;Representing a consensus-group for one choice.&lt;/p&gt;&lt;br&gt;
+&lt;p&gt;Has N+1 states where N is the number of nodes, denoting the number of nodes in the consensus group&lt;/p&gt;&lt;br&gt;
+&lt;p&gt;If any of the consensus-groups ever reaches its last state, the whole system has reached consensus (invariant to check for)&lt;/p&gt;
+&lt;p&gt;For now this consensus group is global to the system. This correlates with local groups in the case where all nodes are neighbours.
+But additional templates (or modifications) must be introduced if bigger networks (or ones where not everyone) are
+neighbours will be introduced.</label>
+		</location>
+		<location id="id1" x="0" y="93">
+			<name x="-10" y="59">M_1</name>
+		</location>
+		<location id="id2" x="0" y="195">
+			<name x="-10" y="161">M_2</name>
+		</location>
+		<location id="id3" x="0" y="297">
+			<name x="-10" y="263">M_3</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="18" y="63">leave[ID]?</label>
+			<nail x="110" y="68"/>
+			<nail x="110" y="17"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="18" y="169">leave[ID]?</label>
+			<nail x="119" y="178"/>
+			<nail x="119" y="127"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="0" y="229">join[ID]?</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="0" y="127">join[ID]?</label>
+		</transition>
+		<transition id="id8">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="17" y="25">join[ID]?</label>
+		</transition>
+	</template>
+	<template>
+		<name>MoreChoiceNode</name>
+		<parameter>const int[0,R-1] id</parameter>
+		<declaration>///Local variables
+int lead;
+double prefs[Q];
+int neighborCount=0;
+//used for updates:
+double runningPrefs[Q]; 
+int runningN=0;
+int visits=0;
+bool toVisit[R]; //array of neighbors to visit under current update 
+
+
+//double consensusGroup[R];
+
+////TODO
+//initialize bool array of unvisited neighbours (copy of neighbour-array entry)
+//Have function to reset it (might just be combined with above functionality)
+
+
+void pmf_alt(double &amp;Prefs[Q]){
+    double rands[Q];
+    double sum_0 = 0.0;
+    for(i : int[0,Q-1]){
+        rands[i] = random(1);
+        sum_0 = sum_0 + rands[i];
+    }
+    for(i : int[0,Q-1]){
+        Prefs[i] = rands[i]/sum_0;
+    }
+    return;
+}
+
+
+////Get max pref
+//Maybe deal with tiebreaks here
+int maxIndex(double &amp;P[Q]){
+     int[-1, Q-1] maxI = -1;
+     double max = -1;
+     for(i : int[0,Q-1]) {
+        if(P[i] &gt; max) {
+            max = P[i];
+            maxI = i;
+        }
+    }
+    return maxI;
+}
+
+//for updating a specific preference
+//TODO: before calculating the robot should:
+//  1) atomically fetch preferences of each neighbour
+//  2) fetch the size of consensus group of each neighbour
+
+double update_pref(int pref) {
+
+    //the sum of the sizes of each decision-group-members' consensus group
+    double cons_size = 0;
+
+    //the sum of preferences (weighted by consensusgroup size for given decision-group-member)
+    double weighted_prefs = 0;
+
+    //loops through consensus group (this includes the robot itself!)
+    for(i : int[0,R-1]) {
+        double cons = 3.0; //consensusGroup[i];
+        double pref = 5.0;
+        cons_size = cons_size + cons;
+        weighted_prefs = weighted_prefs + (cons*pref);
+    }
+    //should potentially ensure no division by 0 here
+    return weighted_prefs/cons_size;
+    
+}
+
+//for updating all preferences
+void update_pmf() {
+    for(i : int[0,Q-1]) {
+        prefs[i] = update_pref(i);
+    }
+}
+
+////Update, newest version, using values from communications
+void update_prefs_alt() 
+{
+    for(i : int[0,Q-1]) {
+        prefs[i] = runningPrefs[i]/runningN;
+    } 
+}
+
+///Resets all values
+void reset_update_values(){
+    visits = 0;
+    runningN = 0;
+    for(i : int[0,Q-1]) {
+        runningPrefs[i] = 0;
+    }
+    toVisit = Robots[id];
+}
+
+//--------------------------------------------------------------------------------------------------------------
+////Depth first search stuff
+
+//Depth first search for a single robot
+//The robot has its own stack that it uses for the traversal
+//For now the structure of neighbours in the graph used for traversal is
+//put in global decarations as two-dimensional boolean array
+
+//Might change capacities
+
+////Id of the robot (put in parameters for now - not checked yet)
+//int id = 0;
+
+//dummy value for testing
+int temp;
+////array for dfs
+bool marked[R];
+
+//fields for the stack
+int list[R+1];
+int len=0;
+
+
+
+//----------------------------
+//// Put an element at the top of the stack
+//----------------------------
+void push(int element)
+{
+        list[len++] = element;
+}
+
+//----------------------------
+//// Remove the top of the stack and return it
+//----------------------------
+int pop()
+{
+        return list[--len];
+}
+
+//----------------------------
+//// Returns the top element of the stack
+//----------------------------
+int front()
+{
+   return list[len - 1];
+}
+
+//----------------------------
+//// Returns the bottom element of the stack
+//----------------------------
+int tail()
+{
+   return list[0];
+}
+
+bool isEmpty(){
+    return len == 0;
+}
+
+//----------------------------
+//// Empties stack
+//----------------------------
+void reset_stack()
+{
+    len = 0;
+}
+
+//----------------------------
+////Performs Depth first search
+//----------------------------
+int dfs() 
+{    
+    //variable for size of connected graph from the robot
+    int groupSize = 0;
+
+    //the current node in the traversal
+    int current = id;
+
+    //value for next node to check (set to dummy value)
+    int next = -1;
+
+    //the robot's stack is reset
+    reset_stack();
+
+    //source node pushed to stack
+    push(current);
+
+    //marked-array reset
+    for(i : int[0,R-1]){
+        marked[i] = false;
+    }
+
+    //until stack is empty, keep popping nodes, increment graph-size, and put neighbours on stack
+    //bonus: only explore if same leading preference as oneself
+    while(!(isEmpty())) {
+        current = pop();
+        if(!marked[current]&amp;&amp;leadingPrefs[current]==lead) {
+            marked[current] = true;
+            groupSize++;
+            for(i : int[0,R-1]) {
+                next = Robots[current][i];
+                if(next) { 
+                    push(i);
+                }
+            }
+        }
+    }
+
+    //number of traversed nodes (incl. source) returned
+    return groupSize;
+}
+
+
+//--------------------------------------------------------------------------------------------------------------
+////For updating:
+
+
+//----------------------------
+////Unload N and prefs onto runningPrefs and runningN
+//----------------------------
+void receivePrefs(int &amp;N_value, double &amp;pref_values[Q]) 
+{
+    for(i : int[0,Q-1]) {
+        runningPrefs[i] = runningPrefs[i] + N_value*pref_values[i];
+    }
+    runningN += N_value;
+}
+
+//----------------------------
+////Unload N and prefs onto runningPrefs
+//----------------------------
+//void resetVisits()
+//{
+//    toVisit = Robots[id];    
+//}
+
+void countNeighbours()
+{
+    for(i : int[0,R-1]){
+        if(Robots[id][i]) {
+            neighborCount++;
+        }
+    }
+}
+
+</declaration>
+		<location id="id9" x="0" y="0">
+			<name x="-10" y="-34">Pre_initialized</name>
+			<label kind="comments" x="-459" y="238">&lt;h1&gt;Initialization&lt;/h1&gt;
+
+&lt;p&gt;Immediately call pmf function to randomly distribute preferences and then save leading preference to local variable 'lead'&lt;/p&gt;</label>
+			<committed/>
+		</location>
+		<location id="id10" x="280" y="0">
+			<name x="238" y="-42">Initialized</name>
+			<label kind="comments" x="799" y="229">&lt;h1&gt;Allocation of consensus-group&lt;h1&gt;
+
+&lt;p&gt; Joins a consensus-group through the corresponding channel, depending on which preference is leading&lt;p&gt;</label>
+			<committed/>
+		</location>
+		<location id="id11" x="484" y="0">
+			<name x="474" y="-34">Ready</name>
+		</location>
+		<location id="id12" x="705" y="-272">
+			<name x="695" y="-306">Prompting</name>
+			<committed/>
+		</location>
+		<location id="id13" x="680" y="204">
+			<name x="670" y="170">Prompted</name>
+			<committed/>
+		</location>
+		<init ref="id9"/>
+		<transition id="id14">
+			<source ref="id11"/>
+			<target ref="id11"/>
+			<label kind="guard" x="238" y="-255">visits == neighborCount</label>
+			<label kind="assignment" x="246" y="-229">N_msg = dfs(),
+receivePrefs(N_msg, prefs),
+update_prefs_alt(),
+lead=maxIndex(prefs),
+leadingPrefs[id] = lead,
+reset_update_values()</label>
+			<label kind="comments" x="-238" y="-484">TODO: implement
+&lt;h1&gt;The update loop&lt;/h1&gt;&lt;br&gt;
+probably enabled when whole array for unprompted neighbours is "emptied".&lt;br&gt;
+The update and reset-operation can be put here.
+&lt;br&gt; Some guard or invariant should make sure that it is taken at the right time (and equally another guard should ensure that (at least prompting-to) won't fire at that point).&lt;br&gt;
+The transition should maybe be made "urgently" as it seems beneficial for a robots update to "fire" when possible (maybe possible through having this use an urgent channel or the like?).&lt;br&gt;
+If consensus-group template maintained, this could be updated here (based on certain things).</label>
+			<nail x="467" y="-212"/>
+			<nail x="306" y="-195"/>
+			<nail x="297" y="-280"/>
+			<nail x="204" y="-272"/>
+			<nail x="221" y="-127"/>
+			<nail x="391" y="-144"/>
+		</transition>
+		<transition id="id15">
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="688" y="-42">exchange?</label>
+			<label kind="assignment" x="688" y="-76">receivePrefs(N_msg, pref_msg), 
+visits++</label>
+			<label kind="comments" x="960" y="-306">&lt;h1&gt;Receiving requested info&lt;/h1&gt;
+TODO: implement with channel etc.
+Here it should receive a number (e.g. with some shared variable or the like) and a pref distribution (maybe with a global array value), from the neighbour-node it just prompted (probably a separate channel, where it listens to the one it just prompted, or the like)</label>
+			<nail x="663" y="-59"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id13"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="697" y="110">exchange!</label>
+			<label kind="assignment" x="697" y="68">N_msg = dfs(),
+pref_msg = prefs</label>
+			<label kind="comments" x="892" y="51">&lt;h1&gt;Sending prompted info&lt;/h1&gt;
+TODO: implement.
+Here the prompted node does a dfs (finding size of consensus-group), sends back result together with its pref-distribution.</label>
+			<nail x="680" y="42"/>
+		</transition>
+		<transition id="id17">
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="select" x="502" y="-187">i : int[0,R-1]</label>
+			<label kind="guard" x="502" y="-170">toVisit[i] &amp;&amp; (visits != neighborCount)</label>
+			<label kind="synchronisation" x="502" y="-153">prompt[i]!</label>
+			<label kind="assignment" x="502" y="-136">toVisit[i] = false</label>
+			<label kind="comments" x="238" y="221">&lt;h1&gt;Prompting neighbour for info&lt;/h1&gt;
+Selects a robot for which it is true that it is a neighbour, and prompts it.&lt;br&gt;The neighbor will respond on its channel</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id11"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="510" y="110">prompt[id]?</label>
+			<label kind="comments" x="59" y="170">&lt;h1&gt;Being prompted for info by neighbour&lt;/h1&gt;</label>
+		</transition>
+		<transition id="id19">
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="340" y="17">join[lead]!</label>
+		</transition>
+		<transition id="id20">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="assignment" x="42" y="25">pmf_alt(prefs),
+lead=maxIndex(prefs),
+leadingPrefs[id] = lead,
+countNeighbours(),
+toVisit = Robots[id]</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Robot_0 = MoreChoiceNode(0);
+Robot_1 = MoreChoiceNode(1);
+Robot_2 = MoreChoiceNode(2);
+Robot_3 = MoreChoiceNode(3);
+Consensus_0 = ConsensusGroup(0);
+Consensus_1 = ConsensusGroup(1);
+Consensus_2 = ConsensusGroup(2);
+// List one or more processes to be composed into a system.
+system Robot_0, Robot_1, Robot_2, Robot_3, Consensus_0, Consensus_1, Consensus_2;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>
