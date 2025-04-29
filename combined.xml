@@ -6,19 +6,11 @@
 //// ================================================
 //// Constants and type definition
 
-const int R = 7;                     // Number of robots
-typedef int[0,R-1] robot;            // The set of robot ids
-typedef int[-1,R-1] optionalRobot;   // The set of robot ids, -1 denoting null
-
+// Maximally connected network
+/* 
+const int R = 7;                       // Number of robots
 const int Q = 4;                       // Number of choices
-typedef int[0,Q-1] choice;             // The set of choice indexes
-typedef int[-1,Q-1] optionalChoice;    // The set of choice indexes
-
 const int NN = 6;                      // Max number of neighbors
-typedef int[0,NN-1] neighbor;          // The set of possible neighbor indexes
-typedef int[-1,NN-1] optionalNeighbor; // The set of possible neighbor indexes, -1 denoting null
-
-typedef int[0,2] timestamp;            // Synchronization following rock-paper-scissors logic ( 0 &lt; 1 &lt; 2 &lt; 0 )
 
 bool C[R][R] = {{false, true, true, true, true, true, true},
                {true, false, true, true, true, true, true},
@@ -27,7 +19,32 @@ bool C[R][R] = {{false, true, true, true, true, true, true},
                {true, true, true, true, false, true, true},
                {true, true, true, true, true, false, true},
                {true, true, true, true, true, true, false}};
+*/
 
+// Minimally connected network
+
+const int R = 7;                       // Number of robots
+const int Q = 4;                       // Number of choices
+const int NN = 2;                      // Max number of neighbors
+
+bool C[R][R] = {{false, true, false, false, false, false, false},
+               {true, false, true, false, false, false, false},
+               {false, true, false, true, false, false, false},
+               {false, false, true, false, true, false, false},
+               {false, false, false, true, false, true, false},
+               {false, false, false, false, true, false, true},
+               {false, false, false, false, false, true, false}};
+
+
+
+
+typedef int[0,NN-1] neighbor;          // The set of possible neighbor indexes
+typedef int[-1,NN-1] optionalNeighbor; // The set of possible neighbor indexes, -1 denoting null
+typedef int[0,2] timestamp;            // Synchronization following rock-paper-scissors logic ( 0 &lt; 1 &lt; 2 &lt; 0 )
+typedef int[0,Q-1] choice;             // The set of choice indexes
+typedef int[-1,Q-1] optionalChoice;    // The set of choice indexes
+typedef int[0,R-1] robot;              // The set of robot ids
+typedef int[-1,R-1] optionalRobot;     // The set of robot ids, -1 denoting null
 
 //// ================================================
 //// Robot state
@@ -400,78 +417,162 @@ mayContinue = false</label>
 			<label kind="assignment" x="-161" y="-85">initialize()</label>
 		</transition>
 	</template>
-	<system>
-
-
-// Place template instantiations here.
-
-/* For R = 5
-
-bool c5_0[R] = {false, true, true,  false, false },
-bool c5_1[R] = {true,  false, false, true,  false },
-bool c5_2[R] = {true,  false, false, false, false },
-bool c5_3[R] = {false, true,  false, false, true  },
-bool c5_4[R] = {false, false, false, true,  false }
-
-r0 = Robot(0, c5_0);
-r1 = Robot(1, c5_1);
-r2 = Robot(2, c5_2);
-r3 = Robot(3, c5_3);
-r4 = Robot(4, c5_4);
-
-*/
-
-/* For R = 3 */
-
-/*
-bool c3_0[R] = {false, true,  true  };
-bool c3_1[R] = {true,  false, false };
-bool c3_2[R] = {true,  false, false };
-
-r0 = Robot(0, c3_0);
-r1 = Robot(1, c3_1);
-r2 = Robot(2, c3_2);
-
-system r0, r1, r2;
-*/
-/*
-//// Fully connected network n = 
-// This should always complete after one full update (right after evvery robot enters cycle 2 for the first time).
-
-bool c5_0[R] = {false, true, true, true, true, true, true};
-bool c5_1[R] = {true, false, true, true, true, true, true};
-bool c5_2[R] = {true, true, false, true, true, true, true};
-bool c5_3[R] = {true, true, true, false, true, true, true};
-bool c5_4[R] = {true, true, true, true, false, true, true};
-bool c5_5[R] = {true, true, true, true, true, false, true};
-bool c5_6[R] = {true, true, true, true, true, true, false};
-r0 = Robot(0, c5_0);
-r1 = Robot(1, c5_1);
-r2 = Robot(2, c5_2);
-r3 = Robot(3, c5_3);
-r4 = Robot(4, c5_4);
-r5 = Robot(5, c5_5);
-r6 = Robot(6, c5_6);
-system r0, r1, r2, r3, r4, r5, r6;
-
-*/
-
-system Robot;
+	<system>system Robot;
 </system>
 	<queries>
-		<option key="--alpha" value="0.01"/>
-		<option key="--beta" value="0.01"/>
-		<option key="--epsilon" value="0.01"/>
+		<option key="--diagnostic" value="0"/>
 		<query>
-			<formula>E[&lt;=1000;5000](max: Robot(0).cyclecounter)</formula>
+			<formula>E[&lt;=1000;100](max: Robot(0).cyclecounter)</formula>
 			<comment>How many cycles in total does robot 0 go through before consensus is reached.
 
 Results:
 For 7 robots with random preferences in a fully connected graphs. [&lt;=1000;5000] ≈ 2 (as expected)</comment>
+			<result outcome="success" type="quantity" value="14.1 ± 1.42094 (95% CI)" timestamp="2025-04-29 12:30:13 +0200">
+				<details>14.1 ± 1.42094 (95% CI)</details>
+				<plot title="Probability Density Distribution" xaxis="max: Robot[0].cyclecounter" yaxis="probability density">
+					<series title="density" type="b(3.000000)" color="0x0000ff" encoding="csv">3.0,0.02666666666666667
+6.0,0.056666666666666664
+9.0,0.06333333333333334
+12.0,0.043333333333333335
+15.0,0.04666666666666667
+18.0,0.023333333333333334
+21.0,0.04
+24.0,0.02
+27.0,0.0
+30.0,0.006666666666666667
+33.0,0.0
+36.0,0.006666666666666667
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
+14.1,0.06333333333333334
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 36]
+Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Distribution" xaxis="max: Robot[0].cyclecounter" yaxis="probability">
+					<series title="probability" type="b(3.000000)" color="0x0000ff" encoding="csv">3.0,0.08
+6.0,0.17
+9.0,0.19
+12.0,0.13
+15.0,0.14
+18.0,0.07
+21.0,0.12
+24.0,0.06
+27.0,0.0
+30.0,0.02
+33.0,0.0
+36.0,0.02
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
+14.1,0.19
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 36]
+Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Distribution" xaxis="max: Robot[0].cyclecounter" yaxis="probability">
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
+6.0,0.08
+9.0,0.25
+12.0,0.44
+15.0,0.57
+18.0,0.71
+21.0,0.78
+24.0,0.9
+27.0,0.96
+30.0,0.96
+33.0,0.98
+36.0,0.98
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
+14.1,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 36]
+Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Confidence Intervals" xaxis="max: Robot[0].cyclecounter" yaxis="probability">
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">3.0,0.03621669264517642
+6.0,0.15155763586442098
+9.0,0.34655249575880825
+12.0,0.5428125029366824
+15.0,0.6686089833686168
+18.0,0.7964258107492681
+21.0,0.8566964232501856
+24.0,0.9509953107785141
+27.0,0.9889955060138118
+30.0,0.9889955060138118
+33.0,0.9975686631760574
+36.0,0.9975686631760574
+					</series>
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">3.0,0.0
+6.0,0.03517156251816281
+9.0,0.16877973809934185
+12.0,0.3408360237234583
+15.0,0.4671337383248463
+18.0,0.6107340410925516
+21.0,0.6860803462136822
+24.0,0.8237774022599773
+27.0,0.9007428432873401
+30.0,0.9007428432873401
+33.0,0.9296160675289299
+36.0,0.9296160675289299
+					</series>
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
+6.0,0.08
+9.0,0.25
+12.0,0.44
+15.0,0.57
+18.0,0.71
+21.0,0.78
+24.0,0.9
+27.0,0.96
+30.0,0.96
+33.0,0.98
+36.0,0.98
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
+14.1,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 36]
+Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+				</plot>
+				<plot title="Frequency Histogram" xaxis="max: Robot[0].cyclecounter" yaxis="count">
+					<series title="count" type="b(3.000000)" color="0x0000ff" encoding="csv">3.0,8.0
+6.0,17.0
+9.0,19.0
+12.0,13.0
+15.0,14.0
+18.0,7.0
+21.0,12.0
+24.0,6.0
+27.0,0.0
+30.0,2.0
+33.0,0.0
+36.0,2.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
+14.1,19.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 36]
+Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+				</plot>
+			</result>
 		</query>
 		<query>
-			<formula>Pr[&lt;=100](&lt;&gt; allSameCycleAndDone) &gt;= 95.0</formula>
+			<formula>Pr[&lt;=1000](&lt;&gt; allSameCycleAndDone) &gt;= 0.98</formula>
 			<comment/>
+			<result outcome="failure" type="quality" timestamp="2025-04-29 12:31:33 +0200">
+				<option key="--diagnostic" value="0"/>
+			</result>
 		</query>
 		<query>
 			<formula/>
