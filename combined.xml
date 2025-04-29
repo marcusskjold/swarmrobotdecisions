@@ -221,7 +221,7 @@ bool compareCalmness() {
 
     for (n : neighbor) {
         r = neighbors[n];
-        if (isRobot(r) &amp;&amp; isConsenting(r) &amp;&amp; isInSameCycle(r) &amp;&amp; !isCalm(r)) { return false; }
+        if (isRobot(r) &amp;&amp; isConsenting(r) &amp;&amp; isInSameCycle(r) &amp;&amp; isLowerLevel(r) &amp;&amp; !isCalm(r)) { return false; }
     }
     return true;
 }
@@ -420,163 +420,151 @@ mayContinue = false</label>
 	<system>system Robot;
 </system>
 	<queries>
-		<option key="--diagnostic" value="0"/>
+		<option key="--diagnostic" value="1"/>
 		<query>
 			<formula>E[&lt;=1000;100](max: Robot(0).cyclecounter)</formula>
 			<comment>How many cycles in total does robot 0 go through before consensus is reached.
 
 Results:
 For 7 robots with random preferences in a fully connected graphs. [&lt;=1000;5000] ≈ 2 (as expected)</comment>
-			<result outcome="success" type="quantity" value="14.1 ± 1.42094 (95% CI)" timestamp="2025-04-29 12:30:13 +0200">
-				<details>14.1 ± 1.42094 (95% CI)</details>
+			<result outcome="success" type="quantity" value="12.55 ± 1.35793 (95% CI)" timestamp="2025-04-29 12:33:16 +0200">
+				<option key="--diagnostic" value="0"/>
+				<details>12.55 ± 1.35793 (95% CI)</details>
 				<plot title="Probability Density Distribution" xaxis="max: Robot[0].cyclecounter" yaxis="probability density">
 					<series title="density" type="b(3.000000)" color="0x0000ff" encoding="csv">3.0,0.02666666666666667
-6.0,0.056666666666666664
-9.0,0.06333333333333334
-12.0,0.043333333333333335
-15.0,0.04666666666666667
-18.0,0.023333333333333334
-21.0,0.04
-24.0,0.02
-27.0,0.0
-30.0,0.006666666666666667
-33.0,0.0
-36.0,0.006666666666666667
+6.0,0.08666666666666667
+9.0,0.056666666666666664
+12.0,0.07
+15.0,0.03333333333333333
+18.0,0.01
+21.0,0.023333333333333334
+24.0,0.013333333333333334
+27.0,0.006666666666666667
+30.0,0.0
+33.0,0.006666666666666667
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
-14.1,0.06333333333333334
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">12.55,0.0
+12.55,0.08666666666666667
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=11
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 36]
-Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+Span of displayed sample: [3, 34]
+Mean estimate of displayed sample: 12.55 ± 1.358 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Distribution" xaxis="max: Robot[0].cyclecounter" yaxis="probability">
 					<series title="probability" type="b(3.000000)" color="0x0000ff" encoding="csv">3.0,0.08
-6.0,0.17
-9.0,0.19
-12.0,0.13
-15.0,0.14
-18.0,0.07
-21.0,0.12
-24.0,0.06
-27.0,0.0
-30.0,0.02
-33.0,0.0
-36.0,0.02
+6.0,0.26
+9.0,0.17
+12.0,0.21
+15.0,0.1
+18.0,0.03
+21.0,0.07
+24.0,0.04
+27.0,0.02
+30.0,0.0
+33.0,0.02
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
-14.1,0.19
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">12.55,0.0
+12.55,0.26
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=11
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 36]
-Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+Span of displayed sample: [3, 34]
+Mean estimate of displayed sample: 12.55 ± 1.358 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Distribution" xaxis="max: Robot[0].cyclecounter" yaxis="probability">
 					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
 6.0,0.08
-9.0,0.25
-12.0,0.44
-15.0,0.57
-18.0,0.71
-21.0,0.78
-24.0,0.9
+9.0,0.34
+12.0,0.51
+15.0,0.72
+18.0,0.82
+21.0,0.85
+24.0,0.92
 27.0,0.96
-30.0,0.96
+30.0,0.98
 33.0,0.98
-36.0,0.98
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
-14.1,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">12.55,0.0
+12.55,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=11
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 36]
-Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+Span of displayed sample: [3, 34]
+Mean estimate of displayed sample: 12.55 ± 1.358 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Confidence Intervals" xaxis="max: Robot[0].cyclecounter" yaxis="probability">
 					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">3.0,0.03621669264517642
 6.0,0.15155763586442098
-9.0,0.34655249575880825
-12.0,0.5428125029366824
-15.0,0.6686089833686168
-18.0,0.7964258107492681
-21.0,0.8566964232501856
-24.0,0.9509953107785141
+9.0,0.4415332677509589
+12.0,0.6113558348383622
+15.0,0.8052063725088185
+18.0,0.8896887708467395
+21.0,0.9135456143583515
+24.0,0.9648284374818372
 27.0,0.9889955060138118
-30.0,0.9889955060138118
+30.0,0.9975686631760574
 33.0,0.9975686631760574
-36.0,0.9975686631760574
 					</series>
 					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">3.0,0.0
 6.0,0.03517156251816281
-9.0,0.16877973809934185
-12.0,0.3408360237234583
-15.0,0.4671337383248463
-18.0,0.6107340410925516
-21.0,0.6860803462136822
-24.0,0.8237774022599773
+9.0,0.2482235015448442
+12.0,0.4080363291554537
+15.0,0.6213329952827324
+18.0,0.7305229140331881
+21.0,0.7646924998510451
+24.0,0.848442364135579
 27.0,0.9007428432873401
-30.0,0.9007428432873401
+30.0,0.9296160675289299
 33.0,0.9296160675289299
-36.0,0.9296160675289299
 					</series>
 					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
 6.0,0.08
-9.0,0.25
-12.0,0.44
-15.0,0.57
-18.0,0.71
-21.0,0.78
-24.0,0.9
+9.0,0.34
+12.0,0.51
+15.0,0.72
+18.0,0.82
+21.0,0.85
+24.0,0.92
 27.0,0.96
-30.0,0.96
+30.0,0.98
 33.0,0.98
-36.0,0.98
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
-14.1,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">12.55,0.0
+12.55,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=11
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 36]
-Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+Span of displayed sample: [3, 34]
+Mean estimate of displayed sample: 12.55 ± 1.358 (95% CI)</comment>
 				</plot>
 				<plot title="Frequency Histogram" xaxis="max: Robot[0].cyclecounter" yaxis="count">
 					<series title="count" type="b(3.000000)" color="0x0000ff" encoding="csv">3.0,8.0
-6.0,17.0
-9.0,19.0
-12.0,13.0
-15.0,14.0
-18.0,7.0
-21.0,12.0
-24.0,6.0
-27.0,0.0
-30.0,2.0
-33.0,0.0
-36.0,2.0
+6.0,26.0
+9.0,17.0
+12.0,21.0
+15.0,10.0
+18.0,3.0
+21.0,7.0
+24.0,4.0
+27.0,2.0
+30.0,0.0
+33.0,2.0
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">14.1,0.0
-14.1,19.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">12.55,0.0
+12.55,26.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=12
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=3, bucket count=11
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 36]
-Mean estimate of displayed sample: 14.1 ± 1.421 (95% CI)</comment>
+Span of displayed sample: [3, 34]
+Mean estimate of displayed sample: 12.55 ± 1.358 (95% CI)</comment>
 				</plot>
 			</result>
 		</query>
 		<query>
 			<formula>Pr[&lt;=1000](&lt;&gt; allSameCycleAndDone) &gt;= 0.98</formula>
 			<comment/>
-			<result outcome="failure" type="quality" timestamp="2025-04-29 12:31:33 +0200">
-				<option key="--diagnostic" value="0"/>
-			</result>
-		</query>
-		<query>
-			<formula/>
-			<comment/>
+			<option key="--diagnostic" value="1"/>
 		</query>
 		<query>
 			<formula/>
