@@ -1,0 +1,1281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>//// ================================================
+//// Network
+
+// Maximally connected network
+
+/*
+const int R = 7;                       // Number of robots
+const int Q = 4;                       // Number of choices
+const int NN = 6;                      // Max number of neighbors
+const double empirical = 0.0;
+double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
+const int SEEDNUM = 0;
+
+bool C[R][R] = {{false, true, true, true, true, true, true},
+               {true, false, true, true, true, true, true},
+               {true, true, false, true, true, true, true},
+               {true, true, true, false, true, true, true},
+               {true, true, true, true, false, true, true},
+               {true, true, true, true, true, false, true},
+               {true, true, true, true, true, true, false}};
+*/
+
+// Test network - medium size
+/*
+const int Q = 10;
+const int R = 10;
+const int NN = 4;
+const double empirical = 0.0;
+double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
+const int SEEDNUM = 0;
+bool C[R][R] = {{false, true, true, true, false, false, false, false, true, false}, {true, false, true, false, false, false, true, true, false, false}, {true, true, false, true, true, false, false, false, false, false}, {true, false, true, false, true, true, false, false, false, false}, {false, false, true, true, false, true, false, false, true, false}, {false, false, false, true, true, false, true, false, false, false}, {false, true, false, false, false, true, false, true, false, true}, {false, true, false, false, false, false, true, false, true, true}, {true, false, false, false, true, false, false, true, false, true}, {false, false, false, false, false, false, true, true, true, false}};
+*/
+
+
+// Minimally connected network of 7
+/*
+const int R = 7;                       // Number of robots
+const int Q = 4;                       // Number of choices
+const int NN = 2;                      // Max number of neighbors
+const double empirical = 0.00;
+double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
+const int SEEDNUM = 0;
+
+bool C[R][R] = {{false, true, false, false, false, false, false},
+               {true, false, true, false, false, false, false},
+               {false, true, false, true, false, false, false},
+               {false, false, true, false, true, false, false},
+               {false, false, false, true, false, true, false},
+               {false, false, false, false, true, false, true},
+               {false, false, false, false, false, true, false}};
+*/
+
+
+// Minimally connected network of 20
+
+const int R = 20;                       // Number of robots
+const int Q = 4;                       // Number of choices
+const int NN = 2;                      // Max number of neighbors
+const double empirical = 0.00;
+double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
+const int SEEDNUM = 0;
+
+bool C[R][R] = {{false, true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+                {true,  false, true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+                {false, true,  false, true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, true,  false, true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, true,  false, true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, true,  false, true,  false, false, false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, true,  false, true,  false, false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, true,  false, true,  false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, true,  false, true,  false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, true,  false, true,  false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, true,  false, true,  false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, true,  false, true,  false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false, true,  false, true,  false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false, false, true,  false, true,  false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false, true,  false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false, true,  false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false, true,  false, false},
+                {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false, true,  false},
+                {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false, true},
+                {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false}};
+
+
+// Minimally connected network of 10
+/* Edge cases appear here, where one robot ends up not registering that it has a full decision group,
+while every other robot does, and so they end up in the terminal state, and the final robot gets stuck.
+Our theory is that this is because a robot with only one neighbor has bad access to information.
+The problem is easily fixed by adding a check for robots being done. */
+/*
+const int R = 10;                       // Number of robots
+const int Q = 4;                       // Number of choices
+const int NN = 2;                      // Max number of neighbors
+const double empirical = 0.0;
+double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
+const int SEEDNUM = 0;
+
+bool C[R][R] = {{false, true, false, false, false, false, false, false, false, false},
+                {true, false, true, false, false, false, false, false, false, false},
+                {false, true, false, true, false, false, false, false, false, false},
+                {false, false, true, false, true, false, false, false, false, false},
+                {false, false, false, true, false, true, false, false, false, false},
+                {false, false, false, false, true, false, true, false, false, false},
+                {false, false, false, false, false, true, false, true, false, false},
+                {false, false, false, false, false, false, true, false, true, false},
+                {false, false, false, false, false, false, false, true, false, true},
+                {false, false, false, false, false, false, false, false, true, false}};
+
+*/
+
+// Circular network of 10
+/* The edge cases described (2025-04-30) do not appear.
+This supports our theory that the edge cases only appear for robots with just one neighbor.
+*/
+/*
+const int R = 10;                       // Number of robots
+const int Q = 4;                       // Number of choices
+const int NN = 2;                      // Max number of neighbors
+const double empirical = 0.0;
+double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
+const int SEEDNUM = 0;
+
+bool C[R][R] = {{false, true, false, false, false, false, false, false, false, true},
+                {true, false, true, false, false, false, false, false, false, false},
+                {false, true, false, true, false, false, false, false, false, false},
+                {false, false, true, false, true, false, false, false, false, false},
+                {false, false, false, true, false, true, false, false, false, false},
+                {false, false, false, false, true, false, true, false, false, false},
+                {false, false, false, false, false, true, false, true, false, false},
+                {false, false, false, false, false, false, true, false, true, false},
+                {false, false, false, false, false, false, false, true, false, true},
+                {true, false, false, false, false, false, false, false, true, false}};
+*/
+
+// Large random graph similar to paper
+/*
+const int Q = 10;
+const int R = 30;
+const int NN = 6;
+const double empirical = 0.0;
+double SEEDP[Q] = {0.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1};
+const int SEEDNUM = 2;
+
+bool C[R][R] = {{false, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, true, false}, {true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, true, false, true, false, true, false, false, false, false, false, false, false, false, false, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false}, {false, false, true, false, true, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, true, false, true, false, false, false, false, true, true, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, true, false, true, false, true, true, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, true, false, true, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, true, false, true, false, true, true, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {true, false, false, true, false, false, false, true, false, true, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false}, {true, false, false, false, false, true, false, false, true, false, true, true, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, true, true, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, true, false, true, true, false, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, true, false, true, false, false, true, false, true, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false}, {false, true, false, false, true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false}, {false, false, false, false, false, false, true, false, false, true, false, false, false, true, false, true, false, false, false, false, true, false, false, false, true, false, false, false, false, false}, {false, true, true, true, false, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false}, {false, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, true, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, true, false, true, false, false, false, true, false, false}, {false, false, false, false, false, false, false, false, true, false, false, false, true, false, true, false, false, false, true, true, false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, true, true, false, true, true, false, false, false, false, false, false}, {true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, false, false, false, true, false, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, true, true, true, false, true}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, false, true, false}, {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, false, true}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, false, true, false}, {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true, false}};
+*/
+
+//// ================================================
+//// Constants and type definitions
+
+typedef int[0,NN-1] neighbor;          // The set of possible neighbor indexes
+typedef int[-1,NN-1] optionalNeighbor; // The set of possible neighbor indexes, -1 denoting null
+typedef int[0,Q-1] choice;             // The set of choice indexes
+typedef int[-1,Q-1] optionalChoice;    // The set of choice indexes
+typedef int[0,R-1] robot;              // The set of robot ids
+typedef int[-1,R-1] optionalRobot;     // The set of robot ids, -1 denoting null
+typedef int[0,R+1] levels;
+typedef int[0,2] timestamp;            // Synchronization following rock-paper-scissors logic ( 0 &lt; 1 &lt; 2 &lt; 0 )
+
+
+
+//// ================================================
+//// Robot state
+
+/* Most state is kept in global variables. 
+However, a robot only ever accesses the state of its neighbors. 
+In this we abstract away the specific communication protocal, while maintaining the requirement that robots have no global knowledge. */
+
+
+/* The public decision of each robot. Is updated (along P), after publicP and ND but before any neighbor starts recalculating D */
+choice decision[R];
+
+/*The decision group of each robot - true means the robot of that ID is in the same group. Is continuously updated while in the calculateDsize state*/
+bool D[R][R];
+
+/* The public preferences of each robot - the preferences are only updated simultaneously with ND */
+
+double publicP[R][Q];
+
+/* The public size of the consensus group of each robot. 
+Is updated atomically, after having calculated D.
+The paper calls this the consensus group, we call it the [D]ecision group 
+This is to phonetically align the use of C and D for neighbors (connected robots) and consenting (same decision) respectively.*/
+int[0,R] ND[R];
+int[0,R] publicND[R];
+
+// Locking state
+timestamp cycle[R];         // Used to synchronize cyclus.
+levels level[R];            // Synchronization while calculating D.
+
+//// =================================================
+//// Functions
+
+// Timestamps
+
+// Returns true if the timestamp of robot a is behind or at equal to that of robot b. False if a is in front.
+bool compareTimestamps(timestamp a, timestamp b) {
+    if (a == b) return true;
+    if ((a + 1) % 3 == b) return true;
+    return false;
+}
+
+// Populate array with random values summing to 1 (PMF)
+void initP(double &amp;P[Q]){
+    double rands[Q];
+    double ssum = 0;
+    for (i : choice) {
+        double val = random(1);
+        rands[i] = val;
+        ssum = ssum + val;
+    }
+    for (i : choice) {
+        P[i] = rands[i] / ssum;
+    }
+}
+
+// Count the number of true values in array
+int[0,R] count(bool &amp;A[R]){
+    return sum (i : robot) A[i] == true;
+}
+
+bool isSubsetOf(bool &amp;A[R], bool &amp;B[R]) {
+    return forall (r : robot) A[r] imply B[r];
+}
+
+// Get the index of a highest value
+choice maxIndex(double &amp;P[Q]){
+    choice maxI = 0;
+    double max = 0;
+    for (i : choice){
+        if (P[i] &gt; max) {
+            max = P[i];
+            maxI = i;
+        }
+    }
+    return maxI;
+}
+
+// Get next true value of boolean array A *after* index i.
+// Returns -1 if there is no next value
+optionalRobot getNextTrue(int i, bool &amp;A[R]){
+    while (i &lt; R-1) {
+        i++;
+        if (A[i]) return i;
+        
+    }
+    return -1;
+}
+
+//// ================================================
+//// Meta
+
+// Return true if all values are equal. Used for verification
+bool allSameTimestamp(timestamp &amp;A[R]){
+    timestamp comparison = A[0];
+    return forall (i : int[1,R-1]) A[i] == comparison;
+}
+
+// Have a robot finished
+bool done[R];
+bool allDone = false;
+bool sameCycle = false;
+clock x = 0;
+int cyclecounter;
+
+///===================================================
+///Used for dfs:
+
+///I don't think this will be necessary***
+//Array holding distributions of preferences (a robot should only access its own pref).
+//int leadingPrefs[R];
+</declaration>
+	<template>
+		<name>Robot</name>
+		<parameter>robot id</parameter>
+		<declaration>//// =====================================================
+//// State
+
+optionalRobot neighbors[NN];           // Inverted index of neighbors, index 0 to count(C)-1 contains index of true values in C. -1 for empty slots.
+bool mayContinue;                      // Guard and synchronization variable - is updated with compareCycle() and compareLevels()
+double P[Q];                           // Preferences as a PMF over all choices in Q.
+
+choice s[Q];                           // s(1) shows the rank of choice 1 if choices were sorted according to this robots preferences.
+double divergence;    // The max total disagreement between this robot and its neighbors.
+
+//// =====================================================
+//// Methods
+// Functions that are simplified by having access to state
+
+    //// Utility
+
+bool isInSameCycle(robot r)      { return cycle[r] == cycle[id]; }
+bool isConsenting(robot r)       { return decision[r] == decision[id]; }
+bool isRobot(optionalRobot r)    { return r != -1; }
+bool isLowerLevel(robot r)       { return level[r] &lt; level[id]; }
+bool isDone(robot r)             { return done[r]; }
+
+void incrementLevel()            { level[id] = level[id] + 1; }
+
+/**Increment cycle by one and reset lower synchronization variables*/
+void incrementCycle()            { 
+    cycle[id] = (cycle[id] + 1) % 3; 
+    cyclecounter++;
+}
+
+
+    //// Synchronization methods
+
+/**Returns true if the all neighbors are on the same as self.*/
+bool compareCycle() {
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (!isRobot(r)) {return true; } // All neighbors checked
+        if (!isInSameCycle(r)) { return false; }
+    }
+    return true;
+
+}
+
+/**Returns true if no consenting neighbor is behind this robot in updating their D array.*/
+/* This ensures that the robot does not ask a neighbor twice before that neighbor has a chance to update their values.
+A neighbor can never be in an earlier cycle than this robot when compareLevels() is called.
+This is because compareLevelsConsenting is only called in state `FindingDecisionGroup`.
+Cycles are only incremented when entering state `AwaitingNeighbors`, and `AwaitingNeighbors` can only be exited when all neighbors are in the same or next cycle*/
+bool noConNeighBehind() {
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (!isRobot(r)) {return true; } // All neighbors checked
+        if (isConsenting(r) &amp;&amp; isInSameCycle(r) &amp;&amp; isLowerLevel(r)) {  return false; }
+    }
+    return true;
+}
+
+/**Returns true if every neighbor has updated their preference.*/
+/* This ensures that the robot does not start calculating their Decision groups based on outdated information.
+A neighbor can never be in an earlier cycle than this robot when compareLevels() is called.
+This is because compareLevels is only called in state `PreferencesUpdated`.
+Cycles are only incremented when entering state `AwaitingNeighbors`, and `AwaitingNeighbors` can only be exited when all neighbors are in the same or next cycle*/
+bool noNeighBehind() {
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (!isRobot(r)) {return true; } // All neighbors checked
+        if (isInSameCycle(r) &amp;&amp; isLowerLevel(r)) {  return false; }
+    }
+    return true;
+}
+
+    //// Updating and calculating preferences (P)
+
+void sortPreferences(){
+    bool mask[Q];
+    for (c : choice) { mask[c] = true;}
+    for (c : choice) {
+        double maxV;
+        choice maxI;
+        for (d : choice) {
+            if (mask[d] &amp;&amp; P[d] &gt; maxV) { 
+                maxV = P[d]; 
+                maxI = d;
+            }
+        }
+        mask[maxI] = false;
+        s[maxI] = c;
+    }
+    return;
+}
+
+bool isLocallyConverged() {
+    double max = 0;
+    double temp;
+    int[0,R] r;
+    int[0,R] t;
+    ///new injection with alternative function
+    //if (!isSubsetOf(C[id], D[id])){ return false; }
+    if (!allAgree()){ return false; }
+    for (r = 0; r &lt; R; r++) {
+        for (t = r+1; t &lt; R; t++) {
+            temp = 0;
+            for (c : choice) {
+                temp = temp + fabs(publicP[r][c] - publicP[t][c]);
+            }
+            if (temp &gt; max) { max = temp; }
+        }
+    }
+    divergence = max;
+    return max &lt; empirical;
+}
+
+///==========
+///made as alternative to using D-array for finding agreeing neighbours
+bool allAgree(){
+optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (isRobot(r) &amp;&amp; !isConsenting(r)) {  return false; }
+    }
+    return true;
+}
+///===========
+
+double L(choice rank) {
+    const double n = Q - 1;
+    double rankF = rank;                                              // An int between 0 &amp; n, smaller should give higher result
+    double Ll = (1.0 / n+1.0) * pow((divergence / empirical), 0.3);   // A number between 0 &amp; 1/Q
+    double Lu = (2.0 / n+1.0) - Ll;                                   // A number between 1/Q &amp; 2/Q
+    double result = (Ll * (rankF / n)) + (Lu * ((n - rank) / n));    
+    return result;
+}
+
+void accelerateConvergence() {
+    double psum = 0.0;
+    sortPreferences();
+    for (c : choice) {
+        P[c] = P[c] * L(s[c]);
+        psum = psum + P[c];
+    }
+    for (c : choice) {
+        P[c] = (P[c] / psum);
+    }
+
+}
+
+/**Updates the preferences of this robot according to the equation given in (Liu &amp; Lee, 2020)*/
+/* Uses the last coherent state of each neighbor.*/
+void updateP() {
+    double sumP[Q];    // The sum of all neighbor's preference value for each choice (including self)
+    int sumND;         // The total size of all neighbor's decision groups (including self)
+    optionalRobot r;
+
+    // First add yourself
+    for (c : choice) {
+        sumP[c] = sumP[c] + publicND[id] * publicP[id][c];
+    }
+    sumND += publicND[id];
+
+    // Then add the each neighbor
+    for (n : neighbor) {
+        r = neighbors[n];
+        if ( isRobot(r) ) {
+            for (c : choice) {
+                sumP[c] = sumP[c] + publicND[r] * publicP[r][c];
+            }
+            sumND += publicND[r];
+        }
+    }
+
+    // Normalize
+    for (c : choice) { P[c] = sumP[c] / sumND; } 
+    
+    // Determine local convergence
+    if (empirical &gt; 0 &amp;&amp; isLocallyConverged()) {
+        accelerateConvergence();
+    }
+}
+
+    //// Calculating consensus / decision group (D)
+
+/** Add every robot to the decision group (D) of this robot that are present
+in the decision group of any neighbors with the same decision as this. s*/
+void syncWithConsentingNeighbors() {
+    optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (!isRobot(r)) {return; } // All neighbors checked
+        if (isConsenting(r)) {
+            for (s : robot) {
+                D[id][s] = D[r][s] || D[id][s];     // Union operation
+            }
+        }
+    }
+}
+
+
+    //// Initializations
+
+// Resets the D array. 
+void resetD() {
+    for (r : robot) { D[id][r] = false; }
+    D[id][id] = true;                      // A robot always agrees with itself
+    ND[id] = 1;
+}
+
+// Create inverted Index of neighbors (neighbors array)
+void initNeighbors() {
+    optionalRobot nextNeighbor;
+    nextNeighbor = getNextTrue(-1, C[id]);                    // Find first neighboring robot
+
+    for (n : neighbor) {
+        if (isRobot(nextNeighbor)) {
+            neighbors[n] = nextNeighbor;                  // Save neighbor in neighbors
+            nextNeighbor = getNextTrue(nextNeighbor, C[id]);  // Find next neighboring robot
+        } else {
+            neighbors[n] = -1;                            // If there are no more neighbors
+        }
+    }
+}
+
+// Initialize a robot with random preferences.
+void initialize() {
+    initP(P);
+    decision[id] = maxIndex(P);
+    initNeighbors();
+    cycle[id] = 0;
+    resetD();
+    level[id] = 1;
+    // Meta values
+    cyclecounter = 0;
+    allDone = false;
+    done[id] = false;
+    x = 0;
+    sameCycle = false;
+}
+
+// Initialize a robot with random preferences.
+void initializeSeeding() {
+    if (id &lt; SEEDNUM) { P = SEEDP;}
+    else { initP(P); }
+    decision[id] = maxIndex(P);
+    initNeighbors();
+    cycle[id] = 0;
+    resetD();
+    level[id] = 1;
+    // Meta values
+    cyclecounter = 0;
+    allDone = false;
+    done[id] = false;
+    x = 0;
+    sameCycle = false;
+}
+
+//--------------------------------------------------------------------------------------------------------------
+////Depth first search stuff
+
+//Depth first search for a single robot
+//The robot has its own stack that it uses for the traversal
+//For now the structure of neighbours in the graph used for traversal is
+//put in global decarations as two-dimensional boolean array
+
+//Might change capacities
+
+
+
+//dummy value for testing
+int temp;
+////array for dfs
+bool marked[R];
+
+//fields for the stack
+int list[R+1];
+int len=0;
+
+
+
+//----------------------------
+//// Put an element at the top of the stack
+//----------------------------
+void push(int element)
+{
+        list[len++] = element;
+}
+
+//----------------------------
+//// Remove the top of the stack and return it
+//----------------------------
+int pop()
+{
+        return list[--len];
+}
+
+//----------------------------
+//// Returns the top element of the stack
+//----------------------------
+int front()
+{
+   return list[len - 1];
+}
+
+//----------------------------
+//// Returns the bottom element of the stack
+//----------------------------
+int tail()
+{
+   return list[0];
+}
+
+bool isEmpty(){
+    return len == 0;
+}
+
+//----------------------------
+//// Empties stack
+//----------------------------
+void reset_stack()
+{
+    len = 0;
+}
+
+//----------------------------
+////Performs Depth first search
+//----------------------------
+int dfs() 
+{    
+    //variable for size of connected graph from the robot
+    int groupSize = 0;
+
+    //the current node in the traversal
+    int current = id;
+
+    //value for next node to check (set to dummy value)
+    int next = -1;
+
+    //the robot's stack is reset
+    reset_stack();
+
+    //source node pushed to stack
+    push(current);
+
+    //marked-array reset
+    for(i : int[0,R-1]){
+        marked[i] = false;
+    }
+
+    //until stack is empty, keep popping nodes, increment graph-size, and put neighbours on stack
+    //bonus: only explore if same leading preference as oneself
+    while(!(isEmpty())) {
+        current = pop();
+        if(!marked[current]&amp;&amp;decision[current]==decision[id]) {
+            marked[current] = true;
+            groupSize++;
+            for(i : int[0,R-1]) {
+                next = C[current][i];
+                if(next) { 
+                    push(i);
+                }
+            }
+        }
+    }
+
+    //number of traversed nodes (incl. source) returned
+    return groupSize;
+}
+
+
+
+</declaration>
+		<location id="id0" x="-280" y="-289">
+			<name x="-263" y="-306">Initial</name>
+			<label kind="exponentialrate" x="-306" y="-297">1</label>
+			<urgent/>
+		</location>
+		<location id="id1" x="-178" y="-212">
+			<name x="-144" y="-221">PreferencesUpdated</name>
+			<label kind="exponentialrate" x="-178" y="-221">1</label>
+		</location>
+		<location id="id2" x="187" y="-85">
+			<name x="204" y="-110">FindingDecisionGroup</name>
+			<label kind="exponentialrate" x="187" y="-93">1</label>
+		</location>
+		<location id="id3" x="187" y="-331">
+			<name x="204" y="-357">AwaitingNeighbors</name>
+			<label kind="exponentialrate" x="187" y="-340">1</label>
+		</location>
+		<location id="id4" x="756" y="-331">
+			<name x="746" y="-365">Terminal</name>
+			<label kind="exponentialrate" x="748" y="-340">1</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id5">
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-59" y="-68">!mayContinue</label>
+			<label kind="assignment" x="-59" y="-42">publicND[id] = dfs(),
+mayContinue = true</label>
+			<nail x="42" y="-85"/>
+			<nail x="42" y="34"/>
+			<nail x="187" y="34"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-255" y="-195">!mayContinue</label>
+			<label kind="assignment" x="-357" y="-178">mayContinue = noNeighBehind()</label>
+			<nail x="-238" y="-238"/>
+			<nail x="-238" y="-187"/>
+		</transition>
+		<transition id="id7">
+			<source ref="id3"/>
+			<target ref="id4"/>
+			<label kind="guard" x="408" y="-348">publicND[id] == R</label>
+			<label kind="assignment" x="408" y="-331">done[id] = true,
+allDone = count(done) == R ? 1 : 0,
+sameCycle = allSameTimestamp(cycle)</label>
+			<label kind="comments" x="408" y="-272">These updates are only for verification (SMC)</label>
+		</transition>
+		<transition id="id8">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="102" y="-416">!mayContinue &amp;&amp; publicND[id] != R</label>
+			<label kind="assignment" x="110" y="-399">mayContinue = compareCycle()</label>
+			<nail x="204" y="-374"/>
+			<nail x="170" y="-374"/>
+		</transition>
+		<transition id="id9">
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-136" y="-399">mayContinue &amp;&amp; publicND[id] != R</label>
+			<label kind="assignment" x="-136" y="-382">updateP(),
+decision[id] = maxIndex(P),
+resetD(),
+level[id] = 1,
+mayContinue = false</label>
+		</transition>
+		<transition id="id10">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="195" y="-238">mayContinue</label>
+			<label kind="assignment" x="195" y="-221">publicP[id] = P,
+incrementCycle()</label>
+			<nail x="187" y="-102"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="8" y="-178">mayContinue</label>
+			<label kind="assignment" x="8" y="-161">mayContinue = false</label>
+		</transition>
+		<transition id="id12">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="-255" y="-289">initializeSeeding()</label>
+		</transition>
+	</template>
+	<system>system Robot;
+</system>
+	<queries>
+		<option key="--diagnostic" value="-1"/>
+		<query>
+			<formula>E[&lt;=10000; 100](max: cyclecounter / R)</formula>
+			<comment>How many cycles in total does robot 0 go through before consensus is reached.
+
+Results:
+For 7 robots with random preferences in a fully connected graphs. [&lt;=1000;5000] ≈ 2 (as expected)</comment>
+			<result outcome="success" type="quantity" value="6.39 ± 0.512241 (95% CI)" timestamp="2025-05-09 15:39:58 +0200">
+				<option key="--diagnostic" value="-1"/>
+				<details>6.39 ± 0.512241 (95% CI)</details>
+				<plot title="Probability Density Distribution" xaxis="max: cyclecounter / R" yaxis="probability density">
+					<series title="density" type="b(1.000000)" color="0x0000ff" encoding="csv">3.0,0.01
+4.0,0.16
+5.0,0.3
+6.0,0.2
+7.0,0.14
+8.0,0.05
+9.0,0.04
+10.0,0.01
+11.0,0.02
+12.0,0.02
+13.0,0.02
+14.0,0.01
+15.0,0.01
+16.0,0.0
+17.0,0.01
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.39,0.0
+6.39,0.3
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=15
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 17]
+Mean estimate of displayed sample: 6.39 ± 0.5122 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Distribution" xaxis="max: cyclecounter / R" yaxis="probability">
+					<series title="probability" type="b(1.000000)" color="0x0000ff" encoding="csv">3.0,0.01
+4.0,0.16
+5.0,0.3
+6.0,0.2
+7.0,0.14
+8.0,0.05
+9.0,0.04
+10.0,0.01
+11.0,0.02
+12.0,0.02
+13.0,0.02
+14.0,0.01
+15.0,0.01
+16.0,0.0
+17.0,0.01
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.39,0.0
+6.39,0.3
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=15
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 17]
+Mean estimate of displayed sample: 6.39 ± 0.5122 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Distribution" xaxis="max: cyclecounter / R" yaxis="probability">
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
+4.0,0.01
+5.0,0.17
+6.0,0.47
+7.0,0.67
+8.0,0.81
+9.0,0.86
+10.0,0.9
+11.0,0.91
+12.0,0.93
+13.0,0.95
+14.0,0.97
+15.0,0.98
+16.0,0.99
+17.0,0.99
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.39,0.0
+6.39,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=15
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 17]
+Mean estimate of displayed sample: 6.39 ± 0.5122 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Confidence Intervals" xaxis="max: cyclecounter / R" yaxis="probability">
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">3.0,0.03621669264517642
+4.0,0.05445938539208066
+5.0,0.2581754106321587
+6.0,0.5724185151099549
+7.0,0.7608014653773982
+8.0,0.8815568038674564
+9.0,0.9212945950730342
+10.0,0.9509953107785141
+11.0,0.9580164043716077
+12.0,0.9713947110925613
+13.0,0.9835681208179479
+14.0,0.9937700284616936
+15.0,0.9975686631760574
+16.0,0.9997468539670226
+17.0,0.9997468539670226
+					</series>
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">3.0,0.0
+4.0,2.5314603297742064E-4
+5.0,0.10226491003552826
+6.0,0.3694051641943945
+7.0,0.5688272492224368
+8.0,0.7193020420263875
+9.0,0.7762720186294323
+10.0,0.8237774022599773
+11.0,0.8360177449703647
+12.0,0.8610802715441427
+13.0,0.8871650888945373
+14.0,0.91482394702572
+15.0,0.9296160675289299
+16.0,0.9455406146079194
+17.0,0.9455406146079194
+					</series>
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
+4.0,0.01
+5.0,0.17
+6.0,0.47
+7.0,0.67
+8.0,0.81
+9.0,0.86
+10.0,0.9
+11.0,0.91
+12.0,0.93
+13.0,0.95
+14.0,0.97
+15.0,0.98
+16.0,0.99
+17.0,0.99
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.39,0.0
+6.39,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=15
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 17]
+Mean estimate of displayed sample: 6.39 ± 0.5122 (95% CI)</comment>
+				</plot>
+				<plot title="Frequency Histogram" xaxis="max: cyclecounter / R" yaxis="count">
+					<series title="count" type="b(1.000000)" color="0x0000ff" encoding="csv">3.0,1.0
+4.0,16.0
+5.0,30.0
+6.0,20.0
+7.0,14.0
+8.0,5.0
+9.0,4.0
+10.0,1.0
+11.0,2.0
+12.0,2.0
+13.0,2.0
+14.0,1.0
+15.0,1.0
+16.0,0.0
+17.0,1.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.39,0.0
+6.39,30.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=15
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [3, 17]
+Mean estimate of displayed sample: 6.39 ± 0.5122 (95% CI)</comment>
+				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>E[&lt;=10000; 100](max: x * (allDone ? 0 : 1) )</formula>
+			<comment/>
+			<result outcome="success" type="quantity" value="405.432 ± 43.7268 (95% CI)" timestamp="2025-05-09 15:40:10 +0200">
+				<option key="--diagnostic" value="-1"/>
+				<details>405.432 ± 43.7268 (95% CI)</details>
+				<plot title="Probability Density Distribution" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability density">
+					<series title="density" type="b(125.174916)" color="0x0000ff" encoding="csv">134.7746753699899,0.0019972052488920924
+259.9495917380909,0.002875975558404613
+385.12450810619185,0.001358099569246623
+510.29942447429283,0.001038546729423888
+635.4743408423938,3.195528398227348E-4
+760.6492572104949,1.597764199113674E-4
+885.8241735785957,0.0
+1010.9990899466968,0.0
+1136.1740063147977,0.0
+1261.3489226828988,2.396646298670511E-4
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">405.4320212830582,0.0
+405.4320212830582,0.002875975558404613
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=125.17, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [134.8, 1387]
+Mean estimate of displayed sample: 405.4 ± 43.73 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Distribution" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability">
+					<series title="probability" type="b(125.174916)" color="0x0000ff" encoding="csv">134.7746753699899,0.25
+259.9495917380909,0.36
+385.12450810619185,0.17
+510.29942447429283,0.13
+635.4743408423938,0.04
+760.6492572104949,0.02
+885.8241735785957,0.0
+1010.9990899466968,0.0
+1136.1740063147977,0.0
+1261.3489226828988,0.03
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">405.4320212830582,0.0
+405.4320212830582,0.36
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=125.17, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [134.8, 1387]
+Mean estimate of displayed sample: 405.4 ± 43.73 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Distribution" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability">
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">134.7746753699899,0.0
+259.9495917380909,0.25
+385.12450810619185,0.61
+510.29942447429283,0.78
+635.4743408423938,0.91
+760.6492572104949,0.95
+885.8241735785957,0.97
+1010.9990899466968,0.97
+1136.1740063147977,0.97
+1261.3489226828988,0.97
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">405.4320212830582,0.0
+405.4320212830582,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=125.17, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [134.8, 1387]
+Mean estimate of displayed sample: 405.4 ± 43.73 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Confidence Intervals" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability">
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">134.7746753699899,0.03621669264517642
+259.9495917380909,0.34655249575880825
+385.12450810619185,0.7059895851465829
+510.29942447429283,0.8566964232501856
+635.4743408423938,0.9580164043716077
+760.6492572104949,0.9835681208179479
+885.8241735785957,0.9937700284616936
+1010.9990899466968,0.9937700284616936
+1136.1740063147977,0.9937700284616936
+1261.3489226828988,0.9937700284616936
+					</series>
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">134.7746753699899,0.0
+259.9495917380909,0.16877973809934185
+385.12450810619185,0.5073144796323635
+510.29942447429283,0.6860803462136822
+635.4743408423938,0.8360177449703647
+760.6492572104949,0.8871650888945373
+885.8241735785957,0.91482394702572
+1010.9990899466968,0.91482394702572
+1136.1740063147977,0.91482394702572
+1261.3489226828988,0.91482394702572
+					</series>
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">134.7746753699899,0.0
+259.9495917380909,0.25
+385.12450810619185,0.61
+510.29942447429283,0.78
+635.4743408423938,0.91
+760.6492572104949,0.95
+885.8241735785957,0.97
+1010.9990899466968,0.97
+1136.1740063147977,0.97
+1261.3489226828988,0.97
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">405.4320212830582,0.0
+405.4320212830582,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=125.17, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [134.8, 1387]
+Mean estimate of displayed sample: 405.4 ± 43.73 (95% CI)</comment>
+				</plot>
+				<plot title="Frequency Histogram" xaxis="max: x * (allDone ? 0 : 1)" yaxis="count">
+					<series title="count" type="b(125.174916)" color="0x0000ff" encoding="csv">134.7746753699899,25.0
+259.9495917380909,36.0
+385.12450810619185,17.0
+510.29942447429283,13.0
+635.4743408423938,4.0
+760.6492572104949,2.0
+885.8241735785957,0.0
+1010.9990899466968,0.0
+1136.1740063147977,0.0
+1261.3489226828988,3.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">405.4320212830582,0.0
+405.4320212830582,36.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=125.17, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [134.8, 1387]
+Mean estimate of displayed sample: 405.4 ± 43.73 (95% CI)</comment>
+				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=10000; 100](&lt;&gt; sameCycle &amp;&amp; allDone)</formula>
+			<comment>It would be nice to have the reverse query.
+Within this time, how much time does it take at most to reach this state?
+There should be a few edge cases where a robot takes one more cycle than the others. 
+This is because of unknown interleavings that causes a single robot (seemingly a robot with only one neighbor) 
+to not calculate their decision group size correctly at the first cycle where all robots agree.</comment>
+			<result outcome="success" type="interval" value="≥ 0.963783 (95% CI)" timestamp="2025-05-09 15:40:24 +0200">
+				<option key="--diagnostic" value="-1"/>
+				<details>≥ 0.963783 (95% CI)</details>
+				<plot title="Probability Density Distribution" xaxis="run duration in time" yaxis="probability density">
+					<series title="density" type="b(155.736322)" color="0x0000ff" encoding="csv">122.24576613080782,0.0014768552186495713
+277.9820882127454,0.002054755086816795
+433.71841029468294,0.0016694885080386459
+589.4547323766205,7.705331575562981E-4
+745.1910544585581,2.568443858520994E-4
+900.9273765404957,0.0
+1056.6636986224332,6.421109646302485E-5
+1212.400020704371,6.421109646302485E-5
+1368.1363427863084,0.0
+1523.872664868246,6.421109646302485E-5
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">456.70346461845105,0.0
+456.70346461845105,0.002054755086816795
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=155.74, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [122.2, 1680]
+Mean estimate of displayed sample: 456.7 ± 47.57 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Density Confidence Intervals" xaxis="run duration in time" yaxis="probability density">
+					<series title="upper limit" type="b(155.736322)" color="0xa0a0ff" encoding="csv">122.24576613080782,0.3248587327751031
+277.9820882127454,0.42076686163162264
+433.71841029468294,0.3573120631001035
+589.4547323766205,0.20023568361996882
+745.1910544585581,0.09925715671265992
+900.9273765404957,0.03621669264517642
+1056.6636986224332,0.05445938539208066
+1212.400020704371,0.05445938539208066
+1368.1363427863084,0.03621669264517642
+1523.872664868246,0.05445938539208066
+					</series>
+					<series title="lower limit" type="b(155.736322)" color="0x0000ff" encoding="csv">122.24576613080782,0.1517316113010475
+277.9820882127454,0.230219916761577
+433.71841029468294,0.1773944378676525
+589.4547323766205,0.0635689025611593
+745.1910544585581,0.011004493986188203
+900.9273765404957,0.0
+1056.6636986224332,2.5314603297742064E-4
+1212.400020704371,2.5314603297742064E-4
+1368.1363427863084,0.0
+1523.872664868246,2.5314603297742064E-4
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">456.70346461845105,0.0
+456.70346461845105,0.002701790154067235
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=155.74, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [122.2, 1680]
+Mean estimate of displayed sample: 456.7 ± 47.57 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Distribution" xaxis="run duration in time" yaxis="probability">
+					<series title="probability" type="b(155.736322)" color="0x0000ff" encoding="csv">122.24576613080782,0.23
+277.9820882127454,0.32
+433.71841029468294,0.26
+589.4547323766205,0.12
+745.1910544585581,0.04
+900.9273765404957,0.0
+1056.6636986224332,0.01
+1212.400020704371,0.01
+1368.1363427863084,0.0
+1523.872664868246,0.01
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">456.70346461845105,0.0
+456.70346461845105,0.32
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=155.74, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [122.2, 1680]
+Mean estimate of displayed sample: 456.7 ± 47.57 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
+					<series title="upper limit" type="b(155.736322)" color="0xa0a0ff" encoding="csv">122.24576613080782,0.3248587327751031
+277.9820882127454,0.42076686163162264
+433.71841029468294,0.3573120631001035
+589.4547323766205,0.20023568361996882
+745.1910544585581,0.09925715671265992
+900.9273765404957,0.03621669264517642
+1056.6636986224332,0.05445938539208066
+1212.400020704371,0.05445938539208066
+1368.1363427863084,0.03621669264517642
+1523.872664868246,0.05445938539208066
+					</series>
+					<series title="lower limit" type="b(155.736322)" color="0x0000ff" encoding="csv">122.24576613080782,0.1517316113010475
+277.9820882127454,0.230219916761577
+433.71841029468294,0.1773944378676525
+589.4547323766205,0.0635689025611593
+745.1910544585581,0.011004493986188203
+900.9273765404957,0.0
+1056.6636986224332,2.5314603297742064E-4
+1212.400020704371,2.5314603297742064E-4
+1368.1363427863084,0.0
+1523.872664868246,2.5314603297742064E-4
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">456.70346461845105,0.0
+456.70346461845105,0.42076686163162264
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=155.74, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [122.2, 1680]
+Mean estimate of displayed sample: 456.7 ± 47.57 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Distribution" xaxis="run duration in time" yaxis="probability">
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">122.24576613080782,0.0
+277.9820882127454,0.23
+433.71841029468294,0.55
+589.4547323766205,0.81
+745.1910544585581,0.93
+900.9273765404957,0.97
+1056.6636986224332,0.97
+1212.400020704371,0.98
+1368.1363427863084,0.99
+1523.872664868246,0.99
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">456.70346461845105,0.0
+456.70346461845105,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=155.74, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [122.2, 1680]
+Mean estimate of displayed sample: 456.7 ± 47.57 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">122.24576613080782,0.03621669264517642
+277.9820882127454,0.3248587327751031
+433.71841029468294,0.6496797707603279
+589.4547323766205,0.8815568038674564
+745.1910544585581,0.9713947110925613
+900.9273765404957,0.9937700284616936
+1056.6636986224332,0.9937700284616936
+1212.400020704371,0.9975686631760574
+1368.1363427863084,0.9997468539670226
+1523.872664868246,0.9997468539670226
+					</series>
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">122.24576613080782,0.0
+277.9820882127454,0.1517316113010475
+433.71841029468294,0.447280188773936
+589.4547323766205,0.7193020420263875
+745.1910544585581,0.8610802715441427
+900.9273765404957,0.91482394702572
+1056.6636986224332,0.91482394702572
+1212.400020704371,0.9296160675289299
+1368.1363427863084,0.9455406146079194
+1523.872664868246,0.9455406146079194
+					</series>
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">122.24576613080782,0.0
+277.9820882127454,0.23
+433.71841029468294,0.55
+589.4547323766205,0.81
+745.1910544585581,0.93
+900.9273765404957,0.97
+1056.6636986224332,0.97
+1212.400020704371,0.98
+1368.1363427863084,0.99
+1523.872664868246,0.99
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">456.70346461845105,0.0
+456.70346461845105,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=155.74, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [122.2, 1680]
+Mean estimate of displayed sample: 456.7 ± 47.57 (95% CI)</comment>
+				</plot>
+				<plot title="Frequency Histogram" xaxis="run duration in time" yaxis="count">
+					<series title="count" type="b(155.736322)" color="0x0000ff" encoding="csv">122.24576613080782,23.0
+277.9820882127454,32.0
+433.71841029468294,26.0
+589.4547323766205,12.0
+745.1910544585581,4.0
+900.9273765404957,0.0
+1056.6636986224332,1.0
+1212.400020704371,1.0
+1368.1363427863084,0.0
+1523.872664868246,1.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">456.70346461845105,0.0
+456.70346461845105,32.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=155.74, bucket count=10
+Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [122.2, 1680]
+Mean estimate of displayed sample: 456.7 ± 47.57 (95% CI)</comment>
+				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=10000]([] allDone imply sameCycle) &gt;= 0.98</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-05-09 15:40:43 +0200">
+				<option key="--diagnostic" value="-1"/>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=10000](&lt;&gt; allDone) &gt;= 0.98</formula>
+			<comment/>
+			<option key="--diagnostic" value="-1"/>
+			<result outcome="success" type="quality" timestamp="2025-05-09 15:41:01 +0200">
+				<option key="--diagnostic" value="-1"/>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=10000](&lt;&gt; Robot(0).Terminal) &gt;= 0.98</formula>
+			<comment/>
+			<option key="--diagnostic" value="-1"/>
+			<result outcome="success" type="quality" timestamp="2025-05-09 15:41:20 +0200">
+				<option key="--diagnostic" value="-1"/>
+			</result>
+		</query>
+		<query>
+			<formula>simulate [&lt;=11000; 100] { publicND } : 1 :  !allDone &amp;&amp; (x &gt;= 10000)</formula>
+			<comment>Counterexamples, should fail</comment>
+			<result outcome="failure" type="interval" value="≤ 0.0362167 (95% CI)" timestamp="2025-05-09 15:41:34 +0200">
+				<option key="--diagnostic" value="-1"/>
+				<details>≤ 0.0362167 (95% CI)</details>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=10000; 100](&lt;&gt; allDone &amp;&amp; (decision[0] == 0))</formula>
+			<comment/>
+			<result outcome="failure" type="quantity" value="0.916237 ± 0.0551572 (95% CI)" timestamp="2025-05-09 15:57:14 +0200">
+				<option key="--diagnostic" value="-1"/>
+				<details>0.916237 ± 0.0551572 (95% CI)</details>
+			</result>
+		</query>
+	</queries>
+</nta>
