@@ -4,9 +4,27 @@
 	<declaration>//// ================================================
 //// Network
 
-// Maximally connected network
+
+// Maximally connected network (tiny one of size 3)
 
 /*
+const int R = 3;                       // Number of robots
+const int Q = 3;                       // Number of choices
+const int NN = 2;                      // Max number of neighbors
+const double empirical = 0.0;
+double SEEDP[Q] = {1.0, 0.0, 0.0};
+const int SEEDNUM = 0;
+
+bool C[R][R] = {{false, true, true},
+               {true, false, true},
+               {true, true, false}};
+
+*/
+
+
+// Maximally connected network
+
+
 const int R = 7;                       // Number of robots
 const int Q = 4;                       // Number of choices
 const int NN = 6;                      // Max number of neighbors
@@ -21,7 +39,7 @@ bool C[R][R] = {{false, true, true, true, true, true, true},
                {true, true, true, true, false, true, true},
                {true, true, true, true, true, false, true},
                {true, true, true, true, true, true, false}};
-*/
+
 
 // Test network - medium size
 /*
@@ -55,7 +73,7 @@ bool C[R][R] = {{false, true, false, false, false, false, false},
 
 
 // Minimally connected network of 20
-
+/*
 const int R = 20;                       // Number of robots
 const int Q = 4;                       // Number of choices
 const int NN = 2;                      // Max number of neighbors
@@ -84,6 +102,7 @@ bool C[R][R] = {{false, true,  false, false, false, false, false, false, false, 
                 {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false, true},
                 {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,  false}};
 
+*/
 
 // Minimally connected network of 10
 /* Edge cases appear here, where one robot ends up not registering that it has a full decision group,
@@ -156,7 +175,8 @@ typedef int[0,Q-1] choice;             // The set of choice indexes
 typedef int[-1,Q-1] optionalChoice;    // The set of choice indexes
 typedef int[0,R-1] robot;              // The set of robot ids
 typedef int[-1,R-1] optionalRobot;     // The set of robot ids, -1 denoting null
-typedef int[0,R+1] levels;
+////Not needed in dfs
+//typedef int[0,R+1] levels;
 typedef int[0,2] timestamp;            // Synchronization following rock-paper-scissors logic ( 0 &lt; 1 &lt; 2 &lt; 0 )
 
 
@@ -172,8 +192,9 @@ In this we abstract away the specific communication protocal, while maintaining 
 /* The public decision of each robot. Is updated (along P), after publicP and ND but before any neighbor starts recalculating D */
 choice decision[R];
 
+///Not used in dfs-version for now
 /*The decision group of each robot - true means the robot of that ID is in the same group. Is continuously updated while in the calculateDsize state*/
-bool D[R][R];
+//bool D[R][R];
 
 /* The public preferences of each robot - the preferences are only updated simultaneously with ND */
 
@@ -188,7 +209,8 @@ int[0,R] publicND[R];
 
 // Locking state
 timestamp cycle[R];         // Used to synchronize cyclus.
-levels level[R];            // Synchronization while calculating D.
+////omitted in dfs for now
+//levels level[R];            // Synchronization while calculating D.
 
 //// =================================================
 //// Functions
@@ -221,9 +243,13 @@ int[0,R] count(bool &amp;A[R]){
     return sum (i : robot) A[i] == true;
 }
 
+
+///Omitted from dfs-version
+/*
 bool isSubsetOf(bool &amp;A[R], bool &amp;B[R]) {
     return forall (r : robot) A[r] imply B[r];
 }
+*/
 
 // Get the index of a highest value
 choice maxIndex(double &amp;P[Q]){
@@ -271,12 +297,22 @@ int cyclecounter;
 ///I don't think this will be necessary***
 //Array holding distributions of preferences (a robot should only access its own pref).
 //int leadingPrefs[R];
+bool prefsUpdated[R];
+bool DUpdated[R];
 </declaration>
 	<template>
 		<name>Robot</name>
 		<parameter>robot id</parameter>
 		<declaration>//// =====================================================
 //// State
+
+
+///((((((((((((((((
+///dfs-implementation-related state:
+//bool prefsUpdated;
+
+///))))))))))))))))))
+
 
 optionalRobot neighbors[NN];           // Inverted index of neighbors, index 0 to count(C)-1 contains index of true values in C. -1 for empty slots.
 bool mayContinue;                      // Guard and synchronization variable - is updated with compareCycle() and compareLevels()
@@ -294,10 +330,11 @@ double divergence;    // The max total disagreement between this robot and its n
 bool isInSameCycle(robot r)      { return cycle[r] == cycle[id]; }
 bool isConsenting(robot r)       { return decision[r] == decision[id]; }
 bool isRobot(optionalRobot r)    { return r != -1; }
-bool isLowerLevel(robot r)       { return level[r] &lt; level[id]; }
 bool isDone(robot r)             { return done[r]; }
+////omitted from dfs
+//bool isLowerLevel(robot r)       { return level[r] &lt; level[id]; }
+//void incrementLevel()            { level[id] = level[id] + 1; }
 
-void incrementLevel()            { level[id] = level[id] + 1; }
 
 /**Increment cycle by one and reset lower synchronization variables*/
 void incrementCycle()            { 
@@ -326,16 +363,18 @@ bool compareCycle() {
 A neighbor can never be in an earlier cycle than this robot when compareLevels() is called.
 This is because compareLevelsConsenting is only called in state `FindingDecisionGroup`.
 Cycles are only incremented when entering state `AwaitingNeighbors`, and `AwaitingNeighbors` can only be exited when all neighbors are in the same or next cycle*/
+
 bool noConNeighBehind() {
     optionalRobot r;
 
     for (n : neighbor) {
         r = neighbors[n];
         if (!isRobot(r)) {return true; } // All neighbors checked
-        if (isConsenting(r) &amp;&amp; isInSameCycle(r) &amp;&amp; isLowerLevel(r)) {  return false; }
+        if (isConsenting(r) &amp;&amp; isInSameCycle(r) &amp;&amp; !DUpdated[r]) {  return false; } ///TODO: Seems first clause could be removed?!**
     }
     return true;
 }
+
 
 /**Returns true if every neighbor has updated their preference.*/
 /* This ensures that the robot does not start calculating their Decision groups based on outdated information.
@@ -348,7 +387,9 @@ bool noNeighBehind() {
     for (n : neighbor) {
         r = neighbors[n];
         if (!isRobot(r)) {return true; } // All neighbors checked
-        if (isInSameCycle(r) &amp;&amp; isLowerLevel(r)) {  return false; }
+        ////adjusted for dfs-case
+        //if (isInSameCycle(r) &amp;&amp; isLowerLevel(r)) {  return false; }
+        if (isInSameCycle(r) &amp;&amp; !prefsUpdated[r]) {  return false; } //TODO: fix without risking livelock (handle some in terminal)
     }
     return true;
 }
@@ -373,6 +414,19 @@ void sortPreferences(){
     return;
 }
 
+///==========
+///made as alternative to using D-array for finding agreeing neighbours
+bool localConsensus(){
+optionalRobot r;
+
+    for (n : neighbor) {
+        r = neighbors[n];
+        if (isRobot(r) &amp;&amp; !isConsenting(r)) {  return false; }
+    }
+    return true;
+}
+///===========
+
 bool isLocallyConverged() {
     double max = 0;
     double temp;
@@ -380,7 +434,7 @@ bool isLocallyConverged() {
     int[0,R] t;
     ///new injection with alternative function
     //if (!isSubsetOf(C[id], D[id])){ return false; }
-    if (!allAgree()){ return false; }
+    if (!localConsensus()){ return false; }
     for (r = 0; r &lt; R; r++) {
         for (t = r+1; t &lt; R; t++) {
             temp = 0;
@@ -394,18 +448,6 @@ bool isLocallyConverged() {
     return max &lt; empirical;
 }
 
-///==========
-///made as alternative to using D-array for finding agreeing neighbours
-bool allAgree(){
-optionalRobot r;
-
-    for (n : neighbor) {
-        r = neighbors[n];
-        if (isRobot(r) &amp;&amp; !isConsenting(r)) {  return false; }
-    }
-    return true;
-}
-///===========
 
 double L(choice rank) {
     const double n = Q - 1;
@@ -464,8 +506,10 @@ void updateP() {
 
     //// Calculating consensus / decision group (D)
 
+///Omitted from dfs
 /** Add every robot to the decision group (D) of this robot that are present
 in the decision group of any neighbors with the same decision as this. s*/
+/*
 void syncWithConsentingNeighbors() {
     optionalRobot r;
 
@@ -479,16 +523,17 @@ void syncWithConsentingNeighbors() {
         }
     }
 }
-
+*/
 
     //// Initializations
-
+/*
 // Resets the D array. 
 void resetD() {
     for (r : robot) { D[id][r] = false; }
     D[id][id] = true;                      // A robot always agrees with itself
     ND[id] = 1;
 }
+*/
 
 // Create inverted Index of neighbors (neighbors array)
 void initNeighbors() {
@@ -511,14 +556,18 @@ void initialize() {
     decision[id] = maxIndex(P);
     initNeighbors();
     cycle[id] = 0;
-    resetD();
-    level[id] = 1;
+    ////not needed in dfs for now
+    //resetD();
+    //level[id] = 1;
     // Meta values
     cyclecounter = 0;
     allDone = false;
     done[id] = false;
     x = 0;
     sameCycle = false;
+    ////addition for dfs:
+    mayContinue = true;
+    publicP[id] = P;
 }
 
 // Initialize a robot with random preferences.
@@ -528,14 +577,18 @@ void initializeSeeding() {
     decision[id] = maxIndex(P);
     initNeighbors();
     cycle[id] = 0;
-    resetD();
-    level[id] = 1;
+    ////not needed in dfs for now
+    //resetD();
+    //level[id] = 1;
     // Meta values
     cyclecounter = 0;
     allDone = false;
     done[id] = false;
     x = 0;
     sameCycle = false;
+    ////addition for dfs:
+    mayContinue = true;
+    publicP[id] = P;
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -550,13 +603,11 @@ void initializeSeeding() {
 
 
 
-//dummy value for testing
-int temp;
 ////array for dfs
 bool marked[R];
 
 //fields for the stack
-int list[R+1];
+int list[R*R+1];
 int len=0;
 
 
@@ -566,7 +617,8 @@ int len=0;
 //----------------------------
 void push(int element)
 {
-        list[len++] = element;
+        list[len] = element;
+        len++;
 }
 
 //----------------------------
@@ -639,6 +691,7 @@ int dfs()
             groupSize++;
             for(i : int[0,R-1]) {
                 next = C[current][i];
+                ///&amp;&amp; !marked[next] here?
                 if(next) { 
                     push(i);
                 }
@@ -656,7 +709,7 @@ int dfs()
 		<location id="id0" x="-280" y="-289">
 			<name x="-263" y="-306">Initial</name>
 			<label kind="exponentialrate" x="-306" y="-297">1</label>
-			<urgent/>
+			<committed/>
 		</location>
 		<location id="id1" x="-178" y="-212">
 			<name x="-144" y="-221">PreferencesUpdated</name>
@@ -679,8 +732,9 @@ int dfs()
 			<source ref="id2"/>
 			<target ref="id2"/>
 			<label kind="guard" x="-59" y="-68">!mayContinue</label>
-			<label kind="assignment" x="-59" y="-42">publicND[id] = dfs(),
-mayContinue = true</label>
+			<label kind="assignment" x="-59" y="-42">ND[id] = dfs(),
+mayContinue = true,
+DUpdated[id] = true</label>
 			<nail x="42" y="-85"/>
 			<nail x="42" y="34"/>
 			<nail x="187" y="34"/>
@@ -696,16 +750,17 @@ mayContinue = true</label>
 		<transition id="id7">
 			<source ref="id3"/>
 			<target ref="id4"/>
-			<label kind="guard" x="408" y="-348">publicND[id] == R</label>
-			<label kind="assignment" x="408" y="-331">done[id] = true,
+			<label kind="guard" x="399" y="-339">ND[id] == R</label>
+			<label kind="assignment" x="399" y="-322">done[id] = true,
 allDone = count(done) == R ? 1 : 0,
-sameCycle = allSameTimestamp(cycle)</label>
-			<label kind="comments" x="408" y="-272">These updates are only for verification (SMC)</label>
+sameCycle = allSameTimestamp(cycle),
+prefsUpdated[id]=false</label>
+			<label kind="comments" x="467" y="-229">These updates are only for verification (SMC)</label>
 		</transition>
 		<transition id="id8">
 			<source ref="id3"/>
 			<target ref="id3"/>
-			<label kind="guard" x="102" y="-416">!mayContinue &amp;&amp; publicND[id] != R</label>
+			<label kind="guard" x="102" y="-416">!mayContinue &amp;&amp; ND[id] != R</label>
 			<label kind="assignment" x="110" y="-399">mayContinue = compareCycle()</label>
 			<nail x="204" y="-374"/>
 			<nail x="170" y="-374"/>
@@ -713,19 +768,22 @@ sameCycle = allSameTimestamp(cycle)</label>
 		<transition id="id9">
 			<source ref="id3"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-136" y="-399">mayContinue &amp;&amp; publicND[id] != R</label>
+			<label kind="guard" x="-187" y="-399">mayContinue &amp;&amp; publicND[id] != R</label>
 			<label kind="assignment" x="-136" y="-382">updateP(),
 decision[id] = maxIndex(P),
-resetD(),
-level[id] = 1,
-mayContinue = false</label>
+mayContinue = false,
+prefsUpdated[id] = true,
+DUpdated[id] = false</label>
 		</transition>
 		<transition id="id10">
 			<source ref="id2"/>
 			<target ref="id3"/>
-			<label kind="guard" x="195" y="-238">mayContinue</label>
+			<label kind="guard" x="195" y="-238">mayContinue&amp;&amp;noConNeighBehind()</label>
 			<label kind="assignment" x="195" y="-221">publicP[id] = P,
-incrementCycle()</label>
+publicND[id] = ND[id],
+incrementCycle(),
+prefsUpdated[id] = false,
+mayContinue = false</label>
 			<nail x="187" y="-102"/>
 		</transition>
 		<transition id="id11">
