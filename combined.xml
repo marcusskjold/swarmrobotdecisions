@@ -375,7 +375,7 @@ double L(choice rank, double Ll, double Lu) {
     return result;
 }
 
-void accelerateConvergence(double divergence) {
+void accConvergence(double divergence) {
     double psum = 0.0;
     double Ll, Lu;
     sortPreferences();
@@ -412,7 +412,7 @@ void updateP() {
     double sumP[Q];    // The sum of all neighbor's preference value for each choice (including self)
     int sumND;         // The total size of all neighbor's decision groups (including self)
     optionalRobot r;
-    double divergence;
+    double div;
 
     // First add yourself
     for (c : choice) {
@@ -436,10 +436,10 @@ void updateP() {
 
     // Determine local convergence
     if (EMPIRICAL &gt; 0) {
-        divergence = divergence();
-        if (divergence &lt; EMPIRICAL) {
+        div = divergence();
+        if (div &lt; EMPIRICAL) {
         
-            accelerateConvergence(divergence);
+            accConvergence(div);
         }
     }
 
