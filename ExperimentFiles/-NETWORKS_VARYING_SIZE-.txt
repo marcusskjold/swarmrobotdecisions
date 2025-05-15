@@ -1,8 +1,8 @@
 ---NETWORKS---
 
-//This is a network of 5 robots with 5 options
+//This is a network of 5 robots with 30 options
 const int R = 5;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -33,9 +33,9 @@ bool C[R][R] = {  {false, true, false, false, true, true, false, false, false, f
 //Network dependency: 3.0542635658914725
 //Most important node: 6
 
-//This is a network of 15 robots with 5 options
+//This is a network of 15 robots with 30 options
 const int R = 15;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -57,9 +57,9 @@ bool C[R][R] = {  {false, true, false, false, false, true, false, false, false, 
 //Network dependency: 3.1140625000000015
 //Most important node: 6
 
-//This is a network of 20 robots with 5 options
+//This is a network of 20 robots with 30 options
 const int R = 20;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -86,9 +86,9 @@ bool C[R][R] = {  {false, true, false, false, false, true, true, false, false, f
 //Network dependency: 3.0807860262008715
 //Most important node: 7
 
-//This is a network of 25 robots with 5 options
+//This is a network of 25 robots with 30 options
 const int R = 25;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -120,9 +120,9 @@ bool C[R][R] = {  {false, true, false, false, false, false, true, true, false, f
 //Network dependency: 3.0868614669721506
 //Most important node: 11
 
-//This is a network of 30 robots with 5 options
+//This is a network of 30 robots with 30 options
 const int R = 30;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -159,9 +159,9 @@ bool C[R][R] = {  {false, true, false, false, false, false, true, true, false, f
 //Network dependency: 3.0914932993048816
 //Most important node: 9
 
-//This is a network of 35 robots with 5 options
+//This is a network of 35 robots with 30 options
 const int R = 35;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -203,9 +203,9 @@ bool C[R][R] = {  {false, true, false, false, false, false, false, false, true, 
 //Network dependency: 3.1603728146572894
 //Most important node: 25
 
-//This is a network of 40 robots with 5 options
+//This is a network of 40 robots with 30 options
 const int R = 40;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -252,9 +252,9 @@ bool C[R][R] = {  {false, true, false, false, false, false, false, false, false,
 //Network dependency: 3.0652754773057618
 //Most important node: 22
 
-//This is a network of 45 robots with 5 options
+//This is a network of 45 robots with 30 options
 const int R = 45;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
@@ -306,9 +306,9 @@ bool C[R][R] = {  {false, true, false, false, false, false, false, false, false,
 //Network dependency: 3.141374882858915
 //Most important node: 15
 
-//This is a network of 50 robots with 5 options
+//This is a network of 50 robots with 30 options
 const int R = 50;
-const int Q = 5;
+const int Q = 30;
 const int NN = 6;
 const double empirical = 0.0;
 //Neighbour Matrix
