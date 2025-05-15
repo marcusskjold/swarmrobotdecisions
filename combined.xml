@@ -568,10 +568,7 @@ ND[id] = count(D[id])</label>
 		<option key="--diagnostic" value="-1"/>
 		<query>
 			<formula>E[&lt;=3000; 100](max: cyclecounter / R)</formula>
-			<comment>How many cycles in total does robot 0 go through before consensus is reached.
-
-Results:
-For 7 robots with random preferences in a fully connected graphs. [&lt;=1000;5000] ≈ 2 (as expected)</comment>
+			<comment>How many cycles in total does robot 0 go through before consensus is reached.</comment>
 			<option key="--diagnostic" value="0"/>
 			<result outcome="success" type="quantity" value="2.95 ± 0.0434629 (95% CI)" timestamp="2025-05-15 11:14:34 +0200">
 				<option key="--diagnostic" value="0"/>
@@ -776,11 +773,7 @@ Mean estimate of displayed sample: 47.01 ± 1.585 (95% CI)</comment>
 		</query>
 		<query>
 			<formula>Pr[&lt;=3000; 100](&lt;&gt; allSameCycle() &amp;&amp; allDone)</formula>
-			<comment>It would be nice to have the reverse query.
-Within this time, how much time does it take at most to reach this state?
-There should be a few edge cases where a robot takes one more cycle than the others. 
-This is because of unknown interleavings that causes a single robot (seemingly a robot with only one neighbor) 
-to not calculate their decision group size correctly at the first cycle where all robots agree.</comment>
+			<comment/>
 			<result outcome="success" type="interval" value="≥ 0.963783 (95% CI)" timestamp="2025-05-15 11:14:36 +0200">
 				<option key="--diagnostic" value="-1"/>
 				<details>≥ 0.963783 (95% CI)</details>
