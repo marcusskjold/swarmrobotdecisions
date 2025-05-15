@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>/// Global variable
+
+const int fastLimit = 12;</declaration>
+	<template>
+		<name x="5" y="5">Example</name>
+		<parameter>int id</parameter>
+		<declaration>/// Local variables
+
+clock localTime;
+bool guardValue;
+double timeUsed[2];
+bool wasFast = false;
+
+/// Function
+
+bool checkSpeed(){
+    if(timeUsed[0] + timeUsed[1] &lt; fastLimit) {
+        return true;
+    }
+    return false;
+}</declaration>
+		<location id="id0" x="-680" y="68">
+			<name x="-714" y="34">L_0</name>
+			<label kind="invariant" x="-791" y="85">localTime &lt;=5</label>
+		</location>
+		<location id="id1" x="-332" y="-237">
+			<name x="-342" y="-271">L_1</name>
+			<label kind="invariant" x="-342" y="-220">localTime &lt;= 8</label>
+		</location>
+		<location id="id2" x="-332" y="68">
+			<name x="-324" y="34">L_2</name>
+			<committed/>
+		</location>
+		<location id="id3" x="-331" y="-25">
+			<name x="-348" y="-59">L_3</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="-416" y="0">wasFast = checkSpeed()</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-662" y="-271">localTime &gt;= 6</label>
+			<label kind="assignment" x="-672" y="-229">timeUsed[0] = localTime,
+localTime = 0</label>
+			<nail x="-680" y="-237"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-604" y="68">guardValue&amp;&amp;localTime&gt;=3</label>
+			<label kind="assignment" x="-604" y="94">timeUsed[1] = localTime</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-433" y="-144">!guardValue</label>
+			<label kind="assignment" x="-433" y="-119">guardValue = true</label>
+		</transition>
+	</template>
+	<system>/// Template instantiations
+
+Robot1 = Example(1);
+Robot2 = Example(2);
+
+///Declaration of system
+
+system Robot1, Robot2;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>
