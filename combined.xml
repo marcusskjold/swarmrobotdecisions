@@ -2,7 +2,7 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
 <nta>
 	<declaration>//// ================================================
-//// Network
+//// Network and constants
 
 // Maximally connected network
 
@@ -24,7 +24,7 @@ bool C[R][R] = {{false, true, true, true, true, true, true},
 */
 
 // Test network - medium size
-/*
+
 const int Q = 10;
 const int R = 10;
 const int NN = 4;
@@ -32,7 +32,7 @@ const double EMPIRICAL = 0.0;
 double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 const int SEEDNUM = 3;
 bool C[R][R] = {{false, true, true, true, false, false, false, false, true, false}, {true, false, true, false, false, false, true, true, false, false}, {true, true, false, true, true, false, false, false, false, false}, {true, false, true, false, true, true, false, false, false, false}, {false, false, true, true, false, true, false, false, true, false}, {false, false, false, true, true, false, true, false, false, false}, {false, true, false, false, false, true, false, true, false, true}, {false, true, false, false, false, false, true, false, true, true}, {true, false, false, false, true, false, false, true, false, true}, {false, false, false, false, false, false, true, true, true, false}};
-*/
+
 
 
 // Minimally connected network of 7
@@ -59,7 +59,7 @@ bool C[R][R] = {{false, true, false, false, false, false, false},
 const int R = 20;                       // Number of robots
 const int Q = 4;                       // Number of choices
 const int NN = 2;                      // Max number of neighbors
-const double EMPIRICAL = 0.00;
+const double EMPIRICAL = 100.00;
 double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
 const int SEEDNUM = 0;
 
@@ -86,10 +86,7 @@ bool C[R][R] = {{false, true,  false, false, false, false, false, false, false, 
 */
 
 // Minimally connected network of 10
-/* Edge cases appear here, where one robot ends up not registering that it has a full decision group,
-while every other robot does, and so they end up in the terminal state, and the final robot gets stuck.
-Our theory is that this is because a robot with only one neighbor has bad access to information.
-The problem is easily fixed by adding a check for robots being done. */
+
 /*
 const int R = 10;                       // Number of robots
 const int Q = 4;                       // Number of choices
@@ -116,7 +113,7 @@ bool C[R][R] = {{false, true, false, false, false, false, false, false, false, f
 const int R = 10;                       // Number of robots
 const int Q = 4;                       // Number of choices
 const int NN = 2;                      // Max number of neighbors
-const double EMPIRICAL = 4;
+const double EMPIRICAL = 1000.0;        // A high value here can lead to non-terminating processes
 double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0};
 const int SEEDNUM = 0;
 
@@ -134,20 +131,20 @@ bool C[R][R] = {{false, true, false, false, false, false, false, false, false, t
 
 // Large random graph similar to paper
 
-
+/*
 const int Q = 10;
 const int R = 30;
 const int NN = 6;
-const double EMPIRICAL = 0.0;
+const double EMPIRICAL = 1000.0;
 //double SEEDP[Q] = {0.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1};
 double SEEDP[Q] = {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 const int SEEDNUM = 0;
 
 bool C[R][R] = {{false, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, true, false}, {true, false, true, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, true, false, true, false, true, false, false, false, false, false, false, false, false, false, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false}, {false, false, true, false, true, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, true, false, true, false, false, false, false, true, true, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, true, false, true, false, true, true, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, true, false, true, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, true, false, true, false, true, true, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {true, false, false, true, false, false, false, true, false, true, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false}, {true, false, false, false, false, true, false, false, true, false, true, true, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, true, true, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, true, false, true, true, false, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, true, false, true, false, false, true, false, true, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false}, {false, true, false, false, true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false}, {false, false, false, false, false, false, true, false, false, true, false, false, false, true, false, true, false, false, false, false, true, false, false, false, true, false, false, false, false, false}, {false, true, true, true, false, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false}, {false, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, true, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, true, false, true, false, false, false, true, false, false}, {false, false, false, false, false, false, false, false, true, false, false, false, true, false, true, false, false, false, true, true, false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, true, true, false, true, true, false, false, false, false, false, false}, {true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, false, false, false, true, false, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, true, true, true, false, true}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, false, true, false}, {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, false, true}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, false, true, false}, {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true}, {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true, false}};
-
+*/
 
 //// ================================================
-//// Constants and type definitions
+//// Type definitions
 
 typedef int[0,NN-1] neighbor;          // The set of possible neighbor indexes
 typedef int[-1,NN-1] optionalNeighbor; // The set of possible neighbor indexes, -1 denoting null
@@ -169,10 +166,9 @@ choice decision[R];
 
 /*The decision group of each robot - true means the robot of that ID is in the same group. Is continuously updated while in the calculateDsize state*/
 bool D[R][R];
-double P[R][Q];                           // Preferences as a PMF over all choices in Q.
 
-/* The public preferences of each robot - the preferences are only updated simultaneously with ND */
-double publicP[R][Q];
+double P[R][Q];                           // Preferences as a PMF over all choices in Q.
+double publicP[R][Q];                     /* The public preferences of each robot */
 
 /* The public size of the consensus group of each robot. 
 Is updated atomically, after having calculated D.
@@ -181,8 +177,7 @@ This is to phonetically align the use of C and D for neighbors (connected robots
 int[0,R] ND[R];
 
 // Locking state
-//timestamp cycle[R];         // Used to synchronize cyclus.
-bool cycle[R];
+bool cycle[R];         // Used to synchronize cyclus among neighbors.
 levels level[R];            // Synchronization while calculating D.
 
 //// =================================================
@@ -260,7 +255,9 @@ bool sameCycle = false;
 clock x = 0;
 int cyclecounter;
 double H[R];
-double entropy;</declaration>
+double entropy;
+
+</declaration>
 	<template>
 		<name>Robot</name>
 		<parameter>robot id</parameter>
@@ -268,7 +265,7 @@ double entropy;</declaration>
 //// State
 
 optionalRobot neighbors[NN];           // Inverted index of neighbors, index 0 to count(C)-1 contains index of true values in C. -1 for empty slots.
-choice s[Q];                           // s(1) shows the rank of choice 1 if choices were sorted according to this robots preferences.
+choice s[Q];                           // If locally converged, s(1) shows the rank of choice 1 if choices were sorted according to this robots preferences.
 
 //// =====================================================
 //// Methods
@@ -285,7 +282,7 @@ bool isDone(robot r)             { return done[r]; }
 
     //// Synchronization methods
 
-/**Returns true if the all neighbors are on the same as self.*/
+/**Returns true if the all neighbors are on the same cycle as self.*/
 bool allNeighsSameCycle() {
     optionalRobot r;
 
@@ -392,20 +389,6 @@ void accConvergence(double divergence) {
 
 }
 
-/*
-
-Robot 9
-P(0) = 0.2731587
-L(s[0]) = 0.447916689
-Pnew(0) = 0.1223523405
-
-P(1) = 0.176061
-L(s[1]) = 0.656249923
-Pnew(1) = 0.1155400195
-
-
-*/
-
 /**Updates the preferences of this robot according to the equation given in (Liu &amp; Lee, 2020)*/
 /* Uses the last coherent state of each neighbor.*/
 void updateP() {
@@ -438,7 +421,6 @@ void updateP() {
     if (EMPIRICAL &gt; 0) {
         div = divergence();
         if (div &lt; EMPIRICAL) {
-        
             accConvergence(div);
         }
     }
@@ -489,16 +471,15 @@ void initNeighbors() {
 
 // Initialize a robot with random preferences.
 void initialize() {
-    if (id &lt; SEEDNUM) { P[id] = SEEDP;}
+    if (id &lt; SEEDNUM) { P[id] = SEEDP; }
     else { initP(P[id]); }
     decision[id] = maxIndex(P[id]);
     ND[id] = 1;
     initNeighbors();
-    //cycle[id] = 0;
     cycle[id] = false;
     resetD();
     level[id] = 1;
-    // Meta values
+    // Meta values // Verification
     cyclecounter = 0;
     allDone = false;
     done[id] = false;
@@ -534,9 +515,8 @@ void initialize() {
 			<target ref="id4"/>
 			<label kind="guard" x="212" y="-365">ND[id] == R</label>
 			<label kind="assignment" x="212" y="-348">done[id] = true,
-allDone = count(done) == R?1:0,
-sameCycle = allSameCycle()</label>
-			<label kind="comments" x="212" y="-289">Verification updates</label>
+allDone = count(done) == R?1:0</label>
+			<label kind="comments" x="212" y="-306">Verification updates</label>
 		</transition>
 		<transition id="id6">
 			<source ref="id3"/>
@@ -593,449 +573,407 @@ ND[id] = count(D[id])</label>
 Results:
 For 7 robots with random preferences in a fully connected graphs. [&lt;=1000;5000] ≈ 2 (as expected)</comment>
 			<option key="--diagnostic" value="0"/>
-			<result outcome="success" type="quantity" value="6.32 ± 0.516867 (95% CI)" timestamp="2025-05-13 15:40:43 +0200">
+			<result outcome="success" type="quantity" value="2.95 ± 0.0434629 (95% CI)" timestamp="2025-05-15 11:14:34 +0200">
 				<option key="--diagnostic" value="0"/>
-				<details>6.32 ± 0.516867 (95% CI)</details>
+				<details>2.95 ± 0.0434629 (95% CI)</details>
 				<plot title="Probability Density Distribution" xaxis="max: cyclecounter / R" yaxis="probability density">
-					<series title="density" type="b(2.000000)" color="0x0000ff" encoding="csv">3.0,0.135
-5.0,0.165
-7.0,0.13
-9.0,0.035
-11.0,0.02
-13.0,0.01
-15.0,0.0
-17.0,0.005
+					<series title="density" type="b(1.000000)" color="0x0000ff" encoding="csv">2.0,0.05
+3.0,0.95
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.32,0.0
-6.32,0.165
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.95,0.0
+2.95,0.95
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=2, bucket count=8
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=2
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 18]
-Mean estimate of displayed sample: 6.32 ± 0.5169 (95% CI)</comment>
+Span of displayed sample: [2, 3]
+Mean estimate of displayed sample: 2.95 ± 0.043463 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Distribution" xaxis="max: cyclecounter / R" yaxis="probability">
-					<series title="probability" type="b(2.000000)" color="0x0000ff" encoding="csv">3.0,0.27
-5.0,0.33
-7.0,0.26
-9.0,0.07
-11.0,0.04
-13.0,0.02
-15.0,0.0
-17.0,0.01
+					<series title="probability" type="b(1.000000)" color="0x0000ff" encoding="csv">2.0,0.05
+3.0,0.95
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.32,0.0
-6.32,0.33
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.95,0.0
+2.95,0.95
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=2, bucket count=8
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=2
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 18]
-Mean estimate of displayed sample: 6.32 ± 0.5169 (95% CI)</comment>
+Span of displayed sample: [2, 3]
+Mean estimate of displayed sample: 2.95 ± 0.043463 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Distribution" xaxis="max: cyclecounter / R" yaxis="probability">
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
-5.0,0.27
-7.0,0.6
-9.0,0.86
-11.0,0.93
-13.0,0.97
-15.0,0.99
-17.0,0.99
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">2.0,0.0
+3.0,0.05
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.32,0.0
-6.32,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.95,0.0
+2.95,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=2, bucket count=8
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=2
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 18]
-Mean estimate of displayed sample: 6.32 ± 0.5169 (95% CI)</comment>
+Span of displayed sample: [2, 3]
+Mean estimate of displayed sample: 2.95 ± 0.043463 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Confidence Intervals" xaxis="max: cyclecounter / R" yaxis="probability">
-					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">3.0,0.03621669264517642
-5.0,0.3680162729089749
-7.0,0.6967052312971226
-9.0,0.9212945950730342
-11.0,0.9713947110925613
-13.0,0.9937700284616936
-15.0,0.9997468539670226
-17.0,0.9997468539670226
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">2.0,0.03621669264517642
+3.0,0.11283491110546276
 					</series>
-					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">3.0,0.0
-5.0,0.18606642229074064
-7.0,0.4972091504223348
-9.0,0.7762720186294323
-11.0,0.8610802715441427
-13.0,0.91482394702572
-15.0,0.9455406146079194
-17.0,0.9455406146079194
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">2.0,0.0
+3.0,0.016431879182052158
 					</series>
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">3.0,0.0
-5.0,0.27
-7.0,0.6
-9.0,0.86
-11.0,0.93
-13.0,0.97
-15.0,0.99
-17.0,0.99
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">2.0,0.0
+3.0,0.05
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.32,0.0
-6.32,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.95,0.0
+2.95,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=2, bucket count=8
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=2
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 18]
-Mean estimate of displayed sample: 6.32 ± 0.5169 (95% CI)</comment>
+Span of displayed sample: [2, 3]
+Mean estimate of displayed sample: 2.95 ± 0.043463 (95% CI)</comment>
 				</plot>
 				<plot title="Frequency Histogram" xaxis="max: cyclecounter / R" yaxis="count">
-					<series title="count" type="b(2.000000)" color="0x0000ff" encoding="csv">3.0,27.0
-5.0,33.0
-7.0,26.0
-9.0,7.0
-11.0,4.0
-13.0,2.0
-15.0,0.0
-17.0,1.0
+					<series title="count" type="b(1.000000)" color="0x0000ff" encoding="csv">2.0,5.0
+3.0,95.0
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">6.32,0.0
-6.32,33.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">2.95,0.0
+2.95,95.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=2, bucket count=8
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1, bucket count=2
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [3, 18]
-Mean estimate of displayed sample: 6.32 ± 0.5169 (95% CI)</comment>
+Span of displayed sample: [2, 3]
+Mean estimate of displayed sample: 2.95 ± 0.043463 (95% CI)</comment>
 				</plot>
 			</result>
 		</query>
 		<query>
 			<formula>E[&lt;=3000; 100](max: x * (allDone ? 0 : 1) )</formula>
 			<comment/>
-			<result outcome="success" type="quantity" value="307.488 ± 34.1698 (95% CI)" timestamp="2025-05-13 15:41:16 +0200">
+			<result outcome="success" type="quantity" value="47.0118 ± 1.5851 (95% CI)" timestamp="2025-05-15 11:14:35 +0200">
 				<option key="--diagnostic" value="-1"/>
-				<details>307.488 ± 34.1698 (95% CI)</details>
+				<details>47.0118 ± 1.5851 (95% CI)</details>
 				<plot title="Probability Density Distribution" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability density">
-					<series title="density" type="b(111.938096)" color="0x0000ff" encoding="csv">90.9038954910278,0.0022333772718584138
-202.84199173214012,0.0034840685440991255
-314.7800879732524,0.001786701817486731
-426.7181842143648,7.146807269946924E-4
-538.656280455477,3.573403634973462E-4
-650.5943766965894,1.786701817486731E-4
-762.5324729377018,0.0
-874.470569178814,8.933509087433655E-5
-986.4086654199264,0.0
-1098.3467616610387,8.933509087433655E-5
+					<series title="density" type="b(4.454168)" color="0x0000ff" encoding="csv">20.699255294496158,0.006735264343960778
+25.153423455972955,0.0022450881146535927
+29.60759161744975,0.006735264343960778
+34.06175977892654,0.0044901762293071855
+38.515927940403344,0.035921409834457484
+42.970096101880145,0.060617379095647
+47.42426426335693,0.04714685040772545
+51.87843242483373,0.044901762293071856
+56.332600586310534,0.011225440573267964
+60.78676874778732,0.0044901762293071855
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">307.48768538917415,0.0
-307.48768538917415,0.003484068544099126
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.01180352507594,0.0
+47.01180352507594,0.060617379095647
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=111.94, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4542, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [90.9, 1210]
-Mean estimate of displayed sample: 307.5 ± 34.17 (95% CI)</comment>
+Span of displayed sample: [20.7, 65.24]
+Mean estimate of displayed sample: 47.01 ± 1.585 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Distribution" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability">
-					<series title="probability" type="b(111.938096)" color="0x0000ff" encoding="csv">90.9038954910278,0.25
-202.84199173214012,0.39
-314.7800879732524,0.2
-426.7181842143648,0.08
-538.656280455477,0.04
-650.5943766965894,0.02
-762.5324729377018,0.0
-874.470569178814,0.01
-986.4086654199264,0.0
-1098.3467616610387,0.01
+					<series title="probability" type="b(4.454168)" color="0x0000ff" encoding="csv">20.699255294496158,0.03
+25.153423455972955,0.01
+29.60759161744975,0.03
+34.06175977892654,0.02
+38.515927940403344,0.16
+42.970096101880145,0.27
+47.42426426335693,0.21
+51.87843242483373,0.2
+56.332600586310534,0.05
+60.78676874778732,0.02
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">307.48768538917415,0.0
-307.48768538917415,0.39
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.01180352507594,0.0
+47.01180352507594,0.27
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=111.94, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4542, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [90.9, 1210]
-Mean estimate of displayed sample: 307.5 ± 34.17 (95% CI)</comment>
+Span of displayed sample: [20.7, 65.24]
+Mean estimate of displayed sample: 47.01 ± 1.585 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Distribution" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability">
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">90.9038954910278,0.0
-202.84199173214012,0.25
-314.7800879732524,0.64
-426.7181842143648,0.84
-538.656280455477,0.92
-650.5943766965894,0.96
-762.5324729377018,0.98
-874.470569178814,0.98
-986.4086654199264,0.99
-1098.3467616610387,0.99
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">20.699255294496158,0.0
+25.153423455972955,0.03
+29.60759161744975,0.04
+34.06175977892654,0.07
+38.515927940403344,0.09
+42.970096101880145,0.25
+47.42426426335693,0.52
+51.87843242483373,0.73
+56.332600586310534,0.93
+60.78676874778732,0.98
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">307.48768538917415,0.0
-307.48768538917415,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.01180352507594,0.0
+47.01180352507594,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=111.94, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4542, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [90.9, 1210]
-Mean estimate of displayed sample: 307.5 ± 34.17 (95% CI)</comment>
+Span of displayed sample: [20.7, 65.24]
+Mean estimate of displayed sample: 47.01 ± 1.585 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Confidence Intervals" xaxis="max: x * (allDone ? 0 : 1)" yaxis="probability">
-					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">90.9038954910278,0.03621669264517642
-202.84199173214012,0.34655249575880825
-314.7800879732524,0.7335915772667655
-426.7181842143648,0.9056897100260538
-538.656280455477,0.9648284374818372
-650.5943766965894,0.9889955060138118
-762.5324729377018,0.9975686631760574
-874.470569178814,0.9975686631760574
-986.4086654199264,0.9997468539670226
-1098.3467616610387,0.9997468539670226
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">20.699255294496158,0.03621669264517642
+25.153423455972955,0.08517605297428003
+29.60759161744975,0.09925715671265992
+34.06175977892654,0.13891972845585734
+38.515927940403344,0.16398225502963523
+42.970096101880145,0.34655249575880825
+47.42426426335693,0.6209945198220413
+51.87843242483373,0.8139335777092593
+56.332600586310534,0.9713947110925613
+60.78676874778732,0.9975686631760574
 					</series>
-					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">90.9038954910278,0.0
-202.84199173214012,0.16877973809934185
-314.7800879732524,0.5378781066725767
-426.7181842143648,0.7532124025891377
-538.656280455477,0.848442364135579
-650.5943766965894,0.9007428432873401
-762.5324729377018,0.9296160675289299
-874.470569178814,0.9296160675289299
-986.4086654199264,0.9455406146079194
-1098.3467616610387,0.9455406146079194
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">20.699255294496158,0.0
+25.153423455972955,0.006229971538306394
+29.60759161744975,0.011004493986188203
+34.06175977892654,0.028605288907438693
+38.515927940403344,0.04198359562839223
+42.970096101880145,0.16877973809934185
+47.42426426335693,0.4177897654063067
+51.87843242483373,0.6319837270910251
+56.332600586310534,0.8610802715441427
+60.78676874778732,0.9296160675289299
 					</series>
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">90.9038954910278,0.0
-202.84199173214012,0.25
-314.7800879732524,0.64
-426.7181842143648,0.84
-538.656280455477,0.92
-650.5943766965894,0.96
-762.5324729377018,0.98
-874.470569178814,0.98
-986.4086654199264,0.99
-1098.3467616610387,0.99
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">20.699255294496158,0.0
+25.153423455972955,0.03
+29.60759161744975,0.04
+34.06175977892654,0.07
+38.515927940403344,0.09
+42.970096101880145,0.25
+47.42426426335693,0.52
+51.87843242483373,0.73
+56.332600586310534,0.93
+60.78676874778732,0.98
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">307.48768538917415,0.0
-307.48768538917415,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.01180352507594,0.0
+47.01180352507594,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=111.94, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4542, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [90.9, 1210]
-Mean estimate of displayed sample: 307.5 ± 34.17 (95% CI)</comment>
+Span of displayed sample: [20.7, 65.24]
+Mean estimate of displayed sample: 47.01 ± 1.585 (95% CI)</comment>
 				</plot>
 				<plot title="Frequency Histogram" xaxis="max: x * (allDone ? 0 : 1)" yaxis="count">
-					<series title="count" type="b(111.938096)" color="0x0000ff" encoding="csv">90.9038954910278,25.0
-202.84199173214012,39.0
-314.7800879732524,20.0
-426.7181842143648,8.0
-538.656280455477,4.0
-650.5943766965894,2.0
-762.5324729377018,0.0
-874.470569178814,1.0
-986.4086654199264,0.0
-1098.3467616610387,1.0
+					<series title="count" type="b(4.454168)" color="0x0000ff" encoding="csv">20.699255294496158,3.0
+25.153423455972955,1.0
+29.60759161744975,3.0
+34.06175977892654,2.0
+38.515927940403344,16.0
+42.970096101880145,27.0
+47.42426426335693,21.0
+51.87843242483373,20.0
+56.332600586310534,5.0
+60.78676874778732,2.0
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">307.48768538917415,0.0
-307.48768538917415,39.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.01180352507594,0.0
+47.01180352507594,27.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=111.94, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4542, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [90.9, 1210]
-Mean estimate of displayed sample: 307.5 ± 34.17 (95% CI)</comment>
+Span of displayed sample: [20.7, 65.24]
+Mean estimate of displayed sample: 47.01 ± 1.585 (95% CI)</comment>
 				</plot>
 			</result>
 		</query>
 		<query>
-			<formula>Pr[&lt;=3000; 100](&lt;&gt; sameCycle &amp;&amp; allDone)</formula>
+			<formula>Pr[&lt;=3000; 100](&lt;&gt; allSameCycle() &amp;&amp; allDone)</formula>
 			<comment>It would be nice to have the reverse query.
 Within this time, how much time does it take at most to reach this state?
 There should be a few edge cases where a robot takes one more cycle than the others. 
 This is because of unknown interleavings that causes a single robot (seemingly a robot with only one neighbor) 
 to not calculate their decision group size correctly at the first cycle where all robots agree.</comment>
-			<result outcome="success" type="interval" value="≥ 0.963783 (95% CI)" timestamp="2025-05-13 15:41:51 +0200">
+			<result outcome="success" type="interval" value="≥ 0.963783 (95% CI)" timestamp="2025-05-15 11:14:36 +0200">
 				<option key="--diagnostic" value="-1"/>
 				<details>≥ 0.963783 (95% CI)</details>
 				<plot title="Probability Density Distribution" xaxis="run duration in time" yaxis="probability density">
-					<series title="density" type="b(95.462905)" color="0x0000ff" encoding="csv">85.50936397544608,0.0025140655500706975
-180.97226866910097,0.0033520874000942634
-276.43517336275585,0.0020950546250589146
-371.8980780564107,6.285163875176744E-4
-467.3609827500656,8.380218500235658E-4
-562.8238874437204,6.285163875176744E-4
-658.2867921373753,0.0
-753.7496968310302,3.142581937588372E-4
-849.212601524685,0.0
-944.6755062183399,1.0475273125294573E-4
+					<series title="density" type="b(4.485380)" color="0x0000ff" encoding="csv">20.04976840455405,0.008917862233595865
+24.53514830303575,0.006688396675196899
+29.02052820151745,0.0
+33.50590809999915,0.0
+37.99128799848084,0.033441983375984495
+42.476667896962546,0.06465450119357002
+46.96204779544424,0.06019557007677209
+51.447427693925945,0.01783572446719173
+55.93280759240764,0.022294655583989662
+60.41818749088934,0.008917862233595865
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">308.23411581791896,0.0
-308.23411581791896,0.003352087400094263
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">46.55249771200771,0.0
+46.55249771200771,0.06465450119357002
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=95.463, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4854, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [85.51, 1040]
-Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
+Span of displayed sample: [20.05, 64.9]
+Mean estimate of displayed sample: 46.55 ± 1.733 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Density Confidence Intervals" xaxis="run duration in time" yaxis="probability density">
-					<series title="upper limit" type="b(95.462905)" color="0xa0a0ff" encoding="csv">85.50936397544608,0.3357354892709986
-180.97226866910097,0.42076686163162264
-276.43517336275585,0.2918426890886281
-371.8980780564107,0.12602993458082296
-467.3609827500656,0.15155763586442098
-562.8238874437204,0.12602993458082296
-658.2867921373753,0.03621669264517642
-753.7496968310302,0.08517605297428003
-849.212601524685,0.03621669264517642
-944.6755062183399,0.05445938539208066
+					<series title="upper limit" type="b(4.485380)" color="0xa0a0ff" encoding="csv">20.04976840455405,0.09925715671265992
+24.53514830303575,0.08517605297428003
+29.02052820151745,0.03621669264517642
+33.50590809999915,0.03621669264517642
+37.99128799848084,0.23530750014895488
+42.476667896962546,0.3892659589074485
+46.96204779544424,0.3680162729089749
+51.447427693925945,0.15155763586442098
+55.93280759240764,0.1762225977400227
+60.41818749088934,0.09925715671265992
 					</series>
-					<series title="lower limit" type="b(95.462905)" color="0x0000ff" encoding="csv">85.50936397544608,0.16022461317144715
-180.97226866910097,0.230219916761577
-276.43517336275585,0.12665555210195586
-371.8980780564107,0.022334886071316375
-467.3609827500656,0.03517156251816281
-562.8238874437204,0.022334886071316375
-658.2867921373753,0.0
-753.7496968310302,0.006229971538306394
-849.212601524685,0.0
-944.6755062183399,2.5314603297742064E-4
+					<series title="lower limit" type="b(4.485380)" color="0x0000ff" encoding="csv">20.04976840455405,0.011004493986188203
+24.53514830303575,0.006229971538306394
+29.02052820151745,0.0
+33.50590809999915,0.0
+37.99128799848084,0.08645438564164858
+42.476667896962546,0.2035741892507319
+46.96204779544424,0.18606642229074064
+51.447427693925945,0.03517156251816281
+55.93280759240764,0.04900468922148596
+60.41818749088934,0.011004493986188203
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">308.23411581791896,0.0
-308.23411581791896,0.004407647797664276
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">46.55249771200771,0.0
+46.55249771200771,0.08678550484413038
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=95.463, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4854, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [85.51, 1040]
-Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
+Span of displayed sample: [20.05, 64.9]
+Mean estimate of displayed sample: 46.55 ± 1.733 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Distribution" xaxis="run duration in time" yaxis="probability">
-					<series title="probability" type="b(95.462905)" color="0x0000ff" encoding="csv">85.50936397544608,0.24
-180.97226866910097,0.32
-276.43517336275585,0.2
-371.8980780564107,0.06
-467.3609827500656,0.08
-562.8238874437204,0.06
-658.2867921373753,0.0
-753.7496968310302,0.03
-849.212601524685,0.0
-944.6755062183399,0.01
+					<series title="probability" type="b(4.485380)" color="0x0000ff" encoding="csv">20.04976840455405,0.04
+24.53514830303575,0.03
+29.02052820151745,0.0
+33.50590809999915,0.0
+37.99128799848084,0.15
+42.476667896962546,0.29
+46.96204779544424,0.27
+51.447427693925945,0.08
+55.93280759240764,0.1
+60.41818749088934,0.04
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">308.23411581791896,0.0
-308.23411581791896,0.32
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">46.55249771200771,0.0
+46.55249771200771,0.29
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=95.463, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4854, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [85.51, 1040]
-Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
+Span of displayed sample: [20.05, 64.9]
+Mean estimate of displayed sample: 46.55 ± 1.733 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
-					<series title="upper limit" type="b(95.462905)" color="0xa0a0ff" encoding="csv">85.50936397544608,0.3357354892709986
-180.97226866910097,0.42076686163162264
-276.43517336275585,0.2918426890886281
-371.8980780564107,0.12602993458082296
-467.3609827500656,0.15155763586442098
-562.8238874437204,0.12602993458082296
-658.2867921373753,0.03621669264517642
-753.7496968310302,0.08517605297428003
-849.212601524685,0.03621669264517642
-944.6755062183399,0.05445938539208066
+					<series title="upper limit" type="b(4.485380)" color="0xa0a0ff" encoding="csv">20.04976840455405,0.09925715671265992
+24.53514830303575,0.08517605297428003
+29.02052820151745,0.03621669264517642
+33.50590809999915,0.03621669264517642
+37.99128799848084,0.23530750014895488
+42.476667896962546,0.3892659589074485
+46.96204779544424,0.3680162729089749
+51.447427693925945,0.15155763586442098
+55.93280759240764,0.1762225977400227
+60.41818749088934,0.09925715671265992
 					</series>
-					<series title="lower limit" type="b(95.462905)" color="0x0000ff" encoding="csv">85.50936397544608,0.16022461317144715
-180.97226866910097,0.230219916761577
-276.43517336275585,0.12665555210195586
-371.8980780564107,0.022334886071316375
-467.3609827500656,0.03517156251816281
-562.8238874437204,0.022334886071316375
-658.2867921373753,0.0
-753.7496968310302,0.006229971538306394
-849.212601524685,0.0
-944.6755062183399,2.5314603297742064E-4
+					<series title="lower limit" type="b(4.485380)" color="0x0000ff" encoding="csv">20.04976840455405,0.011004493986188203
+24.53514830303575,0.006229971538306394
+29.02052820151745,0.0
+33.50590809999915,0.0
+37.99128799848084,0.08645438564164858
+42.476667896962546,0.2035741892507319
+46.96204779544424,0.18606642229074064
+51.447427693925945,0.03517156251816281
+55.93280759240764,0.04900468922148596
+60.41818749088934,0.011004493986188203
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">308.23411581791896,0.0
-308.23411581791896,0.42076686163162264
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">46.55249771200771,0.0
+46.55249771200771,0.3892659589074485
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=95.463, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4854, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [85.51, 1040]
-Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
+Span of displayed sample: [20.05, 64.9]
+Mean estimate of displayed sample: 46.55 ± 1.733 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Distribution" xaxis="run duration in time" yaxis="probability">
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">85.50936397544608,0.0
-180.97226866910097,0.24
-276.43517336275585,0.56
-371.8980780564107,0.76
-467.3609827500656,0.82
-562.8238874437204,0.9
-658.2867921373753,0.96
-753.7496968310302,0.96
-849.212601524685,0.99
-944.6755062183399,0.99
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">20.04976840455405,0.0
+24.53514830303575,0.04
+29.02052820151745,0.07
+33.50590809999915,0.07
+37.99128799848084,0.07
+42.476667896962546,0.22
+46.96204779544424,0.51
+51.447427693925945,0.78
+55.93280759240764,0.86
+60.41818749088934,0.96
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">308.23411581791896,0.0
-308.23411581791896,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">46.55249771200771,0.0
+46.55249771200771,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=95.463, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4854, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [85.51, 1040]
-Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
+Span of displayed sample: [20.05, 64.9]
+Mean estimate of displayed sample: 46.55 ± 1.733 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
-					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">85.50936397544608,0.03621669264517642
-180.97226866910097,0.3357354892709986
-276.43517336275585,0.6591639762765418
-371.8980780564107,0.8397753868285528
-467.3609827500656,0.8896887708467395
-562.8238874437204,0.9509953107785141
-658.2867921373753,0.9889955060138118
-753.7496968310302,0.9889955060138118
-849.212601524685,0.9997468539670226
-944.6755062183399,0.9997468539670226
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">20.04976840455405,0.03621669264517642
+24.53514830303575,0.09925715671265992
+29.02052820151745,0.13891972845585734
+33.50590809999915,0.13891972845585734
+37.99128799848084,0.13891972845585734
+42.476667896962546,0.31391965378631786
+46.96204779544424,0.6113558348383622
+51.447427693925945,0.8566964232501856
+55.93280759240764,0.9212945950730342
+60.41818749088934,0.9889955060138118
 					</series>
-					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">85.50936397544608,0.0
-180.97226866910097,0.16022461317144715
-276.43517336275585,0.45718749706331757
-371.8980780564107,0.6642645107290014
-467.3609827500656,0.7305229140331881
-562.8238874437204,0.8237774022599773
-658.2867921373753,0.9007428432873401
-753.7496968310302,0.9007428432873401
-849.212601524685,0.9455406146079194
-944.6755062183399,0.9455406146079194
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">20.04976840455405,0.0
+24.53514830303575,0.011004493986188203
+29.02052820151745,0.028605288907438693
+33.50590809999915,0.028605288907438693
+37.99128799848084,0.028605288907438693
+42.476667896962546,0.14330357674981448
+46.96204779544424,0.4080363291554537
+51.447427693925945,0.6860803462136822
+55.93280759240764,0.7762720186294323
+60.41818749088934,0.9007428432873401
 					</series>
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">85.50936397544608,0.0
-180.97226866910097,0.24
-276.43517336275585,0.56
-371.8980780564107,0.76
-467.3609827500656,0.82
-562.8238874437204,0.9
-658.2867921373753,0.96
-753.7496968310302,0.96
-849.212601524685,0.99
-944.6755062183399,0.99
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">20.04976840455405,0.0
+24.53514830303575,0.04
+29.02052820151745,0.07
+33.50590809999915,0.07
+37.99128799848084,0.07
+42.476667896962546,0.22
+46.96204779544424,0.51
+51.447427693925945,0.78
+55.93280759240764,0.86
+60.41818749088934,0.96
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">308.23411581791896,0.0
-308.23411581791896,1.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">46.55249771200771,0.0
+46.55249771200771,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=95.463, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4854, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [85.51, 1040]
-Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
+Span of displayed sample: [20.05, 64.9]
+Mean estimate of displayed sample: 46.55 ± 1.733 (95% CI)</comment>
 				</plot>
 				<plot title="Frequency Histogram" xaxis="run duration in time" yaxis="count">
-					<series title="count" type="b(95.462905)" color="0x0000ff" encoding="csv">85.50936397544608,24.0
-180.97226866910097,32.0
-276.43517336275585,20.0
-371.8980780564107,6.0
-467.3609827500656,8.0
-562.8238874437204,6.0
-658.2867921373753,0.0
-753.7496968310302,3.0
-849.212601524685,0.0
-944.6755062183399,1.0
+					<series title="count" type="b(4.485380)" color="0x0000ff" encoding="csv">20.04976840455405,4.0
+24.53514830303575,3.0
+29.02052820151745,0.0
+33.50590809999915,0.0
+37.99128799848084,15.0
+42.476667896962546,29.0
+46.96204779544424,27.0
+51.447427693925945,8.0
+55.93280759240764,10.0
+60.41818749088934,4.0
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">308.23411581791896,0.0
-308.23411581791896,32.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">46.55249771200771,0.0
+46.55249771200771,29.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=95.463, bucket count=10
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=4.4854, bucket count=10
 Runs: 100 in total, 100 (100%) displayed, 0 (0%) remaining
-Span of displayed sample: [85.51, 1040]
-Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
+Span of displayed sample: [20.05, 64.9]
+Mean estimate of displayed sample: 46.55 ± 1.733 (95% CI)</comment>
 				</plot>
 			</result>
 		</query>
 		<query>
-			<formula>Pr[&lt;=3000]([] allDone imply sameCycle) &gt;= 0.98</formula>
+			<formula>Pr[&lt;=3000]([] allDone imply allSameCycle()) &gt;= 0.98</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2025-05-13 15:42:34 +0200">
+			<result outcome="success" type="quality" timestamp="2025-05-15 11:14:36 +0200">
 				<option key="--diagnostic" value="-1"/>
 			</result>
 		</query>
@@ -1043,7 +981,7 @@ Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
 			<formula>Pr[&lt;=3000](&lt;&gt; allDone) &gt;= 0.98</formula>
 			<comment/>
 			<option key="--diagnostic" value="-1"/>
-			<result outcome="success" type="quality" timestamp="2025-05-13 15:43:20 +0200">
+			<result outcome="success" type="quality" timestamp="2025-05-15 11:14:37 +0200">
 				<option key="--diagnostic" value="-1"/>
 			</result>
 		</query>
@@ -1051,14 +989,14 @@ Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
 			<formula>Pr[&lt;=10000](&lt;&gt; Robot(0).Terminal) &gt;= 0.98</formula>
 			<comment/>
 			<option key="--diagnostic" value="-1"/>
-			<result outcome="success" type="quality" timestamp="2025-05-13 15:44:08 +0200">
+			<result outcome="success" type="quality" timestamp="2025-05-15 11:14:38 +0200">
 				<option key="--diagnostic" value="-1"/>
 			</result>
 		</query>
 		<query>
 			<formula>simulate [&lt;=4000; 200] { ND } : 1 :  !allDone &amp;&amp; (x &gt;= 3000)</formula>
 			<comment>Counterexamples, should fail</comment>
-			<result outcome="failure" type="interval" value="≤ 0.0182753 (95% CI)" timestamp="2025-05-13 15:44:54 +0200">
+			<result outcome="failure" type="interval" value="≤ 0.0182753 (95% CI)" timestamp="2025-05-15 11:14:39 +0200">
 				<option key="--diagnostic" value="-1"/>
 				<details>≤ 0.0182753 (95% CI)</details>
 			</result>
@@ -1066,2488 +1004,349 @@ Mean estimate of displayed sample: 308.2 ± 35.24 (95% CI)</comment>
 		<query>
 			<formula>Pr[&lt;=3000; 500](&lt;&gt; allDone &amp;&amp; (decision[0] == 0))</formula>
 			<comment/>
-			<result outcome="success" type="quantity" value="0.100436 ± 0.027053 (95% CI)" timestamp="2025-05-13 15:46:48 +0200">
+			<result outcome="success" type="interval" value="≥ 0.992649 (95% CI)" timestamp="2025-05-15 11:14:42 +0200">
 				<option key="--diagnostic" value="-1"/>
-				<details>0.100436 ± 0.027053 (95% CI)</details>
+				<details>≥ 0.992649 (95% CI)</details>
 				<plot title="Probability Density Distribution" xaxis="run duration in time" yaxis="probability density">
-					<series title="density" type="b(114.436521)" color="0x0000ff" encoding="csv">126.19132173524412,4.369234531401109E-4
-240.6278429168301,2.0972325750725324E-4
-355.0643640984161,8.738469062802218E-5
-469.5008852800021,5.243081437681331E-5
-583.9374064615881,5.243081437681331E-5
-698.373927643174,0.0
-812.81044882476,1.7476938125604438E-5
+					<series title="density" type="b(1.926603)" color="0x0000ff" encoding="csv">20.592439069300028,0.004152386658768074
+22.5190419262636,0.00726667665284413
+24.445644783227173,0.004152386658768074
+26.37224764019075,0.004152386658768074
+28.298850497154323,0.0010380966646920185
+30.225453354117896,0.0
+32.15205621108147,0.002076193329384037
+34.07865906804504,0.0010380966646920185
+36.00526192500862,0.005190483323460093
+37.931864781972195,0.019723836629148353
+39.858467638935764,0.025952416617300463
+41.78507049589933,0.04775244657583286
+43.71167335286291,0.07059057319905726
+45.638276209826486,0.06747628320498121
+47.564879066790056,0.0612477032168291
+49.49148192375363,0.051904833234600926
+51.41808478071721,0.053981026563984964
+53.34468763768078,0.03010480327606854
+55.271290494644354,0.020761933293840372
+57.197893351607924,0.019723836629148353
+59.1244962085715,0.010380966646920186
+61.05109906553507,0.005190483323460093
+62.977701922498646,0.005190483323460093
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">294.13613210612453,0.0
-294.13613210612453,4.3692345314011097E-4
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.421358344726464,0.0
+47.421358344726464,0.07059057319905727
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=114.44, bucket count=7
-Runs: 500 in total, 49 (9.8%) displayed, 451 (90.2%) remaining
-Span of displayed sample: [126.2, 927.2]
-Mean estimate of displayed sample: 294.1 ± 45.54 (95% CI)</comment>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1.9266, bucket count=23
+Runs: 500 in total, 500 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [20.592, 64.904]
+Mean estimate of displayed sample: 47.421 ± 0.64085 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Density Confidence Intervals" xaxis="run duration in time" yaxis="probability density">
-					<series title="upper limit" type="b(114.436521)" color="0xa0a0ff" encoding="csv">126.19132173524412,0.07292762165047896
-240.6278429168301,0.041547618799686256
-355.0643640984161,0.023181388069659643
-469.5008852800021,0.017433673725913517
-583.9374064615881,0.017433673725913517
-698.373927643174,0.007350610051907787
-812.81044882476,0.011092476898968789
+					<series title="upper limit" type="b(1.926603)" color="0xa0a0ff" encoding="csv">20.592439069300028,0.02035563259374393
+22.5190419262636,0.028631616183336057
+24.445644783227173,0.02035563259374393
+26.37224764019075,0.02035563259374393
+28.298850497154323,0.011092476898968789
+30.225453354117896,0.007350610051907787
+32.15205621108147,0.01437407856220031
+34.07865906804504,0.011092476898968789
+36.00526192500862,0.023181388069659643
+37.931864781972195,0.058707290463228555
+39.858467638935764,0.07292762165047896
+41.78507049589933,0.12080703261074258
+43.71167335286291,0.16920335862136804
+45.638276209826486,0.16267648193700152
+47.564879066790056,0.14956039631572743
+49.49148192375363,0.1297090856622031
+51.41808478071721,0.13414074842248078
+53.34468763768078,0.0822382208938353
+55.271290494644354,0.061102609388244696
+57.197893351607924,0.058707290463228555
+59.1244962085715,0.03647240829220974
+61.05109906553507,0.023181388069659643
+62.977701922498646,0.023181388069659643
 					</series>
-					<series title="lower limit" type="b(114.436521)" color="0x0000ff" encoding="csv">126.19132173524412,0.032615180149330056
-240.6278429168301,0.012461239059555672
-355.0643640984161,0.003254721407024252
-469.5008852800021,0.0012390575435407506
-583.9374064615881,0.0012390575435407506
-698.373927643174,0.0
-812.81044882476,5.0634334007415215E-5
+					<series title="lower limit" type="b(1.926603)" color="0x0000ff" encoding="csv">20.592439069300028,0.0021839081083421838
+22.5190419262636,0.00564676107032443
+24.445644783227173,0.0021839081083421838
+26.37224764019075,0.0021839081083421838
+28.298850497154323,5.0634334007415215E-5
+30.225453354117896,0.0
+32.15205621108147,4.847861762900009E-4
+34.07865906804504,5.0634334007415215E-5
+36.00526192500862,0.003254721407024252
+37.931864781972195,0.023030770806247602
+39.858467638935764,0.032615180149330056
+41.78507049589933,0.0681433041566544
+43.71167335286291,0.10718032585698822
+45.638276209826486,0.10178293283994648
+47.564879066790056,0.09105167717278684
+49.49148192375363,0.0751358150664255
+51.41808478071721,0.07865193527463434
+53.34468763768078,0.039183868797187785
+55.271290494644354,0.024601312085545397
+57.197893351607924,0.023030770806247602
+59.1244962085715,0.009631429586433348
+61.05109906553507,0.003254721407024252
+62.977701922498646,0.003254721407024252
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">294.13613210612453,0.0
-294.13613210612453,6.372757656164557E-4
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.421358344726464,0.0
+47.421358344726464,0.08782472111976485
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=114.44, bucket count=7
-Runs: 500 in total, 49 (9.8%) displayed, 451 (90.2%) remaining
-Span of displayed sample: [126.2, 927.2]
-Mean estimate of displayed sample: 294.1 ± 45.54 (95% CI)</comment>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1.9266, bucket count=23
+Runs: 500 in total, 500 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [20.592, 64.904]
+Mean estimate of displayed sample: 47.421 ± 0.64085 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Distribution" xaxis="run duration in time" yaxis="probability">
-					<series title="probability" type="b(114.436521)" color="0x0000ff" encoding="csv">126.19132173524412,0.05
-240.6278429168301,0.024
-355.0643640984161,0.01
-469.5008852800021,0.006
-583.9374064615881,0.006
-698.373927643174,0.0
-812.81044882476,0.002
+					<series title="probability" type="b(1.926603)" color="0x0000ff" encoding="csv">20.592439069300028,0.008
+22.5190419262636,0.014
+24.445644783227173,0.008
+26.37224764019075,0.008
+28.298850497154323,0.002
+30.225453354117896,0.0
+32.15205621108147,0.004
+34.07865906804504,0.002
+36.00526192500862,0.01
+37.931864781972195,0.038
+39.858467638935764,0.05
+41.78507049589933,0.092
+43.71167335286291,0.136
+45.638276209826486,0.13
+47.564879066790056,0.118
+49.49148192375363,0.1
+51.41808478071721,0.104
+53.34468763768078,0.058
+55.271290494644354,0.04
+57.197893351607924,0.038
+59.1244962085715,0.02
+61.05109906553507,0.01
+62.977701922498646,0.01
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">294.13613210612453,0.0
-294.13613210612453,0.05
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.421358344726464,0.0
+47.421358344726464,0.136
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=114.44, bucket count=7
-Runs: 500 in total, 49 (9.8%) displayed, 451 (90.2%) remaining
-Span of displayed sample: [126.2, 927.2]
-Mean estimate of displayed sample: 294.1 ± 45.54 (95% CI)</comment>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1.9266, bucket count=23
+Runs: 500 in total, 500 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [20.592, 64.904]
+Mean estimate of displayed sample: 47.421 ± 0.64085 (95% CI)</comment>
 				</plot>
 				<plot title="Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
-					<series title="upper limit" type="b(114.436521)" color="0xa0a0ff" encoding="csv">126.19132173524412,0.07292762165047896
-240.6278429168301,0.041547618799686256
-355.0643640984161,0.023181388069659643
-469.5008852800021,0.017433673725913517
-583.9374064615881,0.017433673725913517
-698.373927643174,0.007350610051907787
-812.81044882476,0.011092476898968789
+					<series title="upper limit" type="b(1.926603)" color="0xa0a0ff" encoding="csv">20.592439069300028,0.02035563259374393
+22.5190419262636,0.028631616183336057
+24.445644783227173,0.02035563259374393
+26.37224764019075,0.02035563259374393
+28.298850497154323,0.011092476898968789
+30.225453354117896,0.007350610051907787
+32.15205621108147,0.01437407856220031
+34.07865906804504,0.011092476898968789
+36.00526192500862,0.023181388069659643
+37.931864781972195,0.058707290463228555
+39.858467638935764,0.07292762165047896
+41.78507049589933,0.12080703261074258
+43.71167335286291,0.16920335862136804
+45.638276209826486,0.16267648193700152
+47.564879066790056,0.14956039631572743
+49.49148192375363,0.1297090856622031
+51.41808478071721,0.13414074842248078
+53.34468763768078,0.0822382208938353
+55.271290494644354,0.061102609388244696
+57.197893351607924,0.058707290463228555
+59.1244962085715,0.03647240829220974
+61.05109906553507,0.023181388069659643
+62.977701922498646,0.023181388069659643
 					</series>
-					<series title="lower limit" type="b(114.436521)" color="0x0000ff" encoding="csv">126.19132173524412,0.032615180149330056
-240.6278429168301,0.012461239059555672
-355.0643640984161,0.003254721407024252
-469.5008852800021,0.0012390575435407506
-583.9374064615881,0.0012390575435407506
-698.373927643174,0.0
-812.81044882476,5.0634334007415215E-5
+					<series title="lower limit" type="b(1.926603)" color="0x0000ff" encoding="csv">20.592439069300028,0.0021839081083421838
+22.5190419262636,0.00564676107032443
+24.445644783227173,0.0021839081083421838
+26.37224764019075,0.0021839081083421838
+28.298850497154323,5.0634334007415215E-5
+30.225453354117896,0.0
+32.15205621108147,4.847861762900009E-4
+34.07865906804504,5.0634334007415215E-5
+36.00526192500862,0.003254721407024252
+37.931864781972195,0.023030770806247602
+39.858467638935764,0.032615180149330056
+41.78507049589933,0.0681433041566544
+43.71167335286291,0.10718032585698822
+45.638276209826486,0.10178293283994648
+47.564879066790056,0.09105167717278684
+49.49148192375363,0.0751358150664255
+51.41808478071721,0.07865193527463434
+53.34468763768078,0.039183868797187785
+55.271290494644354,0.024601312085545397
+57.197893351607924,0.023030770806247602
+59.1244962085715,0.009631429586433348
+61.05109906553507,0.003254721407024252
+62.977701922498646,0.003254721407024252
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">294.13613210612453,0.0
-294.13613210612453,0.07292762165047896
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.421358344726464,0.0
+47.421358344726464,0.16920335862136804
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=114.44, bucket count=7
-Runs: 500 in total, 49 (9.8%) displayed, 451 (90.2%) remaining
-Span of displayed sample: [126.2, 927.2]
-Mean estimate of displayed sample: 294.1 ± 45.54 (95% CI)</comment>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1.9266, bucket count=23
+Runs: 500 in total, 500 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [20.592, 64.904]
+Mean estimate of displayed sample: 47.421 ± 0.64085 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Distribution" xaxis="run duration in time" yaxis="probability">
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">126.19132173524412,0.0
-240.6278429168301,0.05
-355.0643640984161,0.074
-469.5008852800021,0.084
-583.9374064615881,0.09
-698.373927643174,0.096
-812.81044882476,0.096
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">20.592439069300028,0.0
+22.5190419262636,0.008
+24.445644783227173,0.022
+26.37224764019075,0.03
+28.298850497154323,0.038
+30.225453354117896,0.04
+32.15205621108147,0.04
+34.07865906804504,0.044
+36.00526192500862,0.046
+37.931864781972195,0.056
+39.858467638935764,0.094
+41.78507049589933,0.144
+43.71167335286291,0.236
+45.638276209826486,0.372
+47.564879066790056,0.502
+49.49148192375363,0.62
+51.41808478071721,0.72
+53.34468763768078,0.824
+55.271290494644354,0.882
+57.197893351607924,0.922
+59.1244962085715,0.96
+61.05109906553507,0.98
+62.977701922498646,0.99
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">294.13613210612453,0.0
-294.13613210612453,0.09799999999999998
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.421358344726464,0.0
+47.421358344726464,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=114.44, bucket count=7
-Runs: 500 in total, 49 (9.8%) displayed, 451 (90.2%) remaining
-Span of displayed sample: [126.2, 927.2]
-Mean estimate of displayed sample: 294.1 ± 45.54 (95% CI)</comment>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1.9266, bucket count=23
+Runs: 500 in total, 500 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [20.592, 64.904]
+Mean estimate of displayed sample: 47.421 ± 0.64085 (95% CI)</comment>
 				</plot>
 				<plot title="Cumulative Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
-					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">126.19132173524412,0.007350610051907787
-240.6278429168301,0.07292762165047896
-355.0643640984161,0.10055887474646992
-469.5008852800021,0.1118483012454121
-583.9374064615881,0.11857292167734206
-698.373927643174,0.1252647465633309
-812.81044882476,0.1252647465633309
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">20.592439069300028,0.007350610051907787
+22.5190419262636,0.02035563259374393
+24.445644783227173,0.039022550844808795
+26.37224764019075,0.04899822570881895
+28.298850497154323,0.058707290463228555
+30.225453354117896,0.061102609388244696
+32.15205621108147,0.061102609388244696
+34.07865906804504,0.06586100032359485
+36.00526192500862,0.0682254278812379
+37.931864781972195,0.0799213006043601
+39.858467638935764,0.1230376078895607
+41.78507049589933,0.17787610802552098
+43.71167335286291,0.27571918023327546
+45.638276209826486,0.4160229977417723
+47.564879066790056,0.5467021930810041
+49.49148192375363,0.6627260377078633
+51.41808478071721,0.758955083477832
+53.34468763768078,0.8563814050773387
+55.271290494644354,0.9089483228272132
+57.197893351607924,0.9439488262244397
+59.1244962085715,0.9753986879144546
+61.05109906553507,0.9903685704135666
+62.977701922498646,0.9967452785929758
 					</series>
-					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">126.19132173524412,0.0
-240.6278429168301,0.032615180149330056
-355.0643640984161,0.052635108548995245
-469.5008852800021,0.061209058608347654
-583.9374064615881,0.0664040087545691
-698.373927643174,0.0716326939753408
-812.81044882476,0.0716326939753408
+					<series title="lower limit" type="k" color="0xdd0000" encoding="csv">20.592439069300028,0.0
+22.5190419262636,0.0021839081083421838
+24.445644783227173,0.011032276361257528
+26.37224764019075,0.01688598420387324
+28.298850497154323,0.023030770806247602
+30.225453354117896,0.024601312085545397
+32.15205621108147,0.024601312085545397
+34.07865906804504,0.027776767285571744
+36.00526192500862,0.029380175392402792
+37.931864781972195,0.037530444475022184
+39.858467638935764,0.06988623391878117
+41.78507049589933,0.11440713117916824
+43.71167335286291,0.1994352969849772
+45.638276209826486,0.3295002563949794
+47.564879066790056,0.4572740294438495
+49.49148192375363,0.5758460890440275
+51.41808478071721,0.6784209332693435
+53.34468763768078,0.7877324296532344
+55.271290494644354,0.8504396036842726
+57.197893351607924,0.8949122735699343
+59.1244962085715,0.9388973906117553
+61.05109906553507,0.9635275917077902
+62.977701922498646,0.9768186119303404
 					</series>
-					<series title="cumulative" type="l" color="0x000000" encoding="csv">126.19132173524412,0.0
-240.6278429168301,0.05
-355.0643640984161,0.074
-469.5008852800021,0.084
-583.9374064615881,0.09
-698.373927643174,0.096
-812.81044882476,0.096
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">20.592439069300028,0.0
+22.5190419262636,0.008
+24.445644783227173,0.022
+26.37224764019075,0.03
+28.298850497154323,0.038
+30.225453354117896,0.04
+32.15205621108147,0.04
+34.07865906804504,0.044
+36.00526192500862,0.046
+37.931864781972195,0.056
+39.858467638935764,0.094
+41.78507049589933,0.144
+43.71167335286291,0.236
+45.638276209826486,0.372
+47.564879066790056,0.502
+49.49148192375363,0.62
+51.41808478071721,0.72
+53.34468763768078,0.824
+55.271290494644354,0.882
+57.197893351607924,0.922
+59.1244962085715,0.96
+61.05109906553507,0.98
+62.977701922498646,0.99
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">294.13613210612453,0.0
-294.13613210612453,0.09799999999999998
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.421358344726464,0.0
+47.421358344726464,1.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=114.44, bucket count=7
-Runs: 500 in total, 49 (9.8%) displayed, 451 (90.2%) remaining
-Span of displayed sample: [126.2, 927.2]
-Mean estimate of displayed sample: 294.1 ± 45.54 (95% CI)</comment>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1.9266, bucket count=23
+Runs: 500 in total, 500 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [20.592, 64.904]
+Mean estimate of displayed sample: 47.421 ± 0.64085 (95% CI)</comment>
 				</plot>
 				<plot title="Frequency Histogram" xaxis="run duration in time" yaxis="count">
-					<series title="count" type="b(114.436521)" color="0x0000ff" encoding="csv">126.19132173524412,25.0
-240.6278429168301,12.0
-355.0643640984161,5.0
-469.5008852800021,3.0
-583.9374064615881,3.0
-698.373927643174,0.0
-812.81044882476,1.0
+					<series title="count" type="b(1.926603)" color="0x0000ff" encoding="csv">20.592439069300028,4.0
+22.5190419262636,7.0
+24.445644783227173,4.0
+26.37224764019075,4.0
+28.298850497154323,1.0
+30.225453354117896,0.0
+32.15205621108147,2.0
+34.07865906804504,1.0
+36.00526192500862,5.0
+37.931864781972195,19.0
+39.858467638935764,25.0
+41.78507049589933,46.0
+43.71167335286291,68.0
+45.638276209826486,65.0
+47.564879066790056,59.0
+49.49148192375363,50.0
+51.41808478071721,52.0
+53.34468763768078,29.0
+55.271290494644354,20.0
+57.197893351607924,19.0
+59.1244962085715,10.0
+61.05109906553507,5.0
+62.977701922498646,5.0
 					</series>
-					<series title="average" type="pl" color="0x00dd00" encoding="csv">294.13613210612453,0.0
-294.13613210612453,25.0
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">47.421358344726464,0.0
+47.421358344726464,68.0
 					</series>
-					<comment>Parameters: α=0.05, ε=0.05, bucket width=114.44, bucket count=7
-Runs: 500 in total, 49 (9.8%) displayed, 451 (90.2%) remaining
-Span of displayed sample: [126.2, 927.2]
-Mean estimate of displayed sample: 294.1 ± 45.54 (95% CI)</comment>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=1.9266, bucket count=23
+Runs: 500 in total, 500 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [20.592, 64.904]
+Mean estimate of displayed sample: 47.421 ± 0.64085 (95% CI)</comment>
 				</plot>
+			</result>
+		</query>
+		<query>
+			<formula>simulate [&lt;=100000; 100] { entropy } : 10 : !allDone &amp;&amp; (x &gt;= 100000 || cyclecounter &gt;= 32767)</formula>
+			<comment>For inspecting entropy in extreme cases - finding examples of non-successful convergence.</comment>
+			<result outcome="failure" type="interval" value="≤ 0.0362167 (95% CI)" timestamp="2025-05-15 11:14:43 +0200">
+				<option key="--diagnostic" value="-1"/>
+				<details>≤ 0.0362167 (95% CI)</details>
 			</result>
 		</query>
 		<query>
 			<formula>simulate [&lt;=3000; 100] { entropy } : 10 : allDone</formula>
-			<comment/>
-			<result outcome="success" type="interval" value="≥ 0.691503 (95% CI)" timestamp="2025-05-13 15:46:50 +0200">
-				<option key="--diagnostic" value="-1"/>
-				<details>≥ 0.691503 (95% CI)</details>
-				<plot title="Simulations (10)" xaxis="time" yaxis="value">
-					<series title="entropy" type="l" color="0xff0000" encoding="csv">0.0,0.0
-1.1206145462480772,0.0
-1.209846257254065,3.159200391160203
-1.4522401196103476,6.180487713018628
-1.5108805312448086,9.068041338988515
-1.7152884859687256,12.083766745200865
-1.8062146854746488,15.1558199864058
-2.0637781703201896,18.133566728705418
-2.0701920027744247,21.208562201257543
-2.301349120018363,24.297319709271267
-2.529751562867777,27.249443112285476
-2.707887430513794,30.21239681589996
-2.7901458310891396,33.384128201199445
-2.7915908939853007,36.51475308993658
-2.8261402039824772,39.375217193253974
-2.8795406057508885,42.149853512838014
-3.158738010136073,45.320852347319615
-3.2208037591534455,48.10389156625583
-3.345831899485678,51.18560089425589
-3.3954069669341944,54.377351942658215
-3.557351591449919,57.4378142200637
-3.557351591449919,60.49990637001221
-5.117605200171257,60.49990637001221
-5.122197570092894,63.668401838933164
-5.533244080584617,66.77837984704364
-5.57831073740783,70.01894994756672
-6.106156189807308,73.19907148660022
-6.176580415070226,76.47623301439656
-6.176580415070226,79.54503012658638
-6.975567258351282,79.54503012658638
-7.015885335169964,82.6020139332816
-7.015885335169964,85.41984622014421
-8.163377387136862,85.41984622014421
-8.163377387136862,88.60592259054829
-8.992351322882309,88.60592259054829
-8.992351322882309,91.65742007860956
-10.324726690334307,91.65742007860956
-10.505675497486653,92.04181022090934
-10.597144310353892,92.25952234645749
-11.170802505421264,92.54530535320052
-11.170802505421264,92.76167694236756
-13.512892063007325,92.76167694236756
-13.774440116458562,93.0837682924657
-13.774440116458562,93.18210318866198
-15.874293220316991,93.18210318866198
-16.291583141454467,93.40931005112799
-16.291583141454467,93.5710910282123
-18.00754957910525,93.5710910282123
-18.273157327957364,93.67119715876909
-18.295842312788007,93.76072810810047
-18.572894533383323,93.9797093948018
-18.76665471097377,94.44550701124253
-18.858976665672152,94.7981452331735
-18.8700902559491,95.02837090930561
-19.407752916859174,95.5066692094305
-19.986406641503795,95.70918658563988
-20.316766216194313,95.95055958988719
-20.316766216194313,96.07279124395002
-21.48706571354884,96.07279124395002
-21.62360932203987,96.25185290846898
-21.78334817508765,96.38362013356569
-22.30581334320529,96.66772635946586
-22.30581334320529,96.67590888713873
-23.21044961305432,96.67590888713873
-23.21044961305432,97.11810204075539
-24.680042054744693,97.11810204075539
-25.007651925500273,97.3376987976234
-25.007651925500273,97.57722044767071
-26.235145915416876,97.57722044767071
-26.56014159247097,98.06139967039536
-26.739296952457625,98.27933608103898
-26.739296952457625,98.40190250179081
-27.613334273140865,98.40190250179081
-27.64298680173666,98.42969782415457
-27.64298680173666,98.54860381084909
-29.5106614425775,98.54860381084909
-29.5106614425775,98.59317548481364
-31.54084409533288,98.59317548481364
-31.967914644556465,98.60129187741961
-31.967914644556465,98.61707180281965
-36.630058226468606,98.61707180281965
-36.630058226468606,98.6354033689288
-38.046467623220835,98.6354033689288
-38.546430276792144,98.64746887553484
-38.546430276792144,98.65486177522436
-39.49412938255833,98.65486177522436
-39.49412938255833,98.67239718743704
-41.41474493308668,98.67239718743704
-41.41474493308668,98.700233197257
-42.76235447634303,98.700233197257
-42.76235447634303,98.74075897007154
-43.921057202767486,98.74075897007154
-44.479615237537836,98.746355719162
-44.7019861269947,98.76630245502518
-44.7019861269947,98.77079398449433
-46.99893870011733,98.77079398449433
-47.71294661277328,98.80018179585898
-48.22268368400826,98.82114290232862
-48.22268368400826,98.83798206952186
-50.77312486155524,98.83798206952186
-50.933095752227565,98.86339678056751
-50.933095752227565,98.87034981270634
-61.945654970157264,98.87034981270634
-62.384789440148424,98.87341694973006
-62.46622706713007,98.8950804627659
-62.52482671229845,98.92292112825157
-62.52482671229845,98.93085282184965
-63.59786369590273,98.93085282184965
-63.842932933827434,98.95977330776157
-63.984216647204065,98.97606055635462
-64.33971017069732,98.98998689393349
-64.73597493206947,98.99195391861205
-64.73597493206947,99.02351736666208
-65.73113172753037,99.02351736666208
-65.79812087612093,99.04500501284481
-65.86622800430874,99.0624423904283
-65.86622800430874,99.0905158023488
-66.78919552101397,99.0905158023488
-66.78919552101397,99.09717005911094
-67.9816568558297,99.09717005911094
-68.24954810355715,99.103525753056
-68.24954810355715,99.1073756222408
-69.10436952095718,99.1073756222408
-69.10436952095718,99.11104917213402
-70.31074787042299,99.11104917213402
-70.31074787042299,99.11632259461902
-72.35826715410644,99.11632259461902
-72.35826715410644,99.12135521815932
-145.0006263827158,99.12135521815932
-145.66329377185164,99.13653532793693
-145.69101640489686,99.14100530859314
-145.69101640489686,99.14639632172099
-146.4522659131425,99.14639632172099
-146.76082451054504,99.14436013213505
-146.96846669685215,99.1478842369268
-147.16225971535522,99.14770740965234
-147.3589944932308,99.15140451204688
-147.4401030455852,99.15897124232954
-147.46805695417373,99.16181353501186
-147.49305460148938,99.16374795721136
-147.67825548965004,99.16574843564207
-148.40682212900944,99.16601578560689
-148.72518908849827,99.1764268600554
-148.93396616079357,99.18138543043692
-149.02064717327653,99.18227005038055
-149.18958073957631,99.19033922467183
-149.38250045568793,99.19138582440193
-149.38874683757496,99.19960664073865
-149.81251766334952,99.19804115764914
-150.10091456553957,99.21452043437186
-150.1217042153954,99.21443878175684
-150.8531973756951,99.21281349107674
-151.13327837408332,99.21487315816161
-151.13327837408332,99.21382487225686
-153.46581268274045,99.21382487225686
-153.46581268274045,99.21614229273477
-157.2560294860601,99.21614229273477
-157.2560294860601,99.21710005929451
-159.21758790992385,99.21710005929451
-159.23436694048644,99.21837595193186
-159.52860447242523,99.22229498472937
-159.65428563584726,99.22143421654683
-159.7004402086178,99.22472293261698
-160.27167261584148,99.22687784274548
-160.42204222202736,99.22942688038596
-160.61345013996467,99.2308625890664
-160.79378903258936,99.22984160616453
-160.91526187748704,99.22988149903755
-161.00232050140178,99.23357494883128
-161.16102554999256,99.23420245603491
-161.17143152987376,99.23329715439989
-161.24040755502628,99.23327078826541
-161.28281279520488,99.23234636689385
-161.30208204654363,99.23413433545575
-161.53084896113307,99.23555000468174
-161.5676877549803,99.23519339549922
-161.65238695165996,99.23538782348588
-162.33677823726939,99.23746159773911
-162.39113446754814,99.2394555072798
-162.80359588058477,99.2388519461331
-162.84745407074846,99.24105807754022
-162.88699296700625,99.23945717290523
-163.26939620566532,99.24092000022362
-163.4974934669127,99.24926013818165
-163.4974934669127,99.25126949861908
-165.2530569634726,99.25126949861908
-165.2530569634726,99.26089770976338
-167.1236818541558,99.26089770976338
-167.1236818541558,99.26231325646569
-169.88817962327954,99.26231325646569
-169.88817962327954,99.26970131398193
-171.78805997614919,99.26970131398193
-					</series>
-					<series title="" type="l" color="0xff0909" encoding="csv">0.0,0.0
-0.9826107261219156,0.0
-1.2198682700321233,2.8568704874999784
-1.395988426103779,5.9250875049487846
-1.6087040545696736,8.976893827367883
-2.3320835315222848,11.989568034724025
-2.336203336772609,14.990064214576828
-2.585052513311296,17.965639830543285
-2.62249823867256,21.082748620102777
-2.983817887925029,24.166620043570372
-3.5978689253655722,27.17088793803638
-3.744031329387028,30.173082382427808
-3.9471877361128334,33.46549685838635
-3.9471877361128334,36.553131939354714
-4.8531293477022714,36.553131939354714
-4.8531293477022714,39.32912329935825
-5.738599651062956,39.32912329935825
-5.970954375692799,42.282935172102924
-6.295348932045677,45.287498118905134
-6.555550656875066,48.207871928305785
-6.919468858126038,51.39316720693041
-6.9664629762980494,54.5789441954878
-7.0952470876880005,57.5755557120238
-7.111585737886272,60.4298364737496
-7.179982358151213,63.480987084017464
-7.614866624495331,66.48256811037407
-7.808719853158658,69.51305076438292
-7.879857263457942,72.61053566053279
-7.879857263457942,75.54044331342855
-9.716642264617471,75.54044331342855
-9.716642264617471,78.65835869711425
-10.523929883776596,78.65835869711425
-10.60174720443008,81.74951079056878
-10.60174720443008,84.7933647208301
-12.495033259926998,84.7933647208301
-12.495033259926998,85.13442632469469
-13.494251483184005,85.13442632469469
-13.494251483184005,88.26351065787031
-15.165790421340182,88.26351065787031
-15.165790421340182,91.13451672805138
-17.044096946986034,91.13451672805138
-17.044096946986034,91.458894967938
-19.51315485751236,91.458894967938
-19.51315485751236,91.62173476232104
-21.193237994186617,91.62173476232104
-21.580188252259838,91.85982492050724
-21.580188252259838,92.05042773244764
-22.91978463922813,92.05042773244764
-23.554195423061653,92.39069071938039
-23.829005635957476,92.72622713087463
-24.555043110227707,92.79220162204336
-24.58030292580773,92.94714651198868
-24.882665818113217,93.18125520465975
-24.948741220869223,93.68145603195484
-25.437556544056832,93.88996236755645
-25.601497773980338,94.16710345845942
-25.802941673581316,94.54873642668761
-26.353316542607175,94.85742677222322
-26.872705123725023,95.14567262907173
-26.90237509232864,95.32699514426795
-26.90237509232864,95.56354287906098
-28.9955295912173,95.56354287906098
-28.9955295912173,95.78012701306727
-30.74238747190073,95.78012701306727
-31.16125777768712,96.01162621002952
-31.276434262157295,96.23799530247507
-31.276434262157295,96.5602281610742
-36.62928300942924,96.5602281610742
-37.11995203595537,96.84652262188891
-37.11995203595537,97.02240973368461
-38.6120801302715,97.02240973368461
-38.937105252159796,97.32257153619344
-38.98347330532779,97.24091395341237
-38.98347330532779,97.33376808624858
-40.30010660280835,97.33376808624858
-40.30010660280835,97.51175186148143
-41.891634701739974,97.51175186148143
-41.891634701739974,97.70354573859301
-43.9916802146662,97.70354573859301
-43.9916802146662,97.84994970274802
-52.10033603131505,97.84994970274802
-52.10033603131505,97.88172904391583
-53.01535267886706,97.88172904391583
-53.3255632845728,97.91940285106496
-53.52122374545579,97.93435834664398
-53.57057005744721,98.01691316817822
-53.65786590453587,98.06107719376773
-54.07091430862135,98.08706538423361
-54.297918041002156,98.13752631183301
-54.587886950532315,98.15152290216064
-54.640131324229344,98.15832958874391
-54.640131324229344,98.20426160581867
-55.58057469231653,98.20426160581867
-55.58257256870829,98.2924886968393
-55.58257256870829,98.27890824034309
-58.90218616834497,98.27890824034309
-59.19300556341969,98.29357295176389
-59.19300556341969,98.3413433673862
-87.82399597956042,98.3413433673862
-87.82399597956042,98.36664555429783
-88.9279788797511,98.36664555429783
-89.10265679916797,98.3943907553523
-89.10265679916797,98.41261004003445
-90.5291724460905,98.41261004003445
-90.5291724460905,98.42537419449502
-91.91459551833026,98.42537419449502
-92.11066710060877,98.443895495491
-92.208108466684,98.45477147757299
-92.48996451450621,98.48923078507246
-92.5895834662642,98.53597557651489
-92.9462475557903,98.55577406610618
-93.01854686953524,98.59165583493353
-93.20306932139468,98.6078061545092
-93.34098645016942,98.61687822246088
-93.43051640167982,98.62457219747733
-93.4374742528104,98.64812211992526
-93.4374742528104,98.67083452708584
-95.77446439893521,98.67083452708584
-96.2136426465562,98.68931869161773
-96.2136426465562,98.70602394276739
-101.17341704047145,98.70602394276739
-101.8184634400224,98.72319126509265
-102.31200259830052,98.73861162197102
-102.31200259830052,98.7673143602753
-174.8061122058053,98.7673143602753
-175.40372795149153,98.7867229534664
-175.81165992885508,98.80883766259728
-175.83062674201298,98.80929276122716
-175.84680910438803,98.81841846081932
-176.0374722397484,98.8185795880452
-176.2397633234674,98.85493426334126
-176.27011248162867,98.8695925449557
-176.33249077240268,98.87293964095026
-176.4752030872214,98.87873039332256
-176.68124375507597,98.88102957937996
-177.07553276366139,98.89032895795253
-177.17457705373107,98.8930875618112
-177.22438096803717,98.89059662405143
-177.35710056959485,98.92521726349315
-177.61573076856436,98.94468914239779
-178.11707987173693,98.94538697964369
-178.1560498741265,98.95365744688353
-178.43530505284036,98.95790373126088
-178.49109356599197,98.96980945791923
-178.83292149921388,98.9779928877053
-178.97942852350792,98.98020217111088
-179.04009892873714,98.99082688936916
-179.35494326371267,99.00513938661412
-179.35494326371267,99.00735322875485
-180.28066812707576,99.00735322875485
-180.28066812707576,99.0151426398032
-181.83738353260205,99.0151426398032
-181.83738353260205,99.02368818787737
-186.9311668763311,99.02368818787737
-186.9311668763311,99.02968739386732
-188.6248941523396,99.02968739386732
-188.99341993457804,99.0300444501094
-189.24414487914254,99.0386063358573
-189.45086787210613,99.0398132575763
-189.53055991932405,99.04323916245443
-190.261369885134,99.0491553000597
-190.261369885134,99.04916730234072
-191.019033417919,99.04916730234072
-191.1299473178749,99.0623272364036
-191.19582914240362,99.06077744615128
-191.55761060843474,99.06634948042439
-191.913365031806,99.06609852438359
-191.93581259124804,99.07067333184021
-192.01954508644312,99.06990322690761
-192.04415446387233,99.06926541373792
-192.4924643604483,99.07266443657765
-192.5361201417906,99.07167635721626
-192.54621873449952,99.0772540634062
-192.56779160864136,99.08308382807816
-193.0565013216609,99.09651330658382
-193.24397913394154,99.09877258488024
-193.52575671605857,99.1017236983614
-193.70762783244416,99.10295303511644
-193.98152562902396,99.10335354896424
-194.6209075500542,99.13632015388518
-194.91143793137024,99.14375839282236
-195.59511449668537,99.14589714740862
-196.2247571354695,99.14584375076649
-196.2247571354695,99.1528922605777
-197.4642917689646,99.1528922605777
-197.4642917689646,99.15384480428017
-198.4747887518705,99.15384480428017
-198.4747887518705,99.15356264229973
-199.34894914922677,99.15356264229973
-					</series>
-					<series title="" type="l" color="0xff1212" encoding="csv">0.0,0.0
-0.8513892675814153,0.0
-1.5845704253746435,3.184115402579083
-1.7090234329184277,6.30926537775256
-2.038354533796755,9.363941588052525
-2.331017209921886,12.324260249190106
-2.3722269297545324,15.436624427887283
-2.3988523801908554,18.610662811123433
-2.497422494259584,21.83372284302971
-2.9721659279775228,24.613393671334933
-3.0509566887752513,27.676511964603087
-3.0537892197515317,30.76220154931581
-3.0571937853482516,33.82476084174801
-3.1348355209669503,36.86613980420431
-3.3173074380644767,39.98100223333928
-3.8896649841229998,42.891666944733736
-4.046754641914098,45.81438763821368
-4.087027423568511,48.83249680434314
-4.093419609611543,51.86779786296367
-4.189608489712007,55.133418911207364
-4.316932985103015,58.25972982915707
-4.492903290266274,61.463235115231484
-4.843268416108287,64.56262364482278
-5.071975261670461,67.63361047805442
-5.470947322520089,70.66757800509885
-5.781909200824551,73.90178448280129
-6.137223184410442,76.8422658141376
-6.791405428567142,79.74543544012953
-6.791405428567142,82.59279424152666
-8.578268338473437,82.59279424152666
-8.578268338473437,85.65847271371706
-10.280198404595135,85.65847271371706
-10.280198404595135,85.8556882515505
-11.619718080023336,85.8556882515505
-11.63763431775063,88.94979552818903
-12.07216309509655,92.13705706331726
-12.07216309509655,92.17901126518922
-13.892300858383065,92.17901126518922
-14.289546037317955,92.44275006422079
-14.975004037851127,92.83105800221358
-15.07455793527898,93.0656349513844
-15.07455793527898,93.29270009739228
-17.44780402253569,93.29270009739228
-17.51339474525128,93.56338634991674
-17.6465942546483,93.73363632096675
-17.6465942546483,93.82954561754602
-18.44318811710967,93.82954561754602
-19.095361076754536,94.18736414509117
-19.095361076754536,94.36978138585641
-20.504803435799747,94.36978138585641
-20.674979558486577,94.58808935265917
-20.674979558486577,94.8243596230681
-21.987940578554884,94.8243596230681
-22.347053987661436,94.85715110198458
-22.347053987661436,95.21153213751671
-24.259811301199687,95.21153213751671
-24.259811301199687,95.46277888025676
-25.666068143680732,95.46277888025676
-26.3255274321739,95.78623433983829
-26.461208734158934,95.91588779748264
-26.50983649667528,96.02894512872258
-26.787035714045327,96.39869329879018
-26.787035714045327,96.60998016757794
-27.6779374155624,96.60998016757794
-28.178538404657623,96.79578003914939
-28.178538404657623,96.91606136868363
-29.44099427451613,96.91606136868363
-29.519302483145154,97.09238167067217
-29.772017822562763,97.1559630577395
-29.845073179339874,97.64229497817514
-29.845073179339874,97.96228626027947
-30.658047651422788,97.96228626027947
-30.658047651422788,98.21171352296643
-31.51654861743259,98.21171352296643
-31.51654861743259,98.4322433979243
-32.84937438982436,98.4322433979243
-32.84937438982436,98.56665776936445
-33.73863742643881,98.56665776936445
-33.73863742643881,98.58293375698001
-37.125928302815005,98.58293375698001
-37.125928302815005,98.59280463078566
-39.22261727927896,98.59280463078566
-39.22261727927896,98.6016425191048
-40.44275543032746,98.6016425191048
-40.71793188214688,98.6345162157284
-40.71793188214688,98.6786321217502
-42.31298853565297,98.6786321217502
-42.31298853565297,98.69726603444194
-55.71147011716244,98.69726603444194
-55.738281959605544,98.70931771794183
-56.08353356739936,98.71252834093222
-56.72566879332313,98.71502066771828
-57.125108192323154,98.71641174823284
-57.20812477135246,98.81963992363129
-57.20812477135246,98.8196192470107
-58.20724513281007,98.8196192470107
-58.20724513281007,98.83886132457441
-84.90794404234067,98.83886132457441
-85.51454527901579,98.84933850884075
-85.52734703224684,98.87205908169459
-85.82353448777425,98.87981550831222
-85.82353448777425,98.90200362768122
-86.61370319665107,98.90200362768122
-86.77899153486005,98.90749607996764
-87.01765177297543,98.94370341674161
-87.03923571056073,98.95462257514124
-87.41003489003134,98.96790478851592
-87.63293451622043,99.00463806982154
-87.6619631390255,99.00700767573657
-87.87837051217964,99.03903309134854
-87.94436670328908,99.06635786372027
-88.26011165071675,99.10648621210633
-88.27603454759614,99.10963542309489
-88.59028087758412,99.12940681765143
-89.01502871320035,99.13062139422996
-89.01502871320035,99.13005694452198
-102.34382927160702,99.13005694452198
-102.6007270128376,99.13035401452304
-103.18054951239627,99.13202320053594
-103.18054951239627,99.1387715506356
-104.24158534575315,99.1387715506356
-104.57982358381648,99.13684562987378
-104.57982358381648,99.1467544733888
-105.9939089795241,99.1467544733888
-106.53445133647178,99.14739413569323
-106.53445133647178,99.14965709416971
-148.4374344158322,99.14965709416971
-148.9333086321445,99.14854545930835
-149.37098351685708,99.15263889070715
-149.41760437232747,99.15353654014848
-149.42862910777978,99.1576772927531
-149.80955847170978,99.15400840626369
-150.1705032915547,99.15800822086993
-150.1962649927078,99.1618563105375
-150.55466975764728,99.17015029624972
-151.12870099027873,99.17057075007659
-151.3441170461406,99.1698256683712
-151.46103337282838,99.17514428344515
-151.4617737929222,99.17261659233375
-151.47271738560167,99.17776940723766
-151.7089034180583,99.18392828513083
-151.95086346047376,99.18417332569368
-152.33584637398553,99.18294145010105
-152.74462363440261,99.18278965937282
-152.83770037100408,99.19665380790772
-152.84765906385653,99.2107174965902
-152.84765906385653,99.2184338146262
-153.8010453218341,99.2184338146262
-153.8010453218341,99.22143782257791
-154.59377391399644,99.22143782257791
-154.60008154557585,99.22417853239722
-154.60008154557585,99.22423601129131
-168.40199355323873,99.22423601129131
-169.1504478089552,99.22790251830118
-169.37471645456407,99.23459145770855
-169.4235670524294,99.23766952189752
-169.4235670524294,99.24176430241997
-170.46709915320562,99.24176430241997
-170.91078203524648,99.24449549906566
-170.91078203524648,99.24449609761302
-226.80104102207216,99.24449609761302
-226.96026483436805,99.24460599827933
-227.1097381258766,99.2482990782382
-227.3889120850149,99.25047076688483
-227.49252619407073,99.2527040310957
-227.55080049996886,99.25118161390215
-227.55080049996886,99.25509319555654
-228.36572769390773,99.25509319555654
-228.61482021092968,99.25358245925261
-228.7688962848255,99.25931024184999
-228.77345542890225,99.26091912247662
-228.9846946337336,99.26169797760664
-229.00096693896344,99.2630365317593
-229.15984826122903,99.26243683814482
-229.21386183267143,99.26103171709968
-229.3345021032268,99.2634111058841
-229.40642741529945,99.26348246702196
-229.41673010811485,99.26790183398808
-229.75844311270376,99.26777736830155
-230.31823940593935,99.26962432110923
-230.37395158178788,99.26761340533014
-230.63109632355173,99.27144064819367
-230.70468294628114,99.26990305494752
-230.9305073321773,99.2706294989706
-230.9305073321773,99.2719845702012
-232.93255713381745,99.2719845702012
-232.93255713381745,99.27435468813371
-235.6362594857791,99.27435468813371
-235.6362594857791,99.27386692591705
-246.22278990022764,99.27386692591705
-246.22278990022764,99.27646656597557
-247.0349258325217,99.27646656597557
-247.0349258325217,99.27535047062443
-248.39522047538662,99.27535047062443
-248.5477399645717,99.2762137603322
-248.5477399645717,99.2773705361449
-249.34755294634485,99.2773705361449
-249.34755294634485,99.27909170143518
-315.7138559676039,99.27909170143518
-315.7138559676039,99.28156682749487
-317.1458916988593,99.28156682749487
-317.4530671962117,99.28314865755199
-317.457478931592,99.28405197672542
-317.465077906257,99.2839405284417
-317.50123773553787,99.28645350212456
-317.63999734337295,99.28554432383156
-317.72612236258124,99.28492112980841
-317.85014747520825,99.2843152869821
-317.8519825552632,99.2849132700456
-317.9124470417504,99.28728549357827
-317.9397851627628,99.28991907958836
-318.0902681738346,99.29026564835745
-318.1461485390011,99.29161756975377
-318.28330636259324,99.29070695223537
-318.33748236077855,99.28995511903986
-318.4593406582641,99.28940574036446
-318.54202778132867,99.28914733803431
-318.79979238974056,99.29021830221902
-318.9484721723408,99.28969751030554
-319.682990018872,99.29107562443139
-319.74537619400775,99.28916028625751
-320.20159374988623,99.28994378232227
-320.20159374988623,99.29077436625019
-321.05334099842855,99.29077436625019
-321.05334099842855,99.29111511373002
-323.4239286927735,99.29111511373002
-323.4239286927735,99.29171001621275
-405.6312054866608,99.29171001621275
-405.9135248708537,99.28972235319144
-406.1213133024802,99.2901078885254
-406.27893912011143,99.29043216945075
-406.3101261555985,99.28833585796058
-406.4627191844541,99.28893087241137
-406.644648557735,99.2898846190877
-406.74202890751593,99.28983657286084
-406.823394380411,99.28767711776298
-406.8519305032082,99.28676026547559
-407.1421405039644,99.28764548095562
-407.2586205574868,99.28886045223987
-407.2994582961623,99.2896704677523
-407.3471999761616,99.29050203793332
-407.47716534294347,99.29224356258963
-407.7011510170559,99.29225935220566
-407.84990088155735,99.29212752948598
-407.9036967760828,99.292350095977
-407.9677028695617,99.29076037413778
-408.1186167304983,99.28963211902833
-408.130185561883,99.29045225279273
-408.29721287842835,99.29105829891272
-408.38509890223685,99.29087816630846
-408.46415001359287,99.29042738642978
-408.47649421321165,99.28893465405407
-408.79159571917023,99.28818241956091
-409.3367220927167,99.28718031105994
-409.3367220927167,99.28826594541313
-410.7849753985843,99.28826594541313
-411.2553922753305,99.28871364754208
-411.2553922753305,99.28729283699157
-415.19039535830524,99.28729283699157
-415.19039535830524,99.28689126055214
-416.70092807792867,99.28689126055214
-417.0655603725938,99.28662098423841
-417.3030398733142,99.2852235759242
-417.35391944279274,99.28441369060975
-417.48001619255916,99.28406653446892
-417.5288768948859,99.28359925767084
-417.7125997377765,99.28360867996655
-417.81822698752313,99.28468034799776
-418.00966682518475,99.28433981049803
-418.11366075265005,99.28464910834735
-418.1830955616567,99.28431850959758
-418.43729289915234,99.28548380311686
-418.43729289915234,99.28484449526213
-419.1957372773456,99.28484449526213
-419.2117335151094,99.28473034280832
-419.88938934632006,99.28470217219301
-419.9746495083772,99.28560751368956
-420.15277808902954,99.2857016641103
-420.52352174337176,99.28621548940713
-420.6470590931293,99.28651441986734
-421.3156760409888,99.28685402792625
-421.39611796375164,99.28779797915054
-421.55947255738727,99.28772274170551
-422.03355503609555,99.28785352080537
-422.1405958999544,99.28821435908277
-422.20980480064867,99.28597661654665
-422.44469187383714,99.28686597165428
-422.44469187383714,99.28754521822616
-423.52812747440385,99.28754521822616
-423.52812747440385,99.28814661991858
-426.475164242604,99.28814661991858
-426.475164242604,99.28883073492729
-429.1096685150089,99.28883073492729
-429.1096685150089,99.28781283587875
-431.3477303070712,99.28781283587875
-					</series>
-					<series title="" type="l" color="0xff1b1b" encoding="csv">0.0,0.0
-0.5029378498994236,0.0
-0.959147647777991,3.084276865527239
-0.959147647777991,6.067267664104568
-1.7712790376455139,6.067267664104568
-1.7790938412460982,9.260604276807163
-1.815080461836747,12.233611685598715
-2.1773951679099013,15.162001668872206
-2.199125797997056,18.34421185332137
-2.2949918977898784,21.318367990318986
-2.5287895732750365,24.60163884398587
-2.5907649229399827,27.60883489146788
-3.1753535314698462,30.421182424860316
-3.4602471295648267,33.659972135763965
-3.5077503520203046,36.75677189868198
-3.9391927184594997,39.61825984719519
-4.043127675815926,42.65162803440056
-4.110304061942932,45.58388460357707
-4.110304061942932,48.750087311339165
-5.055724279123214,48.750087311339165
-5.22033050482292,51.78903259588481
-5.2288348774628535,54.78819978038988
-5.448360548701692,57.74767440542307
-5.541542542421029,60.62486821127221
-5.573887852101195,63.645974528229175
-6.045933373174828,66.67088785808465
-6.172612806864918,69.78932798648077
-6.222823834314917,72.7692914325255
-6.340930043252199,75.86923053754037
-7.051945058088966,79.04543853198577
-7.051945058088966,82.09223807402094
-8.128366433973662,82.09223807402094
-8.842968144132376,85.31557292022799
-8.842968144132376,88.31595747878913
-9.859718851628807,88.31595747878913
-9.859718851628807,91.46390123337676
-11.368312702946303,91.46390123337676
-11.427763488391522,91.77256955064192
-12.080958472918065,92.09436172610134
-12.080958472918065,92.2507809015709
-13.453595015645286,92.2507809015709
-13.70891326593977,92.71502147111661
-13.760925975179504,92.82588136450188
-14.02737368350179,93.0825951709089
-14.050693744146601,93.19725688183544
-14.481678351119099,93.48500103649633
-14.492250251828148,93.75889524773459
-14.667728695025941,94.0836053643515
-14.733551829439822,94.29496874363572
-15.437802893326591,94.32272385538009
-15.728346142411791,94.44118181426926
-15.878390269262857,94.69445036061661
-16.11626287922659,94.94109521418962
-16.414128271582623,95.10981169341858
-16.414128271582623,95.1827928665451
-17.39136823849022,95.1827928665451
-17.39136823849022,95.26972522508937
-18.643689423084858,95.26972522508937
-18.782088464661054,95.39021014746068
-18.782088464661054,95.59237933314216
-19.88965760148583,95.59237933314216
-19.88965760148583,96.04077265253906
-20.68612592151722,96.04077265253906
-20.68612592151722,96.33264170378375
-25.680375214791308,96.33264170378375
-25.680375214791308,96.63374270646908
-29.675718305857945,96.63374270646908
-29.675718305857945,96.91561418906299
-32.71244271994917,96.91561418906299
-33.35973233433387,97.09882650798811
-33.52528495522309,97.44289028941488
-33.86769322999272,97.68023028371344
-34.008088194718546,97.74738479842571
-34.008088194718546,98.16588110952962
-35.770971894024434,98.16588110952962
-35.770971894024434,98.48807853833264
-39.104112837313664,98.48807853833264
-39.85411153442772,98.5261875080635
-39.85411153442772,98.5258211128698
-42.2685168508823,98.5258211128698
-42.40446516446833,98.55867134166064
-42.40446516446833,98.57477890039776
-44.80961277056431,98.57477890039776
-44.80961277056431,98.58416066936121
-46.38029670451777,98.58416066936121
-46.38029670451777,98.59862381310398
-47.42653639710761,98.59862381310398
-47.50321871187248,98.6094906495185
-47.641298101464066,98.63272913587325
-47.697657205719445,98.66591858578578
-47.697657205719445,98.67370585223323
-48.592043272197856,98.67370585223323
-48.92888394755921,98.67858146807524
-49.53996540618326,98.70401893702285
-50.106417668818516,98.69643025305213
-50.106417668818516,98.7158092876485
-67.61372806929397,98.7158092876485
-67.61372806929397,98.74631398363334
-69.646641462873,98.74631398363334
-69.67004156969337,98.80466562891245
-70.12457668151085,98.85234759054839
-70.12457668151085,98.88374835691229
-72.20783000135792,98.88374835691229
-72.24468763035954,98.89472905615013
-72.77732026240525,98.89885105780932
-72.79693771916214,98.90482184468559
-72.96750651638939,98.92718264474327
-73.06097836733375,98.94002374087067
-73.29097115437175,98.96714220792148
-73.67986181478292,99.01552795952351
-74.16926453231784,99.00894210538046
-74.16926453231784,99.0449485811304
-75.03237861177311,99.0449485811304
-75.25915196115295,99.0493798555937
-75.25915196115295,99.06254765809507
-76.78591599411338,99.06254765809507
-76.78591599411338,99.09818935573132
-79.01276564994679,99.09818935573132
-79.01276564994679,99.10783982315832
-81.72178887316531,99.10783982315832
-81.72178887316531,99.10973825543829
-82.51604878119403,99.10973825543829
-82.51604878119403,99.11316559129729
-83.32235874376997,99.11316559129729
-83.33993809723422,99.11866206306786
-83.33993809723422,99.12062317579168
-87.15416897555511,99.12062317579168
-87.15416897555511,99.1228439058496
-135.27851607400413,99.1228439058496
-135.60634729839856,99.12403242253608
-135.98615334212124,99.13203301310926
-136.15505391103295,99.13723898114345
-136.15505391103295,99.13318410034205
-137.4921966180122,99.13318410034205
-137.60567514271037,99.13768990157325
-137.6922743242528,99.14809607026773
-137.7826441582106,99.14397079670067
-137.80563041268198,99.15432020651774
-137.98777332703295,99.16412024916107
-138.24267844111284,99.1752756460117
-138.2659118447651,99.17794217165942
-138.32511589904865,99.17664301854118
-138.55816274039114,99.18303446015507
-138.9668739405673,99.18603531735545
-139.21123085540353,99.20266008236044
-139.28324333774157,99.19944339105
-139.5623966443556,99.19828755110483
-139.88373605604383,99.206217031111
-140.2623729723762,99.20877799841232
-140.48663601999806,99.22048377464402
-140.48663601999806,99.22631714114634
-141.46822688626523,99.22631714114634
-141.9786335480586,99.22348101333266
-142.5909039668768,99.23525770130408
-142.5909039668768,99.22990971102901
-147.99243501671768,99.22990971102901
-147.99243501671768,99.23360365603534
-149.24739719264042,99.23360365603534
-149.5774669708025,99.2376516159618
-149.75474793469925,99.23959394707444
-149.92400280426827,99.2403948287308
-150.12269444028354,99.24208435367468
-150.16521371813272,99.24355867304914
-150.27421016725384,99.24827147139654
-150.461892486962,99.24827092988579
-150.55984302823362,99.2495105890754
-150.58471104689343,99.25033394240178
-150.62382017976802,99.25063091605104
-150.79416909050647,99.25593725242497
-151.14741641172725,99.25533805757115
-151.29214189439875,99.25393206358024
-151.29992618993836,99.25555470825128
-151.41941264289815,99.2530066614393
-151.4704968989243,99.25261694918301
-152.2135928885635,99.25722826654382
-152.2135928885635,99.26058329204513
-153.0924185685571,99.26058329204513
-153.30882525537626,99.25783747736577
-153.3690032282166,99.26168291129896
-153.49076918578595,99.26554256873291
-153.90900124443505,99.2721923338102
-154.05037311859692,99.27162546232994
-154.05037311859692,99.2783791921964
-155.32451257649228,99.2783791921964
-155.4679095432798,99.27944112143147
-155.88205281152437,99.27728246244295
-156.44855525768222,99.2805894544091
-156.44855525768222,99.27666569329344
-157.90217148092438,99.27666569329344
-157.90217148092438,99.27891726013718
-159.05731396441868,99.27891726013718
-					</series>
-					<series title="" type="l" color="0xff2424" encoding="csv">0.0,0.0
-0.6771136154586539,0.0
-1.1034337501402294,3.1833440051206274
-1.644906763909341,6.255314235612827
-1.6793299806115953,9.441617771436277
-1.7741966624085999,12.436346679966535
-2.2765069748016,15.514299469659054
-2.309045853102431,18.383626248732508
-2.3621185062523367,21.537145405093778
-2.3890057483726843,24.63151888768145
-2.401933993811322,27.80713710135276
-2.8480472161520063,30.688810559620155
-3.224036708307899,33.922162129739704
-3.335949182585113,36.8703423659876
-3.6020146196665492,39.96672884364083
-4.081148954188996,43.03179443755992
-4.081148954188996,46.09564198458762
-4.997602718147729,46.09564198458762
-5.305627234291993,49.305705917097185
-5.970469311766136,52.35565947828725
-6.297401150229191,55.50173580985348
-6.342554620394751,58.59395508353105
-6.988384110293199,61.53391938343166
-7.501240786831898,64.61291686587994
-7.644244788957435,67.62898808995587
-7.696957182320887,70.63957177888261
-7.852876394114358,73.64457727112237
-8.171423735539497,76.69689004416078
-8.211741740337148,79.75455570268629
-8.211741740337148,82.88876174126571
-9.080299308302266,82.88876174126571
-9.110146706839574,85.94978731394134
-9.110146706839574,89.0842627131249
-10.629006371627673,89.0842627131249
-10.629006371627673,92.02865819175852
-14.007991659034014,92.02865819175852
-14.306939943545267,92.27151090750993
-14.357594816776432,92.46629999395356
-14.357594816776432,92.67685836100604
-15.429731408849499,92.67685836100604
-15.660358340159386,92.91957263586806
-16.017971729133883,93.21305764395419
-16.017971729133883,93.26711650702252
-17.13493123137754,93.26711650702252
-17.682595022790952,93.4861114465206
-17.98768768578875,93.82822313830947
-17.98768768578875,94.122547939989
-25.847144194729758,94.122547939989
-25.847144194729758,94.22392882536431
-27.345112794680375,94.22392882536431
-27.345112794680375,94.34785708357491
-28.672538832075436,94.34785708357491
-29.023196312676113,94.57830385742658
-29.023196312676113,94.81330991110086
-30.417922161292438,94.81330991110086
-30.417922161292438,95.20445633088045
-31.55624077102316,95.20445633088045
-31.55624077102316,95.51246910887185
-47.516720110848865,95.51246910887185
-47.516720110848865,95.7182917729487
-48.34187938974851,95.7182917729487
-48.35820750490539,95.82760219732492
-48.418549908595104,95.95240349987168
-48.70392857633654,96.07535446444082
-48.746225463182014,96.25787791492397
-49.13658094511435,96.49137519472268
-49.28429224832393,96.63773779261567
-49.558093551053155,96.80625579904446
-50.095755226316996,97.17539271830424
-50.095755226316996,97.2644123150935
-50.88021677415956,97.2644123150935
-50.958042321947325,97.51108311584801
-51.07483002517246,97.55639564548167
-51.07483002517246,97.77798752428725
-52.99939097365682,97.77798752428725
-53.19947465458136,97.78286421810135
-53.24766768830921,97.9716558658708
-53.66667531645698,98.13686117150765
-53.66667531645698,98.13690975160836
-70.83933919295838,98.13690975160836
-70.83933919295838,98.14672974246255
-71.97542399031525,98.14672974246255
-71.9839530463331,98.15552814368539
-72.53648783641897,98.16422458602032
-72.6804118414652,98.20012493339658
-73.00421230480153,98.24443094836889
-73.08012501366996,98.2824327748157
-73.08012501366996,98.32096932443537
-113.4770121164076,98.32096932443537
-113.9522908719822,98.32001148333222
-113.9522908719822,98.3325568426214
-114.83603408210631,98.3325568426214
-115.24395005108322,98.34246556836024
-115.30784005113695,98.39577250718567
-115.64722787795122,98.42430667004777
-115.8699825777972,98.47239577905165
-115.8885596154966,98.48351151642754
-116.03423355570541,98.50206770598591
-116.1015652639083,98.51779808925293
-116.16500580645848,98.55332965118117
-116.318857854662,98.55917546520845
-116.33521064655,98.56878991003452
-116.35754509545562,98.59477260746989
-116.46469185055587,98.61357380108679
-116.93692919570951,98.63465225253712
-117.00291489074452,98.67129810159652
-117.03375702111312,98.69625931337687
-117.41057755273155,98.70771924678702
-117.64616469258632,98.7458257852417
-117.64616469258632,98.76380304857825
-118.6700308269093,98.76380304857825
-118.6700308269093,98.7883799611369
-135.40687486637614,98.7883799611369
-135.96206434144997,98.80823981553931
-136.36487189450153,98.81564901671561
-136.52441168986414,98.82286030396827
-136.52441168986414,98.83560839368286
-137.40603962497224,98.83560839368286
-137.40603962497224,98.84257546549101
-140.33686429668623,98.84257546549101
-140.33686429668623,98.84766458357146
-193.41905283223926,98.84766458357146
-193.51682652737497,98.85248836767522
-193.74318510305704,98.85093538766557
-193.8683304716201,98.86271696585155
-194.02422581088334,98.86406958620614
-194.12723321397266,98.87339498913704
-194.14822646695143,98.89401625516773
-194.1535021149856,98.9076644925367
-194.19519044388107,98.91430635621994
-194.38730086544686,98.91480793468709
-194.69053071816705,98.9207315487786
-194.87435045678475,98.9220688958953
-195.08334370865745,98.92493118497903
-195.17797223795287,98.93695102612558
-195.79839919436785,98.93700419324371
-195.81176142604494,98.94092162006861
-196.46664570055688,98.95788166210113
-196.7882621549403,98.96205217139135
-197.04789059176693,98.96253150498079
-197.47071590973093,98.97223131479382
-197.90818092023088,98.97879067454238
-198.29791117302523,98.98010988882551
-198.6814194977333,98.98467952054335
-198.88371652617857,98.99312169951413
-198.88371652617857,98.99901659410982
-209.29779860200452,98.99901659410982
-209.29779860200452,99.00703783226427
-210.09194663625254,99.00703783226427
-210.4640216600789,99.00812291848725
-211.11303080843263,99.01350718558662
-211.11303080843263,99.01522389656539
-274.7733663009002,99.01522389656539
-275.3182605790833,99.01575757852464
-275.3182605790833,99.0216707677161
-276.0905927721985,99.0216707677161
-276.13852501231906,99.02163438250471
-276.2646416325558,99.02642990375908
-276.7714039243566,99.03595841037009
-276.8899652152871,99.03883454324881
-276.9293996834545,99.03923764030952
-277.0211173515295,99.04143166469984
-277.0215146227471,99.04706030051572
-277.70210980527247,99.04999039639584
-277.86654604182223,99.05268774270714
-278.14023045574896,99.05463491195768
-278.2604013297495,99.05490520627032
-278.29236719079813,99.05427042609669
-278.5762516876345,99.05377727875153
-278.72755845604865,99.0545157155553
-278.79737339291665,99.0546004177572
-279.0710650817773,99.06091380917907
-279.07787668365535,99.05961938388188
-279.34034249804796,99.0620013698169
-279.3616461370214,99.06426012427154
-279.3635760955907,99.06470688447725
-279.537994453363,99.06608440124852
-279.537994453363,99.06641423873164
-281.4492938796303,99.06641423873164
-281.81861532169233,99.06710449474524
-281.81861532169233,99.06946000660021
-284.62912070468406,99.06946000660021
-284.62912070468406,99.07072528458181
-369.9267056966524,99.07072528458181
-369.97125229729227,99.07134413919539
-370.2053087176211,99.07116439518335
-370.3573121483165,99.07201637337764
-370.64108049180084,99.07153961689907
-370.7296848288555,99.0724560997535
-370.99728484892916,99.07207900400968
-371.3884182413451,99.07185016558698
-371.69465097512034,99.0713760725682
-371.7369986126687,99.07506014652657
-372.0525562448054,99.07600901110524
-372.0721330850273,99.0766399973042
-372.14203546271517,99.07618827984061
-372.46961030024863,99.07593022239743
-372.56409835419163,99.0759607563374
-372.58680687689315,99.07698810913158
-372.65072697431015,99.0784768431314
-372.9182793062126,99.0815622070507
-372.9243259065819,99.08149251720121
-373.540256989382,99.08153930542065
-373.55939113556786,99.0819325636117
-373.6599314848858,99.08179215106804
-373.7270360024655,99.08105478145009
-373.76833431131087,99.08442642182439
-373.8397082567754,99.08625033313382
-374.4159427233391,99.08822788322638
-374.4159427233391,99.08912896039215
-375.6491706265746,99.08912896039215
-375.93920275074856,99.09056927789018
-375.93920275074856,99.09056330630204
-377.8477813269675,99.09056330630204
-377.8477813269675,99.09141261106015
-383.64826654973336,99.09141261106015
-383.6848567910011,99.09163596300834
-383.6848567910011,99.09296008131787
-384.46812761311514,99.09296008131787
-384.46812761311514,99.09343491847747
-385.2696763740323,99.09343491847747
-385.35764298894117,99.09364570064233
-385.46395476405314,99.09523152115798
-385.8202850961498,99.09516426231437
-386.08725142553544,99.09523168418235
-386.16815203718863,99.09510087200687
-386.44821578866765,99.0966647987353
-386.47714604547883,99.09639744132375
-386.50940843180626,99.09636995013105
-386.69464777263755,99.09703440919654
-386.8145150328439,99.09678990942069
-386.98730818334343,99.09702540450641
-387.1171414064929,99.09737648102168
-387.20209458563767,99.09880321086192
-387.41082718384496,99.09860439314974
-387.49377111898934,99.09863836406836
-388.228645542954,99.09819007500491
-388.36739760507163,99.09892850405964
-388.6101719649141,99.09944927053203
-389.1374802493082,99.10045630108407
-389.1374802493082,99.10113252995757
-390.0802910320685,99.10113252995757
-390.40675948445744,99.10144331390124
-390.4938902428431,99.10183100964426
-390.70175085686634,99.1012517799041
-390.70175085686634,99.10071157409689
-391.51188395210926,99.10071157409689
-391.52795829323316,99.10140928536113
-391.9707115519879,99.10134420626453
-391.9707115519879,99.10211564165205
-393.64019780004134,99.10211564165205
-					</series>
-					<series title="" type="l" color="0xff2d2d" encoding="csv">0.0,0.0
-0.9711361350233076,0.0
-1.2218544951960886,3.233313549015493
-1.9581929836652598,6.277013640519879
-1.99410703035779,9.247792755756834
-2.112268003093219,12.255464517338623
-2.1251548858673024,15.110932955700823
-2.1404177738264663,18.055068775774163
-2.205292022607224,21.113395508522895
-2.2293633565417976,24.175242033090363
-2.3343541662747307,27.340728090485392
-2.456505450881856,30.275102831778412
-2.4756689728459462,33.30666994330555
-2.564061814627371,36.41889388374233
-2.5846033662347634,39.18946210550652
-2.765178355496164,42.17885412979258
-3.3317748580114714,45.27820249855317
-3.643554718976141,48.383948019165814
-3.7125154375592353,51.54868788904955
-4.130978401911661,54.55808842420609
-4.130978401911661,57.64483952167525
-5.242806525128157,57.64483952167525
-5.348524006014662,60.67401295368126
-5.5608248486221585,63.67743283953176
-5.905307659055894,66.921375449679
-6.058655760146643,70.00291577344372
-6.449464333422135,73.04336506754574
-6.819637619882965,76.05162971957371
-7.3181651172398805,79.18243460513027
-7.996862312920801,82.3426164301752
-7.996862312920801,85.2281956419971
-8.78790130082418,85.2281956419971
-8.78790130082418,88.34579035647111
-10.296996053471684,88.34579035647111
-10.296996053471684,91.43397544369846
-11.388029601205169,91.43397544369846
-11.388029601205169,91.69844683547164
-13.042545840996771,91.69844683547164
-13.070010939161344,91.90548813538133
-13.741267002167401,92.33376194622335
-13.741267002167401,92.65981451338827
-15.009016636394875,92.65981451338827
-15.149950672886137,92.82722292052081
-15.348114785245185,93.06333323351087
-15.348114785245185,93.38088860028584
-17.591703252362265,93.38088860028584
-17.591703252362265,93.71116126748225
-23.532763912501654,93.71116126748225
-23.625544570486543,93.98282396550086
-23.657792459313164,94.24279683427088
-23.657792459313164,94.36684323217936
-24.524997019993776,94.36684323217936
-24.710892862883853,94.48614021660367
-25.05517923211316,94.68369328497953
-25.40200778495889,94.73841937094183
-25.435390147624044,94.967352859023
-25.490503167602807,95.04328422995084
-25.490503167602807,95.06142018583995
-26.277723943673355,95.06142018583995
-26.277723943673355,95.15532599592366
-27.1112352684827,95.15532599592366
-27.26678500901005,95.5623689832996
-27.26678500901005,95.73775896709775
-28.733452256918827,95.73775896709775
-28.733452256918827,95.88052699531418
-30.99675053969404,95.88052699531418
-31.485531505602612,96.1190739864572
-31.485531505602612,96.3271196061433
-32.44862132434955,96.3271196061433
-32.49752704024726,96.56094863172237
-32.49752704024726,96.74773347470529
-33.284126149083875,96.74773347470529
-33.48058885577389,96.98300918209029
-33.88153210945855,97.23403218920566
-33.88153210945855,97.50744398410451
-35.81109277584847,97.50744398410451
-35.921781430444376,98.0235301260771
-35.921781430444376,98.18301494981633
-40.99024531555028,98.18301494981633
-40.99024531555028,98.20621465774336
-43.88630462384243,98.20621465774336
-43.88630462384243,98.20710458093514
-44.95767337141886,98.20710458093514
-45.332161030287025,98.25647956522494
-45.332161030287025,98.31137278463189
-46.26383052754437,98.31137278463189
-46.26383052754437,98.32519316084557
-67.06004922802222,98.32519316084557
-67.44484786615043,98.35471286665015
-68.00747421847272,98.3765535785887
-68.00747421847272,98.40718609539567
-69.26093106302424,98.40718609539567
-69.61438335501548,98.42330446187299
-69.7141500538231,98.45366811027259
-69.7477232549012,98.45785307199068
-69.96252231705508,98.47202806858142
-69.96252231705508,98.47388836613699
-70.99078403327282,98.47388836613699
-71.48266819490956,98.49161187432593
-71.58646961036982,98.49567281933543
-71.6533414942936,98.51488464398662
-72.02410833260217,98.54736690396676
-72.2399154722177,98.57112843743953
-72.45292650801731,98.60712643237598
-72.57106032856035,98.62138707881006
-72.63430775793314,98.64746393473008
-73.11881957153078,98.64442698169559
-73.25889853702397,98.6448385504436
-73.25889853702397,98.65412988509726
-74.04692980873784,98.65412988509726
-74.09815407726279,98.68472479312771
-74.33945060683567,98.69088002085536
-74.39850130317654,98.70112331811924
-74.92778435076244,98.69768277326699
-75.26438224112994,98.74953896173128
-75.26438224112994,98.8006424127426
-101.53962146562118,98.8006424127426
-101.53962146562118,98.80736935639595
-102.29937365369766,98.80736935639595
-102.31432441405296,98.81978174553905
-102.73565880440695,98.81831373445655
-102.95771741589962,98.82542401312409
-103.15278623256731,98.82422909310554
-103.78591462040974,98.83376260480836
-104.00511074871434,98.84321767223068
-104.25416434662834,98.84484299969333
-104.25416434662834,98.8593776306422
-106.49868283235168,98.8593776306422
-106.49868283235168,98.86205999478159
-128.39970477791977,98.86205999478159
-128.96766883748822,98.8622984429365
-129.47702115286978,98.86123452571042
-129.87299150666104,98.8666729664117
-130.24520153991315,98.88104652645191
-130.4300607086291,98.88500241661882
-130.56968126490372,98.89252633541766
-130.84988096228176,98.89821539332846
-130.84988096228176,98.91317429917882
-131.6132500075619,98.91317429917882
-131.79870091719232,98.92475278762244
-132.49060145260822,98.9242502584341
-132.49060145260822,98.92253762127059
-133.43257647099188,98.92253762127059
-133.85875676195104,98.92895351419773
-133.85875676195104,98.93551426671804
-136.02978203116967,98.93551426671804
-136.41446162663,98.94117255468105
-136.70844047281656,98.93775674185306
-137.4563483429986,98.95078321397736
-137.63713289300995,98.95177842251738
-137.73531568906293,98.95802481215699
-137.90756934254208,98.96696012428907
-137.90756934254208,98.96994918288983
-157.17458758460094,98.96994918288983
-157.17458758460094,98.9724246946743
-159.6913567064093,98.9724246946743
-159.6913567064093,98.98168651971793
-160.56633936693402,98.98168651971793
-160.56633936693402,98.98526494755372
-161.98410935476406,98.98526494755372
-161.98410935476406,98.98993969808272
-163.85607898364134,98.98993969808272
-163.85607898364134,98.99121532246188
-204.17287503995635,98.99121532246188
-204.17287503995635,98.99548052361055
-205.03721325892624,98.99548052361055
-205.15261672054066,98.9975997520297
-205.55603623319317,99.00119696962616
-206.09286064473673,99.0028146173733
-206.19315287666794,99.00783160486122
-206.2304988600856,99.00755347592731
-206.4138801256822,99.0073354601708
-206.47766837811767,99.0072352648468
-206.4789317875578,99.01098619683731
-206.62998989817876,99.01085279177208
-206.98073116985444,99.00972546111218
-207.07364443466363,99.01151401419882
-207.35791959336112,99.0156819753718
-207.83811388587728,99.01790604856015
-207.92388057654153,99.02009403127578
-207.9304124297338,99.01981668649424
-208.0622488368646,99.01920558298363
-208.25442179976804,99.01926176176771
-208.62060112531967,99.01903117251625
-209.19652971596463,99.02078545719874
-209.2519077752158,99.02226489485558
-209.27471337826177,99.0239567945158
-209.7120910513146,99.02751176529692
-209.7530949773298,99.0316175181301
-209.7530949773298,99.03357870235924
-215.9101344264944,99.03357870235924
-216.4581934343197,99.03514325880177
-216.55823667774052,99.03512189164462
-216.7410709702272,99.03437044665029
-216.75948497863,99.03663360366296
-216.80781163095878,99.037357444494
-216.83981064302785,99.03868177602088
-216.9378248676154,99.04180695556543
-217.1216982260901,99.04320041386158
-217.360650439226,99.04429463301999
-217.44428011840486,99.04504385397895
-217.90573055392144,99.04563766175494
-218.28870233827587,99.04624086844498
-218.70134308791688,99.04724449470791
-218.89709434900016,99.0484840462906
-219.00981181666165,99.04921806360306
-219.06729602879247,99.0503748478241
-219.11337400268397,99.05024841751776
-219.21448976222428,99.05089308574561
-219.5594099975019,99.05157237347534
-219.66282392771035,99.05205363151673
-220.0958976850788,99.05411970735946
-220.1015262734798,99.05418624359237
-220.21575881368503,99.05470321442671
-220.74866653372797,99.05482711884022
-220.74866653372797,99.05724377103583
-222.01002817652056,99.05724377103583
-222.02543063435854,99.0621076966142
-222.603733930617,99.06635981354167
-222.603733930617,99.06736768087185
-223.94438894451307,99.06736768087185
-223.94438894451307,99.06853071561888
-226.78002345978365,99.06853071561888
-226.78002345978365,99.06903647240348
-227.78506907848936,99.06903647240348
-					</series>
-					<series title="" type="l" color="0xff3636" encoding="csv">0.0,0.0
-0.22463800152788702,0.0
-0.5229970687901169,2.8951034960496136
-1.1567421829391527,5.826971209845335
-1.3895901761091995,9.10489606226489
-1.5446643606277386,12.26046185136902
-1.5446643606277386,15.450347403461564
-2.5635653409796975,15.450347403461564
-3.0637701301001714,18.397780604651018
-3.0708453480179245,21.497365024976947
-3.1554752415129848,24.625470578184554
-3.172085846482061,27.630762941243887
-3.3388637486430803,30.654987178100498
-3.362209541806241,33.873817024225964
-3.82017264499045,37.00594990053502
-3.8834497535926706,40.11670902712728
-3.8834497535926706,43.19751883490968
-4.9814212719318895,43.19751883490968
-5.22740802040898,46.28558173088719
-5.329562813636538,49.43459545954401
-5.751727912470821,52.398672965670684
-5.779712529837463,55.259625474912525
-5.779712529837463,58.403958963370975
-6.621642959477085,58.403958963370975
-7.353704478063312,61.54333180593486
-7.917841042892285,64.57391021670729
-7.917841042892285,67.5764841463114
-8.96176199957949,67.5764841463114
-8.983508187721664,70.64278300131895
-8.983508187721664,73.71629296103782
-11.1996614582297,73.71629296103782
-11.1996614582297,73.92862836867782
-12.728868180169494,73.92862836867782
-12.728868180169494,73.94073271880384
-17.888622779218654,73.94073271880384
-17.888622779218654,77.1104065566042
-18.997259367542366,77.1104065566042
-19.19997364540309,80.33070336786433
-19.654642944690018,83.42404938470474
-19.654642944690018,86.62494920884431
-22.742859917972453,86.62494920884431
-22.742859917972453,89.67186820639927
-23.752508277150188,89.67186820639927
-24.47170847316308,92.72219804915478
-24.980468850068227,93.02204367746127
-24.980468850068227,93.18440989512142
-27.603599606819742,93.18440989512142
-27.92726239066451,93.29871697699262
-27.988184801630165,93.45994979316326
-28.10403663554052,93.62702761733456
-28.10403663554052,93.86410325438892
-28.947825617356862,93.86410325438892
-28.947825617356862,94.1643843063446
-30.97536094446316,94.1643843063446
-30.976286511353173,94.35955843124673
-31.573560164093735,94.6079893318062
-31.825050830104043,94.92178137385434
-31.8963636800666,95.1500967188464
-31.8963636800666,95.35463812180328
-33.12421373252722,95.35463812180328
-33.12421373252722,95.46851934618034
-58.92132782494247,95.46851934618034
-58.92132782494247,95.55137957080437
-60.34847099995834,95.55137957080437
-60.426191609883766,95.66557636741786
-60.86476722934704,95.86605583137596
-61.234500178024994,96.03144835753864
-61.68441891269162,96.25164343658626
-62.305865267222735,96.3873942971591
-62.420791495155584,96.5477837191303
-62.84574052877285,96.96282377365134
-62.86040649823513,97.30511895928184
-63.235634885414754,97.51672864092446
-63.49310219294995,97.63403325626719
-63.568638915643206,97.9642436440138
-63.944938969693915,98.19197987759298
-63.944938969693915,98.2351338409229
-66.84648747352821,98.2351338409229
-66.84648747352821,98.25903240387868
-67.72661821299107,98.25903240387868
-68.247762753638,98.34626074586099
-68.247762753638,98.34819169413802
-69.59251249681918,98.34819169413802
-69.7982125832201,98.38538843585853
-69.94774899346122,98.40309905488033
-69.94774899346122,98.40736094950282
-71.29297266728273,98.40736094950282
-71.29297266728273,98.43242933653245
-138.08769415857958,98.43242933653245
-138.08769415857958,98.4058608834671
-138.97814453930206,98.4058608834671
-139.04444794025028,98.4415883734208
-139.17031639151963,98.43682169517724
-139.21779098592157,98.41580158426684
-139.4822133008795,98.4264271480669
-140.06129782709905,98.43088374251967
-140.12163530557433,98.40814443948082
-140.31335343763297,98.4113371201125
-140.32070565675082,98.40839039160633
-140.45471459884553,98.4317775249948
-140.74960208990004,98.43613324642217
-140.74960208990004,98.41104692690746
-141.5809545037994,98.41104692690746
-141.9489789081368,98.44686754466204
-141.9489789081368,98.47229396358946
-143.04345775132182,98.47229396358946
-143.0717037979201,98.48698933368973
-143.2684261355512,98.4924345944458
-143.40806086655203,98.52740018371374
-144.0514288849727,98.53476732218446
-144.2015341340629,98.55300286199586
-144.2979010430387,98.57921222220814
-144.32494787952223,98.57840789416038
-144.41840901858873,98.63242233886321
-144.92511797644872,98.64750535468086
-144.92511797644872,98.64733697184458
-149.87734575422922,98.64733697184458
-149.91405897269306,98.64363226349325
-150.21047785028725,98.64677629493521
-150.32496733166053,98.64797743148976
-150.32496733166053,98.6560936039367
-151.4619302701255,98.6560936039367
-151.55330466266588,98.66997120639574
-151.85002906388348,98.67427378787691
-151.90047429484284,98.68303589363897
-152.0313810199839,98.6941502431596
-152.03364448115133,98.70111944935707
-152.1876834246374,98.70338757037698
-152.1876834246374,98.7087912087252
-153.39558017985559,98.7087912087252
-153.7602525653263,98.7009191081151
-153.82910978816756,98.71526818062354
-153.90849909422786,98.7146697331516
-154.28037330061795,98.71966931453093
-154.29373685515938,98.71906907634157
-154.5556806635383,98.71037532706838
-155.0478799430064,98.71125415900853
-155.42898612672806,98.69647967977163
-155.4644233270022,98.69483670264077
-155.4781162830769,98.7034953829554
-156.20257765436358,98.71419897036982
-156.74872619366752,98.71507127417784
-156.8704865993646,98.71409455592108
-157.2953472787714,98.70830778920462
-157.2953472787714,98.71106781604715
-158.74643996521954,98.71106781604715
-158.80545567646016,98.68732029436312
-158.80545567646016,98.66681370905833
-160.63041533709477,98.66681370905833
-160.63041533709477,98.66040457006456
-165.5605746740833,98.66040457006456
-166.10614459162142,98.66664459767094
-					</series>
-					<series title="" type="l" color="0xff3e3e" encoding="csv">0.0,0.0
-1.3011915744686247,0.0
-1.591653919812281,3.0929648472330733
-1.6943278574014844,6.053922374287222
-1.785117811739728,9.208306450749284
-2.1699393993327805,12.289347062387296
-2.3740999077680915,15.380022905234272
-2.591711478670136,18.477014785597262
-2.643358591422305,21.275320429321425
-2.9912709355925036,24.429477540129994
-3.16574436904185,27.62344706605032
-3.3001940928345825,30.533736275690604
-3.488033074085933,33.64273643394474
-3.5069741460779382,36.64945628984381
-3.769640660899208,39.724924023606754
-3.8803341290979714,42.758508194673006
-4.188087004691242,45.689395729803636
-4.493295406233121,48.84285641201395
-4.884317768886906,51.78940470290649
-4.9125240451497305,54.5497412855939
-4.975152910883065,57.573808107912605
-5.116755887403819,60.65007245592745
-5.116755887403819,63.62246740663442
-6.018627179889266,63.62246740663442
-6.018627179889266,66.43733923705157
-7.656076959934392,66.43733923705157
-8.11024194617658,69.65856223230648
-8.143431092842857,72.7780799310688
-8.143431092842857,75.57768270324432
-9.016974738622588,75.57768270324432
-9.06621655805821,78.69429776088592
-9.305939750819524,81.62988432091174
-9.305939750819524,84.6028800028098
-10.381407451705465,84.6028800028098
-10.381407451705465,87.70482588631995
-11.16460809452947,87.70482588631995
-11.16460809452947,90.77416800544465
-12.950289585028083,90.77416800544465
-13.42102325741705,90.85178409716804
-13.42102325741705,91.07594735251449
-14.277566738061031,91.07594735251449
-14.277566738061031,91.34592485258328
-15.438093019673145,91.34592485258328
-15.9812917324301,91.56534383180234
-16.56039783953908,91.7107989737582
-16.59539425202042,91.78113960167018
-16.647052519144573,91.94744513532585
-17.25942185519931,92.0977409524664
-17.43228798651626,92.4009929221394
-17.69797544215655,92.68263908530157
-18.10644257058517,92.98471625798093
-18.541380603177277,93.15402663894605
-18.958391539309147,93.63432593863828
-19.287632165480225,93.72764343604136
-19.287632165480225,93.92017492901323
-25.109433253160383,93.92017492901323
-25.109433253160383,94.15743010567478
-26.78193367196263,94.15743010567478
-26.847354999674,94.33848940841214
-27.338191367498187,94.62107025538377
-27.83578093528141,94.95617324976295
-28.057963490682162,95.42828662387232
-28.249139858107448,95.48393535428052
-28.72163545080412,95.66495863385755
-28.839329671215072,95.83913633142382
-29.44055887642328,96.0599015997068
-29.570210220365066,96.21887016946025
-29.570210220365066,96.50246254782711
-31.063131324585793,96.50246254782711
-31.168945044067204,96.97944634510071
-31.557064768625985,97.42647916519917
-31.557064768625985,97.65077028254989
-33.16378074226397,97.65077028254989
-33.16378074226397,97.81711802667988
-37.996192680752905,97.81711802667988
-37.996192680752905,97.87305889049823
-41.40676457568627,97.87305889049823
-41.40676457568627,97.94075961235791
-64.05071972237182,97.94075961235791
-64.17592927571435,97.91659487045739
-64.72541045420535,97.93009155346715
-64.90518384238057,97.94675654235226
-64.95308039717952,97.99067623611215
-65.01502933480937,98.0292070564908
-65.10266991183731,98.02593351509717
-65.14523916564175,98.06386978158136
-65.28472614691974,98.07391518737595
-65.46981876343887,98.07187020498215
-65.69553527019076,98.09435537400671
-66.26800203102474,98.12274849534704
-66.26800203102474,98.20268070175254
-68.03102592279004,98.20268070175254
-68.37133795944764,98.1944806484381
-68.85588688924888,98.22428535318078
-69.10580314302727,98.2448162608812
-69.22601926161293,98.24742774092013
-69.42114992944596,98.31531082333993
-69.44270320871964,98.33016829982903
-69.78429624946196,98.36042383805663
-70.447794834093,98.39272508288471
-70.62048384012289,98.40519736627583
-70.91848887919292,98.46923756757336
-71.03118903803255,98.42804018887641
-71.31512965298995,98.49403708906299
-71.62259862621316,98.50988822227215
-71.842424448865,98.53821260156516
-71.94267831960313,98.50363032487179
-71.94267831960313,98.56007780155821
-76.20473700689485,98.56007780155821
-76.20473700689485,98.58784675226927
-77.5380642240111,98.58784675226927
-77.5380642240111,98.59202125847337
-110.47284362728438,98.59202125847337
-110.9045015069622,98.58794557061695
-111.59291472331101,98.61482127766952
-111.92920467262043,98.62344956178332
-111.92920467262043,98.64140107871579
-112.95340937398879,98.64140107871579
-113.16370889715922,98.65486499925171
-113.73941669968097,98.66240950252927
-113.73941669968097,98.67266629178205
-114.74089734043548,98.67266629178205
-115.27965354440565,98.68135874071154
-115.27965354440565,98.68520987216262
-116.12755745494924,98.68520987216262
-116.44285798389318,98.6772720928592
-116.99812473156993,98.71806714210592
-117.40600858401903,98.73058077913812
-117.40600858401903,98.73650199819703
-118.73844804815546,98.73650199819703
-118.73844804815546,98.73720708517101
-119.78146856925493,98.73720708517101
-120.26819078185304,98.76053103591305
-120.75713255004665,98.77228154552584
-120.95611732825678,98.78720516710399
-121.01801386136754,98.78983662553254
-121.27749674401628,98.7868729086661
-121.40201122241635,98.83008616480957
-121.53197188404882,98.812990714751
-121.65641953539073,98.82016683926803
-121.66088613672491,98.83701781934668
-121.66088613672491,98.86292536732172
-122.49563235186098,98.86292536732172
-123.17041138753744,98.88906579097194
-123.19227327568532,98.87980457898861
-123.92043923677512,98.88676655800253
-123.92043923677512,98.91159098905341
-125.20991450278899,98.91159098905341
-125.20991450278899,98.91239664553522
-126.90932786044667,98.91239664553522
-126.90932786044667,98.91153050320288
-127.88653787256658,98.91153050320288
-127.88653787256658,98.91135664729143
-143.6552407065912,98.91135664729143
-143.87721270636635,98.91171335707082
-143.87721270636635,98.91129730744055
-145.22755812431365,98.91129730744055
-145.2912534446064,98.9152986479601
-145.68485619168078,98.9207346998695
-145.68485619168078,98.93314323389411
-146.56306720060425,98.93314323389411
-146.82453160517676,98.94390805144455
-147.06671943087716,98.9507917956851
-147.06671943087716,98.97059010042081
-148.13837916811968,98.97059010042081
-148.62560107264852,98.97419755003655
-148.62560107264852,98.97433145706243
-150.50940848599927,98.97433145706243
-150.50940848599927,98.98230861004936
-163.29582712402205,98.98230861004936
-163.29582712402205,98.98280072847155
-164.12359813969553,98.98280072847155
-164.12461982765177,99.00070481773842
-164.25933539122255,99.0021067255214
-164.85966305371412,99.00279513785704
-164.87286331488144,99.02148131424048
-164.87668510329397,99.03455032331983
-165.13214608428453,99.0280881673106
-165.15727345702774,99.04429649920182
-165.34269420437724,99.04263682055908
-165.93986508687465,99.04094927262528
-166.10261668282124,99.04769425587587
-166.13785088385634,99.05386224831545
-166.23697600232992,99.06244551496867
-166.46768414647394,99.07504957576553
-166.46768414647394,99.07148475893192
-169.7159401145614,99.07148475893192
-169.7159401145614,99.06888668151772
-173.638815552535,99.06888668151772
-173.638815552535,99.06840907410718
-175.34292575874449,99.06840907410718
-175.34292575874449,99.06939935108892
-177.29521548637163,99.06939935108892
-177.29521548637163,99.07393681366403
-179.82692365955188,99.07393681366403
-179.82692365955188,99.07359294040428
-181.1925591255552,99.07359294040428
-181.1925591255552,99.0723448857358
-185.1469598374377,99.0723448857358
-185.1469598374377,99.07180568375554
-187.78216858756278,99.07180568375554
-187.78216858756278,99.07410124103733
-188.86649544415633,99.07410124103733
-189.33530776699132,99.08040009443833
-189.33530776699132,99.08293964533691
-190.74669971284257,99.08293964533691
-191.32766313775065,99.08647127785095
-191.64285787124356,99.08748757796629
-191.83432430727638,99.09600020709348
-191.83432430727638,99.10170415661601
-215.12899742774565,99.10170415661601
-215.3603741847641,99.10461952413999
-215.3603741847641,99.10730859080553
-216.51401383865203,99.10730859080553
-216.9541609819115,99.10656321293722
-217.13109673084196,99.10637875752995
-217.13109673084196,99.10799333045333
-217.8909891786156,99.10799333045333
-218.53069612358433,99.11169863579768
-219.2203195718167,99.1190901201676
-219.2259250005303,99.11460275640154
-219.29200505135466,99.11560881244284
-219.82148544807794,99.12208333271259
-220.1560295919488,99.1241097397162
-220.1560295919488,99.13256413486936
-220.9133302857706,99.13256413486936
-221.3455593643773,99.14046769952765
-221.39335757653936,99.14691540007576
-221.39335757653936,99.14764323899048
-222.57134274790766,99.14764323899048
-222.57134274790766,99.14656924812988
-228.53693120401846,99.14656924812988
-228.8400722512199,99.14741949707246
-228.8400722512199,99.14958874622766
-233.47998135398507,99.14958874622766
-233.47998135398507,99.15333467062366
-237.36107969728226,99.15333467062366
-237.46855742818136,99.15556857312271
-237.46855742818136,99.1596641177316
-238.65632414249768,99.1596641177316
-238.65632414249768,99.16198428627271
-240.27929351985864,99.16198428627271
-240.27929351985864,99.16225835770605
-292.2737415696645,99.16225835770605
-292.2737415696645,99.16942518231467
-294.131669330892,99.16942518231467
-294.16904976419954,99.16813104229429
-294.55661941554456,99.16876065568408
-294.67673799270113,99.1703215288275
-294.7752112363952,99.16740675865806
-294.87024289382185,99.166322727928
-295.22294008037164,99.1665892557828
-295.39199425981576,99.17234749878169
-295.64741282610004,99.17697634378047
-296.15045783095746,99.1834456902668
-296.2999517390067,99.18589240552416
-296.330684444375,99.1843963825913
-296.5397437520623,99.18331384886504
-296.9429848549586,99.18443464590536
-296.9429848549586,99.18747528874086
-298.09994694902616,99.18747528874086
-298.5069343577786,99.18853399857852
-298.5069343577786,99.18867365225036
-299.9934838292346,99.18867365225036
-300.2189852586421,99.18863652234279
-300.781269781368,99.18792690820533
-301.05394280454595,99.18704218070481
-301.29506116608957,99.18665365444369
-301.29506116608957,99.1863979255722
-302.09256085614777,99.1863979255722
-302.09256085614777,99.1860487863653
-304.25317280973235,99.1860487863653
-304.25317280973235,99.18611275170794
-307.33662656374173,99.18611275170794
-307.33662656374173,99.18956569060116
-310.1115461818603,99.18956569060116
-310.1115461818603,99.19287266332022
-387.81380570379787,99.19287266332022
-387.81380570379787,99.19651169077987
-388.99261080951135,99.19651169077987
-389.5166950100457,99.2000524916407
-389.67790109890944,99.20249294126909
-389.69742658954493,99.20510846248236
-389.837975929954,99.20492269457982
-390.11445875290576,99.2084934740577
-390.1905761620245,99.20923557765767
-390.3660617572958,99.20951207267831
-391.080252374887,99.20908572437702
-391.2745112576756,99.2087790083688
-391.3424474568133,99.20851867213497
-391.5000499201083,99.20879725366339
-391.54481495015233,99.2095820506405
-391.56471575447296,99.2093774817823
-391.8051589147769,99.2089927997306
-391.81381219678735,99.21214433926384
-391.86982716662044,99.2126243437158
-392.05202330744413,99.21599655272216
-392.0718951997232,99.21475376769776
-392.11356152888897,99.21396669000717
-392.2012381519481,99.2136120084745
-392.3628754340853,99.21480508272002
-392.610500786625,99.21449048838369
-392.62892721954097,99.21717634870801
-392.62892721954097,99.21754447926729
-393.5590098510691,99.21754447926729
-393.65327854043375,99.21969183871728
-394.0359072133071,99.2189205067594
-394.0359072133071,99.21988848321698
-400.30261336190415,99.21988848321698
-400.4078597238026,99.2195611443979
-400.4078597238026,99.21974093294268
-401.1926164345854,99.21974093294268
-401.52629594376293,99.21898936075897
-401.7731973704769,99.21893972257544
-402.25493085112765,99.21842606345686
-402.44449944165245,99.22155167560088
-402.5453595616093,99.22203338642846
-402.83353441367285,99.22189848984854
-402.8976321689038,99.22306251295473
-403.13249178191637,99.22299323196623
-403.36900338385647,99.22297337902852
-403.657633773371,99.22257184876344
-403.8017696945984,99.22319617451954
-403.9386382034784,99.22647417893809
-404.20597674433196,99.22634814078144
-404.357503317056,99.22591631564963
-404.4473160856742,99.2257106388666
-404.75941003450515,99.2257154316949
-404.98604343721723,99.22842045609136
-405.1900852942535,99.22800243455717
-405.6323276703751,99.23084188637908
-405.7947179278486,99.23078227518631
-405.7947179278486,99.23071249569087
-407.2667529369014,99.23071249569087
-407.2828583732705,99.23393252932499
-407.51837594494907,99.23416189149457
-407.51837594494907,99.2361296244947
-410.3080529714643,99.2361296244947
-410.61602529714526,99.23573176713994
-410.8717599452778,99.23520359383859
-411.3296319503916,99.23512491334631
-411.3296319503916,99.23542730061205
-412.1881612295807,99.23542730061205
-					</series>
-					<series title="" type="l" color="0xff4747" encoding="csv">0.0,0.0
-0.5339285502702185,0.0
-0.5339285502702185,3.127466302293391
-1.3754084844049055,3.127466302293391
-1.653179382956214,6.184746856058563
-1.8020730011314474,9.128026497441379
-1.9090287848306335,12.193209544632046
-1.9090287848306335,15.225582743864367
-2.688924060873015,15.225582743864367
-2.715080103854133,18.132224166762175
-2.8532419331678516,21.1097401406249
-2.854165177811212,24.175112542179278
-2.888650857726106,27.383754001109487
-3.1660375868686934,30.365672783326104
-3.1660375868686934,33.29330874919953
-4.346080122075781,33.29330874919953
-4.496747750592763,36.369483504439614
-4.829573499296835,39.600367950931705
-4.829573499296835,42.71475685091358
-6.0330757511682185,42.71475685091358
-6.726192523846728,45.547414450685324
-6.788127981848502,48.632749579048514
-6.8438469362805625,51.627774165815865
-6.9542032449707305,54.771984025747685
-6.9542032449707305,57.819295051714974
-8.78778017285135,57.819295051714974
-9.433157398593698,60.91109530629062
-9.817793493966844,63.84585499493379
-9.817793493966844,67.05839604071903
-12.597235376706301,67.05839604071903
-12.765695579749487,70.09925913339119
-13.206422358082227,73.15171239384736
-13.206422358082227,76.2022860767128
-13.968303438888274,76.2022860767128
-13.968303438888274,79.3434932433861
-14.83160869033579,79.3434932433861
-15.332749978076324,82.51517427821913
-15.332749978076324,85.4564505706401
-16.76250153060483,85.4564505706401
-16.818676927956016,88.60321907921349
-17.164840688212735,88.68000271839894
-17.386147600547382,91.4584794738633
-18.102226226531098,91.59794841010807
-18.102226226531098,91.83394688988625
-23.286699995317083,91.83394688988625
-23.286699995317083,91.9855685892887
-24.372720403144463,91.9855685892887
-24.521174140361552,92.10658164614699
-24.88784107650783,92.56490634525306
-24.88784107650783,92.77090782531113
-26.45213976499905,92.77090782531113
-26.45213976499905,93.10914661236436
-27.933228177368647,93.10914661236436
-27.933228177368647,93.34642108683872
-29.79293766943613,93.34642108683872
-29.79293766943613,93.60469500098495
-32.223004617652485,93.60469500098495
-32.223004617652485,93.82140089128728
-33.49126866012365,93.82140089128728
-33.49126866012365,94.10637977794298
-35.66004670941303,94.10637977794298
-36.030152626176466,94.44392540537794
-36.46709767560504,94.47939140110378
-36.58480309513186,94.78764390328007
-37.1597973174973,95.1063231456759
-37.1597973174973,95.27778976597295
-38.05007028221945,95.27778976597295
-38.05007028221945,95.43253863548148
-39.24364890593839,95.43253863548148
-39.31799070571726,95.69486803224589
-39.31799070571726,95.84958844935903
-41.95822933390681,95.84958844935903
-42.378477605575426,95.96980638379097
-42.73079715725345,96.17961973335011
-43.20090034447026,96.2563619338045
-43.34121239250214,96.38600706332207
-43.47113713138028,96.60738980866648
-44.06590396767367,96.83266264782338
-44.06590396767367,97.13321317741118
-45.066553850755575,97.13321317741118
-45.175433090948225,97.33608401330217
-45.175433090948225,97.65541875155536
-46.92358595844395,97.65541875155536
-46.92358595844395,98.11583627343326
-48.634848616010224,98.11583627343326
-48.634848616010224,98.15135120190814
-52.37924225645339,98.15135120190814
-52.37924225645339,98.22615102315123
-74.46063323472222,98.22615102315123
-74.64796604667123,98.23514983811734
-74.88595975233459,98.23127097108753
-74.88595975233459,98.24425366565414
-75.91029627670575,98.24425366565414
-76.04754472938346,98.27422969478489
-76.04754472938346,98.31647252404628
-77.33619565328154,98.31647252404628
-77.51788414718513,98.31778341088528
-77.53732813813787,98.36470174546574
-78.26223525700108,98.400265097772
-78.99815550054615,98.47397726875968
-78.99815550054615,98.4790711100993
-81.16949123142498,98.4790711100993
-81.16949123142498,98.5008426546142
-90.33437166463533,98.5008426546142
-90.33437166463533,98.51048008460026
-91.19452547182381,98.51048008460026
-91.19452547182381,98.52733335217822
-92.07407079535717,98.52733335217822
-92.18874360349221,98.53501405504467
-92.19776187067005,98.54032060854198
-92.48509550965508,98.62017154403043
-93.03649705046251,98.65667561887284
-93.27374497656754,98.66379123011139
-93.61291359629318,98.6712203485037
-93.90376388828334,98.68295656981351
-93.92511057772874,98.71263581215848
-94.16881556369556,98.73027247158622
-94.27745828889266,98.74951664908856
-94.5647530217597,98.7652788936469
-94.5647530217597,98.7727615900377
-95.67963566097636,98.7727615900377
-95.91872795544054,98.79153982409979
-95.91872795544054,98.81023311527
-97.95837008594039,98.81023311527
-97.95837008594039,98.80245011193935
-121.09276461207953,98.80245011193935
-121.09276461207953,98.8128905087646
-122.68417647547172,98.8128905087646
-123.41658146621529,98.81863744784727
-123.41658146621529,98.82281105422351
-124.2463336957241,98.82281105422351
-124.26876875219122,98.83796705774837
-124.27206891714268,98.83891836764398
-124.34875614553144,98.84858129792515
-124.65706413846809,98.85883941097217
-124.69245976085904,98.86075463284844
-124.69245976085904,98.86200931007751
-159.31047527647866,98.86200931007751
-159.31801295380242,98.86858896006558
-159.31801295380242,98.87680241649528
-160.3558164503773,98.87680241649528
-160.931143429762,98.89122490362985
-161.1794539730521,98.89529252190619
-161.25111867080815,98.8973230388512
-161.34110300146207,98.91050884396572
-161.34110300146207,98.910576155118
-162.50267997037508,98.910576155118
-162.6182965511212,98.91276411250962
-162.74772034416256,98.91610810049055
-162.7758769843692,98.92334158080548
-162.85892867021587,98.92605832731887
-162.9118491105597,98.92725346104835
-163.17051847949708,98.93232411000218
-163.17051847949708,98.93262882893562
-164.0491917024193,98.93262882893562
-164.11722916236786,98.93946207503271
-164.41523711457106,98.94320502440183
-165.04678810503492,98.94470447787376
-165.62295648472804,98.94300346791175
-165.97818785560807,98.9457084784564
-166.12760757424522,98.95193098480615
-166.12760757424522,98.9510785325511
-174.32207397591336,98.9510785325511
-174.46173783254005,98.95720661932987
-174.46173783254005,98.96018735356176
-175.91011023838885,98.96018735356176
-175.91011023838885,98.96087521832104
-177.41045239177288,98.96087521832104
-177.41045239177288,98.96643805130421
-239.58713974447213,98.96643805130421
-239.78960972738793,98.97046827901104
-240.15136226828957,98.97409870047198
-240.33372229039452,98.97698696381283
-240.7676178721746,98.98012971484243
-240.84498767583597,98.98506275243267
-240.84498767583597,98.98524322539546
-241.64296995819305,98.98524322539546
-241.7392630649223,98.98786012187492
-241.80369329802434,98.9904591505336
-242.02773644011725,98.991736303664
-242.15857541490814,98.99080194845882
-242.18191787906514,98.99013211863073
-242.31907254837714,98.99429770272896
-242.32048075493628,98.99588630487915
-242.4041533105885,98.994895903695
-242.46140632180567,98.9940571948247
-243.19774036477503,98.9957419102228
-243.55546191998457,98.99462102898717
-243.5658200742262,98.99455415146443
-243.6228591811969,98.9959758973444
-243.6228591811969,98.99597555411184
-244.44015031186746,98.99597555411184
-244.67480846861605,98.99370797881183
-244.97386369264723,98.99396430382097
-245.7224065563304,98.99349210144337
-245.7224065563304,98.99598016592654
-247.80369756935508,98.99598016592654
-247.80369756935508,98.99531553023135
-248.90485472136916,98.99531553023135
-248.90485472136916,98.99555466419056
-254.1678404715257,98.99555466419056
-254.3966533902143,98.99506928537009
-255.00312095482383,98.99544275286713
-255.1514745858539,98.99650919056546
-255.33856100445468,98.99827792307835
-255.56788820271308,98.99979732186898
-255.61203714948397,99.0010531193335
-255.6176033129983,99.00089089600691
-255.7277902795789,99.00010865997855
-255.8324051814741,98.99949297439677
-256.03983237155785,99.0012462277894
-256.0601828178702,99.00226488322859
-256.13499375511634,99.00260004968372
-256.2655210766412,99.00154647103429
-256.2765182563454,99.00258113317668
-256.9481161805942,99.0027897287668
-257.02682187285694,99.00332740019232
-257.14427950866354,99.00315123161553
-257.294533673112,99.00539773220586
-257.3130475538452,99.00566712066609
-257.35367726880605,99.00699733394455
-257.5583016269318,99.00670385233667
-257.80797499118506,99.00719180623952
-257.8302683931568,99.00697945789665
-258.5055124824361,99.00922694384565
-258.5055124824361,99.00956026979969
-259.5770683330499,99.00956026979969
-259.8011860667013,99.01018423182103
-259.8011860667013,99.01085360484964
-260.8608118620263,99.01085360484964
-261.0065559517037,99.0111749025381
-261.0065559517037,99.01106458961006
-264.99400354136316,99.01106458961006
-264.99400354136316,99.01338157826929
-265.9180778947259,99.01338157826929
-					</series>
-					<series title="" type="l" color="0xff5050" encoding="csv">0.0,0.0
-0.4751197446236559,0.0
-0.5189207539732311,2.8205244335583823
-0.7155076442709649,5.816956432363467
-0.9774725177375607,8.740276855065535
-1.0723197631605,11.883768230043035
-1.176894798119079,14.739634711674693
-1.3994044581922875,17.881419504037936
-1.509328023691219,21.038463521893654
-1.822853963693578,24.04947129676974
-1.9859731060454549,27.078798611677907
-2.206904395347647,30.021903265183017
-2.3013773865501306,33.09800399224968
-2.335918446089008,36.1343329204216
-2.448757629719044,39.255906571752554
-2.4818657112328903,42.2054083819679
-2.4861134672450205,45.17260225046835
-2.741602769389849,48.11426686503649
-2.927683548216945,51.358561411844455
-3.136539278854264,54.16778433519921
-3.300337259317714,57.20255812360448
-3.638073070443384,60.377086831114774
-3.6642806975782496,63.48608104872756
-3.7256375514502587,66.40768072939943
-3.8127569587461303,69.61622759164395
-3.8127569587461303,72.76050810825964
-5.256725040012916,72.76050810825964
-5.768588610515567,75.70428433773738
-6.1488829078889955,78.81869558591683
-6.524735791639645,81.81852473565311
-6.524735791639645,84.89311203600612
-8.170734986123227,84.89311203600612
-8.530704683035221,87.95129197613761
-8.530704683035221,90.98342309526042
-9.429426006704642,90.98342309526042
-9.569143599903107,91.26717270001055
-9.569143599903107,91.43577306644853
-10.396217835769157,91.43577306644853
-10.955815212157514,91.76020641640915
-10.955815212157514,92.0207064535271
-12.24480121544638,92.0207064535271
-12.86123027640906,92.19173819807223
-13.3610397483383,92.63181758611888
-13.43216538639766,92.89209220243198
-13.554834937112014,92.91935531405285
-13.789914597987716,93.10644115954904
-13.98053229747196,93.2786033827575
-14.406310884173179,93.64753318964216
-14.839051724741939,94.01171752132547
-15.24861023663504,94.28453491452296
-15.3728712870805,94.64973549064985
-15.474614071708613,94.76641605093624
-15.909789452030843,94.85327085578636
-15.950166843746622,94.97877667748631
-16.17871575845822,95.32714843887338
-16.54613920217881,95.68835376699144
-16.562514711778725,95.98637558186789
-16.685062903992698,96.16777550684967
-17.043974310742747,96.44522606361113
-17.482891473284397,96.5541052590741
-17.6533154511076,97.0223282636679
-17.765543828930745,97.16306303456435
-17.899881097222437,97.43422449636645
-18.561887570010743,97.68201880943016
-18.855237599085346,97.90434562186648
-18.855237599085346,98.20780812902038
-19.840584065017506,98.20780812902038
-20.584274922589064,98.22745857926864
-21.050166551982112,98.25943621578567
-21.050166551982112,98.74236917551337
-23.755772016524574,98.74236917551337
-23.755772016524574,98.75831911192408
-25.695434597160013,98.75831911192408
-25.695434597160013,98.7993947815707
-27.26692372835193,98.7993947815707
-27.362544020521657,98.83369130928571
-27.362544020521657,98.85140313040408
-28.339525436005104,98.85140313040408
-28.613961927404322,98.87410358647824
-28.916874818255145,98.89155993664387
-29.059601117919247,98.90344047787303
-29.72974505894052,98.89836331632338
-29.86144795306088,98.91607032943362
-30.10439881430362,98.93829878284355
-30.15238092366004,98.95531998071769
-30.15238092366004,99.00693305671304
-30.926338789242774,99.00693305671304
-30.926338789242774,99.02415268268906
-31.826423996705188,99.02415268268906
-32.27273788782954,99.03861024797146
-32.27273788782954,99.09460710066739
-33.6160027576334,99.09460710066739
-33.6160027576334,99.09666839668607
-36.00997006381028,99.09666839668607
-36.00997006381028,99.12413913333096
-37.74540415766876,99.12413913333096
-37.983087991173996,99.1587972720658
-38.22921597011514,99.16056359690131
-38.701977819386464,99.16294833067818
-39.24406980442683,99.17644066985869
-39.24406980442683,99.17711446629144
-40.025359078053334,99.17711446629144
-40.219996742474386,99.24412005857528
-40.25042840729407,99.26703771692316
-40.25042840729407,99.27482921658952
-41.045095098618496,99.27482921658952
-41.045095098618496,99.2922123664336
-41.87122933605996,99.2922123664336
-42.2312129497817,99.32538983974979
-42.75482081898294,99.34159438783435
-42.75482081898294,99.34202958879787
-47.673598842002676,99.34202958879787
-47.673598842002676,99.34184689752533
-48.508515265823654,99.34184689752533
-48.95426819242876,99.34613465641415
-48.95426819242876,99.35680746495498
-49.778474195308384,99.35680746495498
-49.79204884490809,99.36041420391537
-49.980946873344756,99.36477504380754
-50.48780759306911,99.36978520361549
-50.61083933660851,99.36927736857696
-50.652805017809044,99.37715150910536
-50.652805017809044,99.37863991587986
-57.93320970075466,99.37863991587986
-58.06410619017544,99.38185299642701
-58.67988335471704,99.38892249364062
-58.67988335471704,99.38673986826062
-60.10054881567366,99.38673986826062
-60.10054881567366,99.3916496961894
-61.39510938594912,99.3916496961894
-61.931281163422256,99.39427288017842
-61.931281163422256,99.40320769906913
-63.33972490812619,99.40320769906913
-63.33972490812619,99.40270207615461
-72.37594427746748,99.40270207615461
-72.58788372891824,99.40695163597437
-72.76994706472406,99.41136872169287
-72.85546428087234,99.41712574635224
-72.96689232854281,99.42606547574985
-73.10245377835705,99.43373231703077
-73.10245377835705,99.43227822853567
-73.86343056403648,99.43227822853567
-74.57133750781011,99.43486223748582
-74.93423500976095,99.43273844883026
-75.01975670253131,99.43330730845173
-75.01975670253131,99.44244396176643
-75.78344400530634,99.44244396176643
-75.78344400530634,99.44478161560497
-77.21555971837356,99.44478161560497
-77.2728679380856,99.44953276809102
-77.2728679380856,99.45832742298623
-81.25203910245807,99.45832742298623
-81.30569092493126,99.4598665158918
-81.30569092493126,99.45970620737157
-83.86698388111371,99.45970620737157
-83.86698388111371,99.45996430112098
-85.8378954477328,99.45996430112098
-85.8378954477328,99.46079503159456
-143.49353926538734,99.46079503159456
-143.49353926538734,99.46084206651287
-144.50707643653305,99.46084206651287
-144.53360351765392,99.46327658401356
-144.61231048501006,99.46631670277124
-144.61231048501006,99.46878305601787
-145.39657535319216,99.46878305601787
-145.89402091298342,99.46925669998355
-146.32895361027528,99.4704734293767
-146.39768724851402,99.47459906950705
-146.42752004754573,99.47643856696921
-146.9000806581732,99.47647836099593
-147.44349675944187,99.47581349900737
-148.12288873531023,99.47797931075876
-148.2025527042386,99.47771170566448
-148.36348155313462,99.47789285173202
-148.63540595189644,99.47918251056957
-148.63960411323563,99.47912510946205
-149.28009358242653,99.48045071052663
-149.37973815885033,99.47944854042144
-149.41476590056465,99.48186197521844
-149.53962858190255,99.48224340849289
-149.83772230673654,99.48548845083288
-149.8905073639587,99.48555386369627
-150.32608189109172,99.4842337463847
-150.36791814605584,99.48464400472707
-150.90641907548104,99.4880632378865
-150.90641907548104,99.49150144679064
-152.73499110813327,99.49150144679064
-152.73499110813327,99.49437501789889
-159.0707156188905,99.49437501789889
-159.4219984435837,99.4945920091164
-159.45430678157695,99.49789145527069
-159.45430678157695,99.4986557386074
-160.49643917910393,99.4986557386074
-160.56119603869405,99.4997743166296
-160.77364501615583,99.50051762371726
-161.19169934936684,99.50088618537896
-161.31821173448043,99.50057222126334
-161.55160097038603,99.500365506162
-161.57830745458776,99.50384562123566
-161.60846808968006,99.5047861046708
-161.72062141119412,99.50475705319441
-162.1341018207274,99.50588130857894
-162.26839888249086,99.5080484069375
-162.4435835877813,99.50901864597738
-162.5077217031056,99.51139114069179
-162.70957066414277,99.51201183770021
-162.98712165212876,99.51271850982604
-163.0289407779986,99.51339861228753
-163.0884157517047,99.51319166180893
-163.1880914353403,99.5138743864575
-163.1880914353403,99.51397095691435
-164.01940892712736,99.51397095691435
-164.01940892712736,99.51356158675281
-165.16761495795802,99.51356158675281
-165.32030647092452,99.51451894182661
-165.55419334249447,99.51360856250602
-165.55419334249447,99.51266523663102
-166.46747767450907,99.51266523663102
-166.46747767450907,99.51233186895264
-167.56706589653913,99.51233186895264
-167.6604731074045,99.5125405640143
-167.6604731074045,99.51177422910818
-169.1508450544104,99.51177422910818
-169.55482955943353,99.51091458106025
-169.72809864321306,99.51129712640703
-					</series>
-					<comment/>
-				</plot>
-			</result>
-		</query>
-		<query>
-			<formula/>
-			<comment/>
-		</query>
-		<query>
-			<formula/>
-			<comment/>
+			<comment>For inspecting entropy in normal cases</comment>
 		</query>
 	</queries>
 </nta>

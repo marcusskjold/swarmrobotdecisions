@@ -9,7 +9,7 @@ Finally, we consider how our work may be improved and built upon.
 \subsection{UPPAAL as a modeling tool}
 
 We have benefited greatly from UPPAALs support for types, functions and templates.
-These features made it much easier for us to translate our existing programming knowledge into modeling work - which is even more enhanced by the C-like syntax.
+These features made it easier for us to translate our existing programming knowledge into modeling work - which is even more enhanced by the C-like syntax.
 UPPAAL is tool in development, and many useful and user-friendly features have been added during recent versions.
 The graphical editor and simulator also make it easy to inspect the models behavior which greatly simplifies debugging.
 
@@ -28,13 +28,22 @@ UPPAAL has chosen to save systems as XML files and enforces a strict project str
 This means that the entire project is saved as a single file, and is only comfortable to edit using UPPAALs own GUI editor.
 Within the GUI, a project must have exactly one global declarations file, one declarations file per template, and one global declarations file.
 Combined, this makes it cumbersome to collaborate on projects, as merge conflicts are inevitable and complex project cannot be broken down into components.
-The ability to modularise a project in some way would make it possible to 
+The ability to modularise a project in some way would be very helpful for collaborative projects.
 
-Finally, we note that UPPAAL currently has quite severe performance issues on newer MacOS machines that may stem from memory leaks.
-
-
+Finally, we note that UPPAAL currently seems to have quite severe performance issues on newer MacOS machines that may stem from memory leaks.
 
 \subsection{Correctness of our model}
+
+The algorithm we chose to model is a best-of-n problem (\cite{AlgorithmPaper}, section 1). While it is simple to measure the performance in terms of how fast the model achieves consensus, it is more difficult to evaluate the quality of that consensus.
+A very fast consensus algorithm is for every robot to always decide on choice 0. This is obviously not desired behavior, but by what metric should it be considered wrong?
+Liu \& Lee do not consider quality of result in this way.
+The algorithm is presented as an improvement to simple majority rule, because that handles sparsely connected networks better.
+This seems correct, but clearly relies of some notion of global fairness in addition to simple efficiency or speed.
+
+In our verification, we include the expected value of the consensus landing on choice 0, which is a good proxy for fairness in networks with completely random initial preference distributions.
+However, we metric does not allow us to investigate how network topology and non-random initial preferences affect 
+
+More and better metrics or methods for evaluating fairness and quality is needed, and this is seen at two places in the original report.
 
 
 
